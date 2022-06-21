@@ -71,7 +71,15 @@ export const HomeTab = () => {
 
   const dispatch = useDispatch();
 
-  const latestFeeding = feedings[feedings.length - 1] as Feeding | undefined;
+  // const latestFeeding = feedings[feedings.length - 1] as Feeding | undefined;
+  const latestFeeding = [...feedings].sort((a, b) => {
+    if (+new Date(a.finish) < +new Date(b.finish)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  })[0];
+
   const latestSleep = [...sleeps].sort((a, b) => {
     if (+new Date(a.finish) < +new Date(b.finish)) {
       return 1;
@@ -79,10 +87,39 @@ export const HomeTab = () => {
       return -1;
     }
   })[0];
-  const latestLeisure = leisures[leisures.length - 1] as Leisure | undefined;
-  const latestDiaper = diapers[diapers.length - 1] as Diaper | undefined;
-  const latestHealth = healths[healths.length - 1] as Health | undefined;
-  const latestGrowth = growths[growths.length - 1] as Growth | undefined;
+  // const latestLeisure = leisures[leisures.length - 1] as Leisure | undefined;
+  const latestLeisure = [...leisures].sort((a, b) => {
+    if (+new Date(a.finish) < +new Date(b.finish)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  })[0];
+
+  // const latestDiaper = diapers[diapers.length - 1] as Diaper | undefined;
+  const latestDiaper = [...diapers].sort((a, b) => {
+    if (+new Date(a.start) < +new Date(b.start)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  })[0];
+  // const latestHealth = healths[healths.length - 1] as Health | undefined;
+  const latestHealth = [...healths].sort((a, b) => {
+    if (+new Date(a.start) < +new Date(b.start)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  })[0];
+  // const latestGrowth = growths[growths.length - 1] as Growth | undefined;
+  const latestGrowth = [...growths].sort((a, b) => {
+    if (+new Date(a.start) < +new Date(b.start)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  })[0];
 
   // TODO: fix , at the end, when there is no details
 
@@ -229,10 +266,16 @@ export const HomeTab = () => {
   const totalLeisureDuration = () => {
     let totalSec = 0;
     sumLeisures.forEach((leisure) => {
-      const diff = differenceInSeconds(
-        new Date(leisure.finish),
-        new Date(leisure.start)
-      );
+      let diff = 0;
+      if (isToday(new Date(leisure.start))) {
+        diff = differenceInSeconds(
+          new Date(leisure.finish),
+          new Date(leisure.start)
+        );
+      } else {
+        diff = differenceInSeconds(new Date(leisure.finish), startOfToday());
+      }
+
       totalSec = totalSec + diff;
     });
     const date = addSeconds(new Date(0), totalSec);
@@ -250,7 +293,7 @@ export const HomeTab = () => {
   const totalDiapers = () => {
     let pooCounter = 0;
     let peeCounter = 0;
-    diapers.forEach((diaper) => {
+    sumDiapers.forEach((diaper) => {
       if (diaper.type === "poo") {
         pooCounter = pooCounter + 1;
       } else if (diaper.type === "pee") {

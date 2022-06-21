@@ -24,7 +24,8 @@ import { ViewPhotoPage } from "./Pages/ViewPhotoPage";
 import { SleepPage } from "./Pages/SleepPage";
 import { AllLogsPage } from "./Pages/AllLogsPage";
 import { StatsTab } from "./Pages/StatsTab";
-import { FeedStats } from "./Pages/FeedStats";
+import { StatsFeeding } from "./Pages/StatsFeeding";
+import { StatsSleep } from "./Pages/StatsSleep";
 
 function App() {
   const themeOptions: ThemeOptions = {
@@ -65,7 +66,8 @@ function App() {
               <Route path="sleep" element={<SleepPage />} />
               <Route path="all-log" element={<AllLogsPage />} />
               <Route path="stats" element={<StatsTab />} />
-              <Route path="feed-stats" element={<FeedStats />} />
+              <Route path="stats-sleep" element={<StatsSleep />} />
+              <Route path="stats-feeding" element={<StatsFeeding />} />
             </Routes>
           </BrowserRouter>
         </ThemeProvider>

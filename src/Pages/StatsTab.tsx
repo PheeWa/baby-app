@@ -5,104 +5,123 @@ import {
   ListItem,
   ListItemText,
   ListSubheader,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import {
   addHours,
   addSeconds,
+  endOfToday,
   format,
+  isToday,
   isWithinInterval,
+  startOfDay,
+  startOfToday,
   subDays,
 } from "date-fns";
-import { differenceInSeconds } from "date-fns/esm";
+import { differenceInDays, differenceInSeconds } from "date-fns/esm";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { LineChart, Line } from "recharts";
+import {
+  LineChart,
+  Line,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Label,
+  LabelList,
+} from "recharts";
 import { RootState } from "../Store/store";
+import { Feeding } from "./FeedPage";
+import { Leisure } from "./LeisurePage";
+import { Sleep } from "./SleepPage";
+import { StatsFeeding } from "./StatsFeeding";
+import { StatsSleep } from "./StatsSleep";
 
-export const StatsTab = () => {
-  // From Redux//
-  const sleeps = useSelector((state: RootState) => state.sleep.sleeps);
-
-  //Statistics functions//
-
-  const avgSleep = () => {
-    let sumSleep = 0;
-    sleeps.forEach((sleep) => {
-      const thisWeek = isWithinInterval(new Date(sleep.finish), {
-        start: subDays(new Date(), 6),
-        end: new Date(),
-      });
-
-      if (thisWeek) {
-        const diff = differenceInSeconds(
-          new Date(sleep.finish),
-          new Date(sleep.start)
-        );
-        sumSleep = sumSleep + diff;
-      }
-    });
-    const avgSleepInSec = sumSleep / 7;
-    const date = addSeconds(new Date(0), avgSleepInSec);
-    const x = addHours(date, 12);
-    return format(x, "H'h'mm'm'");
+export const calcDay = (
+  item: Sleep | Feeding | Leisure,
+  daysAgo: number
+): { currentDay: number; previousDay: number } => {
+  let diff = 0;
+  let prev = 0;
+  if (differenceInDays(endOfToday(), new Date(item.start)) === daysAgo) {
+    diff = differenceInSeconds(new Date(item.finish), new Date(item.start));
+  } else {
+    diff = differenceInSeconds(
+      new Date(item.finish),
+      subDays(startOfToday(), daysAgo)
+    );
+    prev = differenceInSeconds(
+      subDays(startOfToday(), daysAgo),
+      new Date(item.start)
+    );
+  }
+  return {
+    currentDay: diff,
+    previousDay: prev,
   };
+};
 
-  // const avg;
+export const getBarData = (events: Sleep[] | Feeding[] | Leisure[]) => {
+  let result = [0, 0, 0, 0, 0, 0, 0];
+  events.forEach((event) => {
+    const daysDiff = differenceInDays(endOfToday(), new Date(event.finish));
+    if (daysDiff < 7) {
+      const { currentDay, previousDay } = calcDay(event, daysDiff);
+      result[daysDiff] = result[daysDiff] + currentDay;
+      if (daysDiff < 6) {
+        result[daysDiff + 1] = result[daysDiff + 1] + previousDay;
+      }
+    }
+  });
+
+  return result
+    .map((item, i) => {
+      return {
+        time: item,
+        date: subDays(endOfToday(), i),
+      };
+    })
+    .reverse();
+};
+export const StatsTab = () => {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
   return (
     <Box>
-      <Container sx={{ marginTop: "16px", display: "flex", gap: "16px" }}>
-        <Link to="/feed-stats" style={{ textDecorationLine: "none" }}>
-          <Button variant="outlined" sx={{ textTransform: "none" }}>
-            Feeding
-          </Button>
-        </Link>
-        <Link to="" style={{ textDecorationLine: "none" }}>
-          <Button variant="outlined" sx={{ textTransform: "none" }}>
-            Diapers
-          </Button>
-        </Link>
-        <Link to="" style={{ textDecorationLine: "none" }}>
-          <Button variant="outlined" sx={{ textTransform: "none" }}>
-            Leisure
-          </Button>
-        </Link>
-        <Link to="" style={{ textDecorationLine: "none" }}>
-          <Button variant="outlined" sx={{ textTransform: "none" }}>
-            Growth
-          </Button>
-        </Link>
-        <Link to="" style={{ textDecorationLine: "none" }}>
-          <Button variant="outlined" sx={{ textTransform: "none" }}>
-            All in one
-          </Button>
-        </Link>
-      </Container>
-      <Box>
-        <List
-          subheader={
-            <ListSubheader
-            // component="div" id="nested-list-subheader"
-            >
-              Statistics
-            </ListSubheader>
-          }
-        >
-          <ListItem>
-            <ListItemText primary="Avg sleep per day" />
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
-            >
-              {avgSleep()}
-            </Typography>
-          </ListItem>
-        </List>
-      </Box>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        variant="scrollable"
+        // scrollButtons
+        allowScrollButtonsMobile
+        aria-label="scrollable force tabs example"
+        sx={{
+          ".MuiTabs-scrollButtons.Mui-disabled": {
+            opacity: 0.3,
+          },
+        }}
+      >
+        <Tab label="Sleep" />
+        <Tab label="Feeding" />
+        <Tab label="Diapers" />
+        <Tab label="Leisure" />
+        <Tab label="Growth" />
+      </Tabs>
+      {value === 0 && <StatsSleep />}
+      {value === 1 && <StatsFeeding />}
     </Box>
   );
 };
