@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Leisure, LeisureType } from "../Pages/LeisurePage";
+import { leisureData } from "./initData";
 
 type Stopwatch = {
   time: number;
@@ -16,7 +17,7 @@ export interface LeisureState {
 }
 
 const initialState: LeisureState = {
-  leisures: [],
+  leisures: leisureData,
   stopwatch: {
     time: 0,
     isEdit: false,

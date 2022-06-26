@@ -1,13 +1,14 @@
 import { ActionTypes } from "@mui/base";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Growth } from "../Pages/GrowthPage";
+import { growthData } from "./initData";
 
 export interface GrowthState {
   growths: Growth[];
 }
 
 const initialState: GrowthState = {
-  growths: [],
+  growths: growthData,
 };
 
 export const growthSlice = createSlice({

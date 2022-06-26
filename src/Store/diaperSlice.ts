@@ -1,13 +1,14 @@
 import { ActionTypes } from "@mui/base";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Diaper } from "../Pages/DiapersPage";
+import { diaperData } from "./initData";
 
 export interface DiaperState {
   diapers: Diaper[];
 }
 
 const initialState: DiaperState = {
-  diapers: [],
+  diapers: diaperData,
 };
 
 export const diaperSlice = createSlice({

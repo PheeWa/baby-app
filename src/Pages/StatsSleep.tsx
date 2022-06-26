@@ -19,6 +19,7 @@ import {
   startOfDay,
   endOfDay,
 } from "date-fns";
+import { syncBuiltinESMExports } from "module";
 import React from "react";
 import { useSelector } from "react-redux";
 import {
@@ -39,42 +40,130 @@ import { Sleep } from "./SleepPage";
 import { formatSeconds } from "./StatsFeeding";
 import { getBarData } from "./StatsTab";
 
+export const getLineChartData = (
+  events: { start: string; finish: string; type: string }[]
+) => {
+  // const thisWeekEvents = events.filter((event) => {
+  //   const thisWeek = isWithinInterval(new Date(event.finish), {
+  //     start: subDays(new Date(), 7),
+  //     end: new Date(),
+  //   });
+
+  //   if (thisWeek) {
+  //     return true;
+  //   }
+  // });
+  let extraChartData: any = [];
+  const chartData = events.map((event, i) => {
+    const startDate = new Date(event.start);
+    const finishDate = new Date(event.finish);
+    const daysDiff = differenceInDays(
+      endOfDay(startDate),
+      endOfDay(finishDate)
+    );
+
+    if (daysDiff === 0) {
+      return {
+        name: `${i}`,
+        type: event.type,
+        data: [
+          {
+            time: differenceInSeconds(startDate, startOfDay(startDate)),
+            date: +startOfDay(startDate),
+          },
+
+          {
+            time: differenceInSeconds(finishDate, startOfDay(finishDate)),
+            date: +startOfDay(finishDate),
+          },
+        ],
+      };
+    } else {
+      const extraChartItem = {
+        name: `${i}-extra`,
+        type: event.type,
+        data: [
+          {
+            time: 0,
+            date: +startOfDay(finishDate),
+          },
+
+          {
+            time: differenceInSeconds(finishDate, startOfDay(finishDate)),
+            date: +startOfDay(finishDate),
+          },
+        ],
+      };
+      extraChartData = [...extraChartData, extraChartItem];
+
+      return {
+        name: `${i}`,
+        type: event.type,
+        data: [
+          {
+            time: differenceInSeconds(startDate, startOfDay(startDate)),
+            date: +startOfDay(startDate),
+          },
+
+          {
+            time: differenceInSeconds(
+              endOfDay(startDate),
+              startOfDay(startDate)
+            ),
+            date: +startOfDay(startDate),
+          },
+        ],
+      };
+    }
+  });
+  return [
+    {
+      name: `}`,
+      data: [
+        {
+          time: 0,
+          date: 0,
+        },
+
+        {
+          time: 1,
+          date: 0,
+        },
+      ],
+    },
+    ...chartData,
+    ...extraChartData,
+  ];
+};
+
+export const avgEvent = (events: Sleep[] | Leisure[]) => {
+  let numEvents = 0;
+  let sumEvents = 0;
+  events.forEach((event) => {
+    // const thisWeek = isWithinInterval(new Date(event.finish), {
+    //   start: subDays(new Date(), 9),
+    //   end: new Date(),
+    // });
+
+    const diff = differenceInSeconds(
+      new Date(event.finish),
+      new Date(event.start)
+    );
+    sumEvents = sumEvents + diff;
+    numEvents = numEvents + 1;
+  });
+  const avgEventInSec = sumEvents / 7;
+  const avgEvents = formatSeconds(avgEventInSec);
+  const avgEventsTimes = (numEvents / 7).toFixed(1);
+  return { avgEvents, avgEventsTimes };
+};
+
 export const StatsSleep = () => {
   // From Redux//
-  const sleeps = useSelector((state: RootState) => state.sleep.sleeps);
-
-  //Statistics functions//
-
-  const avgSleep = () => {
-    let numSleep = 0;
-    let sumSleep = 0;
-    sleeps.forEach((sleep) => {
+  const weeklySleeps = useSelector((state: RootState) => {
+    return state.sleep.sleeps.filter((sleep) => {
       const thisWeek = isWithinInterval(new Date(sleep.finish), {
-        start: subDays(new Date(), 6),
-        end: new Date(),
-      });
-
-      if (thisWeek) {
-        const diff = differenceInSeconds(
-          new Date(sleep.finish),
-          new Date(sleep.start)
-        );
-        sumSleep = sumSleep + diff;
-        numSleep = numSleep + 1;
-      }
-    });
-    const avgSleepInSec = sumSleep / 7;
-    const date = addSeconds(new Date(0), avgSleepInSec);
-    const x = addHours(date, 12);
-    const avgSleeps = format(x, "H'h'mm'm'");
-    const avgSleepTimes = (numSleep / 7).toFixed(1);
-    return { avgSleeps, avgSleepTimes };
-  };
-
-  const getDataInSec = () => {
-    const thisWeekSleeps = sleeps.filter((sleep) => {
-      const thisWeek = isWithinInterval(new Date(sleep.finish), {
-        start: subDays(new Date(), 6),
+        start: subDays(new Date(), 7),
         end: new Date(),
       });
 
@@ -82,87 +171,9 @@ export const StatsSleep = () => {
         return true;
       }
     });
-    let extraChartData: any = [];
-    const chartData = thisWeekSleeps.map((sleep, i) => {
-      const startDate = new Date(sleep.start);
-      const finishDate = new Date(sleep.finish);
-      const daysDiff = differenceInDays(
-        endOfDay(startDate),
-        endOfDay(finishDate)
-      );
+  });
 
-      if (daysDiff === 0) {
-        return {
-          name: `${i}`,
-          // type: "red",
-          data: [
-            {
-              time: differenceInSeconds(startDate, startOfDay(startDate)),
-              date: +startOfDay(startDate),
-            },
-
-            {
-              time: differenceInSeconds(finishDate, startOfDay(finishDate)),
-              date: +startOfDay(finishDate),
-            },
-          ],
-        };
-      } else {
-        const extraChartItem = {
-          name: `${i}-extra`,
-          data: [
-            {
-              time: 0,
-              date: +startOfDay(finishDate),
-            },
-
-            {
-              time: differenceInSeconds(finishDate, startOfDay(finishDate)),
-              date: +startOfDay(finishDate),
-            },
-          ],
-        };
-        extraChartData = [...extraChartData, extraChartItem];
-
-        return {
-          name: `${i}`,
-          data: [
-            {
-              time: differenceInSeconds(startDate, startOfDay(startDate)),
-              date: +startOfDay(startDate),
-            },
-
-            {
-              time: differenceInSeconds(
-                endOfDay(startDate),
-                startOfDay(startDate)
-              ),
-              date: +startOfDay(startDate),
-            },
-          ],
-        };
-      }
-    });
-    return [
-      {
-        name: `}`,
-        data: [
-          {
-            time: 0,
-            date: 0,
-          },
-
-          {
-            time: 1,
-            date: 0,
-          },
-        ],
-      },
-      ...chartData,
-      ...extraChartData,
-    ];
-  };
-  console.log("hahahah", getDataInSec());
+  //Statistics functions//
 
   return (
     <Box>
@@ -182,7 +193,7 @@ export const StatsSleep = () => {
             component="div"
             sx={{ flexGrow: 1, textAlign: "center" }}
           >
-            {avgSleep().avgSleeps}
+            {avgEvent(weeklySleeps).avgEvents}
           </Typography>
         </ListItem>
         <ListItem>
@@ -192,18 +203,17 @@ export const StatsSleep = () => {
             component="div"
             sx={{ flexGrow: 1, textAlign: "center" }}
           >
-            {avgSleep().avgSleepTimes}
+            {avgEvent(weeklySleeps).avgEventsTimes}
           </Typography>
         </ListItem>
       </List>
       <Box>
         <Typography>Sleep duration by days</Typography>
 
-        {/* <ResponsiveContainer width="100%" height="100%"> */}
         <BarChart
           width={400}
           height={300}
-          data={getBarData(sleeps)}
+          data={getBarData(weeklySleeps)}
           margin={{
             top: 20,
             right: 30,
@@ -211,15 +221,12 @@ export const StatsSleep = () => {
             bottom: 5,
           }}
         >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis
             dataKey="date"
             tickFormatter={(value) => {
               return format(value, "EEE");
             }}
           />
-          {/* <YAxis /> */}
-          {/* <Legend /> */}
           <Tooltip
             labelFormatter={(value: any) => {
               return format(value, "LLL d yyyy");
@@ -237,10 +244,8 @@ export const StatsSleep = () => {
             />
           </Bar>
         </BarChart>
-        {/* </ResponsiveContainer> */}
-
+        <Typography>Sleep schedule</Typography>
         <LineChart width={350} height={600}>
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis
             dataKey="date"
             type="category"
@@ -254,7 +259,6 @@ export const StatsSleep = () => {
             }}
           />
           <YAxis
-            // ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
             tickFormatter={(value) => {
               const date = addSeconds(startOfToday(), value);
               return format(date, "h a");
@@ -262,17 +266,9 @@ export const StatsSleep = () => {
             tickCount={13}
             interval="preserveStartEnd"
             allowDataOverflow={false}
-            // domain={[
-            //   0,
-            //   differenceInSeconds(startOfToday(), endOfToday()) + 9999,
-            // ]}
-            // domain={[0, "dataMax + 3600"]}
             domain={[0, 86400]}
-            // dataKey="hahah"
           />
-          {/* <Tooltip /> */}
-          {/* <Legend /> */}
-          {getDataInSec().map((s: any) => {
+          {getLineChartData(weeklySleeps).map((s: any) => {
             return (
               <Line
                 dataKey="time"

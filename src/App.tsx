@@ -66,8 +66,8 @@ function App() {
               <Route path="sleep" element={<SleepPage />} />
               <Route path="all-log" element={<AllLogsPage />} />
               <Route path="stats" element={<StatsTab />} />
-              <Route path="stats-sleep" element={<StatsSleep />} />
-              <Route path="stats-feeding" element={<StatsFeeding />} />
+              {/* <Route path="stats-sleep" element={<StatsSleep />} /> */}
+              {/* <Route path="stats-feeding" element={<StatsFeeding />} /> */}
             </Routes>
           </BrowserRouter>
         </ThemeProvider>

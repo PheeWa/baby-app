@@ -27,39 +27,39 @@ export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
 
-const interval = setInterval(() => {
-  const diff = differenceInSeconds(
-    new Date(),
-    new Date(store.getState().feed.stopwatch.startDate)
-  );
-  store.dispatch(
-    updateStopwatch({ ...store.getState().feed.stopwatch, time: diff })
-  );
-}, 1000);
-const SleepInterval = setInterval(() => {
-  // setTime((time) => time + 1);
-  const diff = differenceInSeconds(
-    new Date(),
-    new Date(store.getState().sleep.sleepStopwatch.startDate)
-  );
-  store.dispatch(
-    updateSleepStopwatch({
-      ...store.getState().sleep.sleepStopwatch,
-      time: diff,
-    })
-  );
-}, 1000);
+// const interval = setInterval(() => {
+//   const diff = differenceInSeconds(
+//     new Date(),
+//     new Date(store.getState().feed.stopwatch.startDate)
+//   );
+//   store.dispatch(
+//     updateStopwatch({ ...store.getState().feed.stopwatch, time: diff })
+//   );
+// }, 1000);
+// const SleepInterval = setInterval(() => {
+//   // setTime((time) => time + 1);
+//   const diff = differenceInSeconds(
+//     new Date(),
+//     new Date(store.getState().sleep.sleepStopwatch.startDate)
+//   );
+//   store.dispatch(
+//     updateSleepStopwatch({
+//       ...store.getState().sleep.sleepStopwatch,
+//       time: diff,
+//     })
+//   );
+// }, 1000);
 
-const leisureInterval = setInterval(() => {
-  // setTime((time) => time + 1);
-  const diff = differenceInSeconds(
-    new Date(),
-    new Date(store.getState().leisure.stopwatch.startDate)
-  );
-  store.dispatch(
-    updateLeisureStopwatch({
-      ...store.getState().leisure.stopwatch,
-      time: diff,
-    })
-  );
-}, 1000);
+// const leisureInterval = setInterval(() => {
+//   // setTime((time) => time + 1);
+//   const diff = differenceInSeconds(
+//     new Date(),
+//     new Date(store.getState().leisure.stopwatch.startDate)
+//   );
+//   store.dispatch(
+//     updateLeisureStopwatch({
+//       ...store.getState().leisure.stopwatch,
+//       time: diff,
+//     })
+//   );
+// }, 1000);

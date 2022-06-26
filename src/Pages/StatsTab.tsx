@@ -43,6 +43,9 @@ import { RootState } from "../Store/store";
 import { Feeding } from "./FeedPage";
 import { Leisure } from "./LeisurePage";
 import { Sleep } from "./SleepPage";
+import { StasDiapers } from "./StasDiapers";
+import { StasGrowth } from "./StasGrowth";
+import { StasLeisure } from "./StasLeisure";
 import { StatsFeeding } from "./StatsFeeding";
 import { StatsSleep } from "./StatsSleep";
 
@@ -122,6 +125,9 @@ export const StatsTab = () => {
       </Tabs>
       {value === 0 && <StatsSleep />}
       {value === 1 && <StatsFeeding />}
+      {value === 2 && <StasDiapers />}
+      {value === 3 && <StasLeisure />}
+      {value === 4 && <StasGrowth />}
     </Box>
   );
 };
