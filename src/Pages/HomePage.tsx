@@ -29,12 +29,12 @@ export const HomePage = () => {
         >
           <Tab icon={<HomeRounded />} aria-label="phone" />
           <Tab icon={<TimelineRounded />} aria-label="favorite" />
-          <Tab icon={<CalendarMonthRounded />} aria-label="person" />
+          {/* <Tab icon={<CalendarMonthRounded />} aria-label="person" /> */}
         </Tabs>
       </Box>
       {value === 0 && <HomeTab />}
       {value === 1 && <StatsTab />}
-      {value === 2 && <Box>Item Three</Box>}
+      {/* {value === 2 && <Box>Item Three</Box>} */}
     </Box>
   );
 };
