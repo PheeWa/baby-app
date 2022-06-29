@@ -27,6 +27,11 @@ import { StatsTab } from "./Pages/StatsTab";
 import { StatsFeeding } from "./Pages/StatsFeeding";
 import { StatsSleep } from "./Pages/StatsSleep";
 
+import { initializeApp } from "firebase/app";
+import { RegisterPage } from "./Pages/RegisterPage";
+import { LoginPage } from "./Pages/LoginPage";
+import { SettingPage } from "./Pages/SettingPage";
+
 function App() {
   const themeOptions: ThemeOptions = {
     palette: {
@@ -45,6 +50,23 @@ function App() {
   };
 
   const theme = createTheme(themeOptions);
+  // Import the functions you need from the SDKs you need
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsIiVmXknLIpaQeDZANZzbOe8GK2wlCkk",
+    authDomain: "baby-app-react.firebaseapp.com",
+    projectId: "baby-app-react",
+    storageBucket: "baby-app-react.appspot.com",
+    messagingSenderId: "370335286755",
+    appId: "1:370335286755:web:cd42bb31d35bf3f28b0cd6",
+    measurementId: "G-5SQV41RYMV",
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
 
   return (
     <Provider store={store}>
@@ -66,8 +88,9 @@ function App() {
               <Route path="sleep" element={<SleepPage />} />
               <Route path="all-log" element={<AllLogsPage />} />
               <Route path="stats" element={<StatsTab />} />
-              {/* <Route path="stats-sleep" element={<StatsSleep />} /> */}
-              {/* <Route path="stats-feeding" element={<StatsFeeding />} /> */}
+              <Route path="register" element={<RegisterPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="setting" element={<SettingPage />} />
             </Routes>
           </BrowserRouter>
         </ThemeProvider>

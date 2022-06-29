@@ -4,14 +4,17 @@ import {
   HomeRounded,
   PersonRounded,
   PhoneRounded,
+  SettingsRounded,
   TimelineRounded,
 } from "@mui/icons-material";
-import { Box, Tabs, Tab, Container } from "@mui/material";
+import { Box, Tabs, Tab, Container, Avatar, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { HomeTab } from "./HomeTab";
 import { StatsTab } from "./StatsTab";
 
 export const HomePage = () => {
+  const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -20,6 +23,24 @@ export const HomePage = () => {
 
   return (
     <Box>
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: 16,
+          paddingBottom: 0,
+        }}
+      >
+        <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <Avatar alt="Remy Sharp" src="" />
+          <Typography>Luka</Typography>
+        </Box>
+        <SettingsRounded
+          onClick={() => {
+            navigate("/setting");
+          }}
+        />
+      </Box>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
