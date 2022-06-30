@@ -15,6 +15,7 @@ import {
   DialogTitle,
   FormControl,
   IconButton,
+  InputLabel,
   List,
   ListItem,
   ListItemAvatar,
@@ -201,12 +202,10 @@ export const DiapersPage = () => {
         </DialogTitle>
         <DialogContent>
           <Box style={{ display: "flex" }}>
-            <Typography variant="body1" component="p">
-              Date
-            </Typography>
-
             <MobileDateTimePicker
-              openTo="hours"
+              showToolbar
+              label="Date"
+              // openTo="hours"
               value={date}
               onChange={(newValue) => {
                 setDate(newValue ?? "");
@@ -218,10 +217,10 @@ export const DiapersPage = () => {
           </Box>
 
           <Box style={{ display: "flex" }}>
-            <Typography variant="body1" component="p">
-              Type
-            </Typography>
             <FormControl variant="standard" fullWidth>
+              <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                Type
+              </InputLabel>
               <Select value={type} onChange={(e) => setType(e.target.value)}>
                 <MenuItem value={"pee"}>Pee</MenuItem>
                 <MenuItem value={"poo"}>Poo</MenuItem>
@@ -231,11 +230,8 @@ export const DiapersPage = () => {
           </Box>
 
           <Box style={{ display: "flex" }}>
-            <Typography variant="body1" component="p">
-              Details
-            </Typography>
-
             <TextField
+              label="Details"
               id="standard-basic"
               variant="standard"
               fullWidth

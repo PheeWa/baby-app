@@ -16,6 +16,7 @@ import {
   Button,
   Input,
   InputAdornment,
+  InputLabel,
 } from "@mui/material";
 
 import React, { useEffect, useState } from "react";
@@ -74,12 +75,10 @@ export const HealthDialog = (props: Props) => {
       </DialogTitle>
       <DialogContent>
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Date
-          </Typography>
-
           <MobileDateTimePicker
-            openTo="hours"
+            label="Date"
+            showToolbar
+            // openTo="hours"
             value={date}
             onChange={(newValue) => {
               setDate(newValue ?? "");
@@ -91,10 +90,10 @@ export const HealthDialog = (props: Props) => {
         </Box>
 
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Type
-          </Typography>
           <FormControl variant="standard" fullWidth>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Type
+            </InputLabel>
             <Select
               value={type}
               onChange={(e) => {
@@ -110,10 +109,13 @@ export const HealthDialog = (props: Props) => {
 
         {type === "temperature" ? (
           <Box style={{ display: "flex" }}>
-            <Typography variant="body1" component="p">
+            {/* <Typography variant="body1" component="p">
               Value
-            </Typography>
+            </Typography> */}
             <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
+              <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                Value
+              </InputLabel>
               <Input
                 id="filled-adornment-weight"
                 value={value}
@@ -134,11 +136,8 @@ export const HealthDialog = (props: Props) => {
         ) : null}
 
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Details
-          </Typography>
-
           <TextField
+            label="Details"
             id="standard-basic"
             variant="standard"
             fullWidth

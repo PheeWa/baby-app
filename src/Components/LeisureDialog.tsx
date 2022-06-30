@@ -13,6 +13,7 @@ import {
   MenuItem,
   DialogActions,
   Button,
+  InputLabel,
 } from "@mui/material";
 import { type } from "@testing-library/user-event/dist/type";
 import React, { useEffect, useState } from "react";
@@ -74,12 +75,10 @@ export const LeisureDialog = (props: Props) => {
       </DialogTitle>
       <DialogContent>
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Start
-          </Typography>
-
           <MobileDateTimePicker
-            openTo="hours"
+            label="Start"
+            showToolbar
+            // openTo="hours"
             value={start}
             onChange={(newValue) => {
               setStart(newValue ?? "");
@@ -90,12 +89,10 @@ export const LeisureDialog = (props: Props) => {
           />
         </Box>
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Finish
-          </Typography>
-
           <MobileDateTimePicker
-            openTo="hours"
+            label="Finish"
+            showToolbar
+            // openTo="hours"
             value={finish}
             onChange={(newValue) => {
               setFinish(newValue ?? "");
@@ -107,10 +104,10 @@ export const LeisureDialog = (props: Props) => {
         </Box>
 
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Type
-          </Typography>
           <FormControl variant="standard" fullWidth>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Type
+            </InputLabel>
             <Select
               value={type}
               onChange={(e) => {
@@ -126,11 +123,8 @@ export const LeisureDialog = (props: Props) => {
         </Box>
 
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Details
-          </Typography>
-
           <TextField
+            label="Details"
             id="standard-basic"
             variant="standard"
             fullWidth

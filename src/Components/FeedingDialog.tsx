@@ -13,6 +13,7 @@ import {
   MenuItem,
   DialogActions,
   Button,
+  InputLabel,
 } from "@mui/material";
 import { subMinutes } from "date-fns";
 import React, { useEffect, useState } from "react";
@@ -75,13 +76,11 @@ export const FeedingDialog = (props: Props) => {
       </DialogTitle>
       <DialogContent>
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Start
-          </Typography>
-
           <MobileDateTimePicker
-            openTo="hours"
+            // openTo="hours"
+            label="Start"
             value={start}
+            showToolbar
             onChange={(newValue) => {
               setStart(new Date(newValue ?? Date()).toString());
             }}
@@ -91,13 +90,11 @@ export const FeedingDialog = (props: Props) => {
           />
         </Box>
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Finish
-          </Typography>
-
           <MobileDateTimePicker
-            openTo="hours"
+            label="Finish"
+            // openTo="hours"
             value={finish}
+            showToolbar
             onChange={(newValue) => {
               setFinish(new Date(newValue ?? Date()).toString());
             }}
@@ -108,11 +105,15 @@ export const FeedingDialog = (props: Props) => {
         </Box>
 
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Type
-          </Typography>
           <FormControl variant="standard" fullWidth>
-            <Select value={type} onChange={(e) => setType(e.target.value)}>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Type
+            </InputLabel>
+            <Select
+              // label="Type"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            >
               <MenuItem value={"left breast"}>Left Breast</MenuItem>
               <MenuItem value={"right breast"}>Right Breast</MenuItem>
               <MenuItem value={"bottle"}>Bottle</MenuItem>
@@ -124,11 +125,8 @@ export const FeedingDialog = (props: Props) => {
         {type === "bottle" ? (
           <Box>
             <Box style={{ display: "flex" }}>
-              <Typography variant="body1" component="p">
-                Amount
-              </Typography>
-
               <TextField
+                label="Amount"
                 id="standard-basic"
                 variant="standard"
                 fullWidth
@@ -139,10 +137,10 @@ export const FeedingDialog = (props: Props) => {
             </Box>
 
             <Box style={{ display: "flex" }}>
-              <Typography variant="body1" component="p">
-                Contents
-              </Typography>
               <FormControl variant="standard" fullWidth>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Contents
+                </InputLabel>
                 <Select
                   value={contents}
                   onChange={(e) => setContents(e.target.value)}
@@ -155,11 +153,8 @@ export const FeedingDialog = (props: Props) => {
           </Box>
         ) : null}
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Details
-          </Typography>
-
           <TextField
+            label="Details"
             id="standard-basic"
             variant="standard"
             fullWidth

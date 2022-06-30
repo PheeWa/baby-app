@@ -34,7 +34,6 @@ import {
   YAxis,
 } from "recharts";
 import { RootState } from "../Store/store";
-import { Feeding, formatDuration } from "./FeedPage";
 import { Leisure } from "./LeisurePage";
 import { Sleep } from "./SleepPage";
 import { formatSeconds } from "./StatsFeeding";

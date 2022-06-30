@@ -16,8 +16,10 @@ import {
   addSeconds,
   differenceInSeconds,
   format,
+  startOfYear,
   subMinutes,
 } from "date-fns";
+import { differenceInMinutes } from "date-fns/esm";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FeedingDialog } from "../Components/FeedingDialog";
@@ -47,18 +49,28 @@ export type FeedingType = "left breast" | "right breast" | "bottle" | "meal";
 export const formatDuration = (start: string, finish: string) => {
   const diff = differenceInSeconds(new Date(finish), new Date(start));
 
-  const date = addSeconds(new Date(0), diff);
+  const date = addSeconds(startOfYear(new Date()), diff);
   const x = addHours(date, 12);
   if (diff < 60) {
     return format(x, "ss's'");
   } else if (diff < 3600) {
-    return format(x, "m'm'ss's'");
+    return format(x, "m'm'");
+  } else if (diff < 86400) {
+    return format(x, "H'h'mm'm'");
   }
-  return format(x, "H'h'mm'm'");
+  return format(x, "D'd'H'h'", {
+    useAdditionalDayOfYearTokens: true,
+  });
 };
 
 export const FeedPage = () => {
-  const feedings = useSelector((state: RootState) => state.feed.feedings);
+  const feedingsList = useSelector((state: RootState) => {
+    return [...state.feed.feedings].sort((a, b) => {
+      if (+new Date(a.start) < +new Date(b.start)) {
+        return 1;
+      } else return -1;
+    });
+  });
 
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
   const dispatch = useDispatch();
@@ -168,34 +180,64 @@ export const FeedPage = () => {
 
       <Box>
         <List dense={true}>
-          {feedings.map((feeding: Feeding) => {
+          {feedingsList.map((feeding: Feeding, i: number) => {
             const text = `${format(
               new Date(feeding.start),
               "p"
             )}, ${formatDuration(feeding.start, feeding.finish)}, ${
               feeding.type
             }`;
+            const diff = formatDuration(
+              feedingsList[i].finish,
+              feedingsList[i - 1]?.start ?? Date()
+            );
+            const showDiff = differenceInSeconds(
+              new Date(feedingsList[i - 1]?.start ?? Date()),
+              new Date(feedingsList[i].finish)
+            );
+            if (i === 0) {
+              console.log("hahaha", showDiff);
+            }
 
             return (
-              <ListItem
-                key={feeding.id}
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleEdit(feeding)}
+              <>
+                {showDiff > 3600 && (
+                  <ListItem
+                    key={feeding.id + "-showDiff"}
+                    style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
-                    <MoreVertRounded />
-                  </IconButton>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={text} secondary={feeding.details} />
-              </ListItem>
+                    <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      style={{ marginTop: 0, marginBottom: 0 }}
+                      // primary={text}
+                      secondary={diff}
+                    />
+                  </ListItem>
+                )}
+                <ListItem
+                  key={feeding.id}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleEdit(feeding)}
+                    >
+                      <MoreVertRounded />
+                    </IconButton>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={text} secondary={feeding.details} />
+                </ListItem>
+              </>
             );
           })}
         </List>

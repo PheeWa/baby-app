@@ -64,13 +64,11 @@ export const SleepDialog = (props: Props) => {
       </DialogTitle>
       <DialogContent>
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Start
-          </Typography>
-
           <MobileDateTimePicker
-            openTo="hours"
+            // openTo="hours"
+            label="Start"
             value={start}
+            showToolbar
             onChange={(newValue) => {
               setStart(newValue ?? "");
             }}
@@ -80,13 +78,11 @@ export const SleepDialog = (props: Props) => {
           />
         </Box>
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Finish
-          </Typography>
-
           <MobileDateTimePicker
-            openTo="hours"
+            label="Finish"
+            // openTo="hours"
             value={finish}
+            showToolbar
             onChange={(newValue) => {
               setFinish(newValue ?? "");
             }}
@@ -97,11 +93,8 @@ export const SleepDialog = (props: Props) => {
         </Box>
 
         <Box style={{ display: "flex" }}>
-          <Typography variant="body1" component="p">
-            Details
-          </Typography>
-
           <TextField
+            label="Details"
             id="standard-basic"
             variant="standard"
             fullWidth

@@ -23,7 +23,7 @@ export const HomePage = () => {
 
   return (
     <Box>
-      <Box
+      {/* <Box
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -40,7 +40,7 @@ export const HomePage = () => {
             navigate("/setting");
           }}
         />
-      </Box>
+      </Box> */}
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}

@@ -40,7 +40,13 @@ export type Sleep = {
   details: string;
 };
 export const SleepPage = () => {
-  const sleeps = useSelector((state: RootState) => state.sleep.sleeps);
+  const sleepsList = useSelector((state: RootState) => {
+    return [...state.sleep.sleeps].sort((a, b) => {
+      if (+new Date(a.start) < +new Date(b.start)) {
+        return 1;
+      } else return -1;
+    });
+  });
 
   const sleepStopwatch = useSelector(
     (state: RootState) => state.sleep.sleepStopwatch
@@ -123,32 +129,53 @@ export const SleepPage = () => {
       {sleepStopwatch.isRunning ? <SleepStopWatch onSave={onSave} /> : null}
       <Box>
         <List dense={true}>
-          {sleeps.map((sleep: any) => {
+          {sleepsList.map((sleep: any, i: number) => {
             const text = `${format(
               new Date(sleep.start),
               "p"
             )}, ${formatDuration(sleep.start, sleep.finish)},${sleep.type}
             `;
+            const diff = formatDuration(
+              sleepsList[i].finish,
+              sleepsList[i - 1]?.start ?? Date()
+            );
 
             return (
-              <ListItem
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleEditOpen(sleep)}
-                  >
-                    <MoreVertRounded />
-                  </IconButton>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={text} secondary={sleep.details} />
-              </ListItem>
+              <>
+                <ListItem
+                  key={sleep.id + "-showDiff"}
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                >
+                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    style={{ marginTop: 0, marginBottom: 0 }}
+                    // primary={text}
+                    secondary={diff}
+                  />
+                </ListItem>
+                <ListItem
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleEditOpen(sleep)}
+                    >
+                      <MoreVertRounded />
+                    </IconButton>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={text} secondary={sleep.details} />
+                </ListItem>
+              </>
             );
           })}
         </List>
