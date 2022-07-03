@@ -26,7 +26,7 @@ import {
   Typography,
 } from "@mui/material";
 import { type } from "@testing-library/user-event/dist/type";
-import { format, set } from "date-fns";
+import { format, isSameDay, isToday, isYesterday, set } from "date-fns";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { start } from "repl";
@@ -39,6 +39,7 @@ import {
   recordDiaper,
 } from "../Store/diaperSlice";
 import { RootState } from "../Store/store";
+import { formatDuration } from "./FeedPage";
 
 export type Diaper = {
   id: number;
@@ -50,7 +51,13 @@ export type Diaper = {
 type DiaperType = "pee" | "poo" | "pee & poo";
 
 export const DiapersPage = () => {
-  const diapers = useSelector((state: RootState) => state.diaper.diapers);
+  const diapersList = useSelector((state: RootState) => {
+    return [...state.diaper.diapers].sort((a, b) => {
+      if (+new Date(a.start) < +new Date(b.start)) {
+        return 1;
+      } else return -1;
+    });
+  });
   const dispatch = useDispatch();
 
   //usetates//
@@ -250,31 +257,78 @@ export const DiapersPage = () => {
 
       <Box>
         <List dense={true}>
-          {diapers.map((diaper) => {
+          {diapersList.map((diaper, i: number) => {
             const text = `${format(new Date(diaper.start), "p")}`;
+            const diff = formatDuration(
+              diapersList[i].start,
+              diapersList[i - 1]?.start ?? Date()
+            );
+            // console.log("hahahha", diff);
+            const dates = () => {
+              if (isToday(new Date(diapersList[i].start))) {
+                return "Today";
+              } else if (isYesterday(new Date(diapersList[i].start))) {
+                return "Yesterday";
+              } else {
+                return format(new Date(diapersList[i].start), "LLL d EEEE");
+              }
+            };
+            const isSameDate = isSameDay(
+              new Date(diapersList[i - 1]?.start ?? Date()),
+              new Date(diapersList[i].start)
+            );
 
             return (
-              <ListItem
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => onEdit(diaper)}
+              <>
+                {!isSameDate && (
+                  <ListItem
+                    key={diaper.id + "showdates"}
+                    style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
-                    <MoreVertRounded />
-                  </IconButton>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={`${text} ,${diaper.type}`}
-                  secondary={diaper.details}
-                />
-              </ListItem>
+                    <ListItemText
+                      style={{ marginTop: 0, marginBottom: 0 }}
+                      primary={dates()}
+                      // secondary={diff}
+                    />
+                  </ListItem>
+                )}
+                <ListItem
+                  key={diaper.id + "-showDiff"}
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                >
+                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    style={{ marginTop: 0, marginBottom: 0 }}
+                    // primary={text}
+                    secondary={diff}
+                  />
+                </ListItem>
+                <ListItem
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => onEdit(diaper)}
+                    >
+                      <MoreVertRounded />
+                    </IconButton>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${text} ,${diaper.type}`}
+                    secondary={diaper.details}
+                  />
+                </ListItem>
+              </>
             );
           })}
         </List>

@@ -12,13 +12,14 @@ import {
 } from "@mui/material";
 
 import { time } from "console";
-import { format } from "date-fns";
+import { format, isSameDay, isToday, isYesterday } from "date-fns";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getLabel, getUnit, GrowthDialog } from "../Components/GrowthDialog";
 import { Header } from "../Components/Header";
 import { addGrowth, deleteGrowth, editGrowth } from "../Store/growthSlice";
 import { RootState } from "../Store/store";
+import { formatDuration } from "./FeedPage";
 
 export type Growth = {
   id: number;
@@ -30,7 +31,13 @@ export type Growth = {
 export type GrowthType = "weight" | "height" | "head";
 
 export const GrowthPage = () => {
-  const growths = useSelector((state: RootState) => state.growth.growths);
+  const growthsList = useSelector((state: RootState) => {
+    return [...state.growth.growths].sort((a, b) => {
+      if (+new Date(a.start) < +new Date(b.start)) {
+        return 1;
+      } else return -1;
+    });
+  });
   const dispatch = useDispatch();
 
   //usestate//
@@ -133,32 +140,79 @@ export const GrowthPage = () => {
 
       <Box>
         <List dense={true}>
-          {growths.map((growth) => {
+          {growthsList.map((growth, i: number) => {
             const text = `${format(new Date(growth.start), "p")}`;
+            const diff = formatDuration(
+              growthsList[i].start,
+              growthsList[i - 1]?.start ?? Date()
+            );
+
+            const dates = () => {
+              if (isToday(new Date(growthsList[i].start))) {
+                return "Today";
+              } else if (isYesterday(new Date(growthsList[i].start))) {
+                return "Yesterday";
+              } else {
+                return format(new Date(growthsList[i].start), "LLL d EEEE");
+              }
+            };
+            const isSameDate = isSameDay(
+              new Date(growthsList[i - 1]?.start ?? Date()),
+              new Date(growthsList[i].start)
+            );
 
             return (
-              <ListItem
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleEdit(growth)}
+              <>
+                {!isSameDate && (
+                  <ListItem
+                    key={growth.id + "showdates"}
+                    style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
-                    <MoreVertRounded />
-                  </IconButton>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={`${text} ,${getLabel(growth.type)},${
-                    growth.value
-                  }${getUnit(growth.type)}`}
-                />
-              </ListItem>
+                    <ListItemText
+                      style={{ marginTop: 0, marginBottom: 0 }}
+                      primary={dates()}
+                      // secondary={diff}
+                    />
+                  </ListItem>
+                )}
+                <ListItem
+                  key={growth.id + "-showDiff"}
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                >
+                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    style={{ marginTop: 0, marginBottom: 0 }}
+                    // primary={text}
+                    secondary={diff}
+                  />
+                </ListItem>
+                <ListItem
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleEdit(growth)}
+                    >
+                      <MoreVertRounded />
+                    </IconButton>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${text} ,${getLabel(growth.type)},${
+                      growth.value
+                    }${getUnit(growth.type)}`}
+                  />
+                </ListItem>
+              </>
             );
           })}
         </List>

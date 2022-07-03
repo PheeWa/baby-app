@@ -16,6 +16,10 @@ import {
   addSeconds,
   differenceInSeconds,
   format,
+  getDate,
+  isSameDay,
+  isToday,
+  isYesterday,
   startOfYear,
   subMinutes,
 } from "date-fns";
@@ -48,17 +52,15 @@ export type FeedingType = "left breast" | "right breast" | "bottle" | "meal";
 
 export const formatDuration = (start: string, finish: string) => {
   const diff = differenceInSeconds(new Date(finish), new Date(start));
-
   const date = addSeconds(startOfYear(new Date()), diff);
-  const x = addHours(date, 12);
   if (diff < 60) {
-    return format(x, "ss's'");
+    return format(date, "ss's'");
   } else if (diff < 3600) {
-    return format(x, "m'm'");
+    return format(date, "m'm'");
   } else if (diff < 86400) {
-    return format(x, "H'h'mm'm'");
+    return format(date, "H'h'mm'm'");
   }
-  return format(x, "D'd'H'h'", {
+  return format(date, "D'd'H'h'", {
     useAdditionalDayOfYearTokens: true,
   });
 };
@@ -195,12 +197,34 @@ export const FeedPage = () => {
               new Date(feedingsList[i - 1]?.start ?? Date()),
               new Date(feedingsList[i].finish)
             );
-            if (i === 0) {
-              console.log("hahaha", showDiff);
-            }
+            const dates = () => {
+              if (isToday(new Date(feedingsList[i].finish))) {
+                return "Today";
+              } else if (isYesterday(new Date(feedingsList[i].finish))) {
+                return "Yesterday";
+              } else {
+                return format(new Date(feedingsList[i].finish), "LLL d EEEE");
+              }
+            };
+            const isSameDate = isSameDay(
+              new Date(feedingsList[i - 1]?.finish ?? Date()),
+              new Date(feedingsList[i].finish)
+            );
 
             return (
               <>
+                {!isSameDate && (
+                  <ListItem
+                    key={feeding.id + "showdates"}
+                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                  >
+                    <ListItemText
+                      style={{ marginTop: 0, marginBottom: 0 }}
+                      primary={dates()}
+                      // secondary={diff}
+                    />
+                  </ListItem>
+                )}
                 {showDiff > 3600 && (
                   <ListItem
                     key={feeding.id + "-showDiff"}

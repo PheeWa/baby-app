@@ -39,6 +39,7 @@ export const TakePhotoPage = () => {
       <Webcam
         style={{ flex: "1", objectFit: "cover" }}
         ref={webcamRef}
+        videoConstraints={{ facingMode: "user" }}
       ></Webcam>
       <Box style={{ display: "flex", justifyContent: "space-around" }}>
         <IconButton size="large" onClick={goBack}>

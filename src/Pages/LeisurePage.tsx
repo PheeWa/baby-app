@@ -15,6 +15,9 @@ import {
   addSeconds,
   differenceInSeconds,
   format,
+  isSameDay,
+  isToday,
+  isYesterday,
   subMinutes,
 } from "date-fns";
 import React, { useState } from "react";
@@ -48,7 +51,13 @@ export const LeisurePage = () => {
 
   // functions are here//
 
-  const leisures = useSelector((state: RootState) => state.leisure.leisures);
+  const leisuresList = useSelector((state: RootState) => {
+    return [...state.leisure.leisures].sort((a, b) => {
+      if (+new Date(a.start) < +new Date(b.start)) {
+        return 1;
+      } else return -1;
+    });
+  });
   const stopwatch = useSelector((state: RootState) => state.leisure.stopwatch);
   const dispatch = useDispatch();
 
@@ -148,7 +157,7 @@ export const LeisurePage = () => {
 
       <Box>
         <List dense={true}>
-          {leisures.map((leisure: any) => {
+          {leisuresList.map((leisure: any, i: number) => {
             const text = `${format(
               new Date(leisure.start),
               "p"
@@ -156,25 +165,78 @@ export const LeisurePage = () => {
               leisure.type
             }`;
 
+            const diff = formatDuration(
+              leisuresList[i].finish,
+              leisuresList[i - 1]?.start ?? Date()
+            );
+
+            const dates = () => {
+              if (isToday(new Date(leisuresList[i].finish))) {
+                return "Today";
+              } else if (isYesterday(new Date(leisuresList[i].finish))) {
+                return "Yesterday";
+              } else {
+                return format(new Date(leisuresList[i].finish), "LLL d EEEE");
+              }
+            };
+            const isSameDate = isSameDay(
+              new Date(leisuresList[i - 1]?.finish ?? Date()),
+              new Date(leisuresList[i].finish)
+            );
+
             return (
-              <ListItem
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleEdit(leisure)}
+              <>
+                {!isSameDate && (
+                  <ListItem
+                    key={leisure.id + "showdates"}
+                    style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
-                    <MoreVertRounded />
-                  </IconButton>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={text} secondary={leisure.details} />
-              </ListItem>
+                    <ListItemText
+                      style={{ marginTop: 0, marginBottom: 0 }}
+                      primary={dates()}
+                      // secondary={diff}
+                    />
+                  </ListItem>
+                )}
+                <ListItem
+                  key={leisure.id + "-showDiff"}
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                >
+                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    style={{ marginTop: 0, marginBottom: 0 }}
+                    // primary={text}
+                    secondary={diff}
+                  />
+                </ListItem>
+                <ListItem
+                  key={leisure.id}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleEdit(leisure)}
+                    >
+                      <MoreVertRounded />
+                    </IconButton>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={text} secondary={leisure.details} />
+                  {/* <ListItemText
+                    primary={leisure.id}
+                    secondary={leisure.details}
+                  /> */}
+                </ListItem>
+              </>
             );
           })}
         </List>

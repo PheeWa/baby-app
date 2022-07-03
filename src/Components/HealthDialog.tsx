@@ -147,11 +147,7 @@ export const HealthDialog = (props: Props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button
-        // onClick={props.onClose}
-        >
-          Cancel
-        </Button>
+        <Button onClick={props.onClose}>Cancel</Button>
         <Button
           onClick={() => {
             props.onSave({

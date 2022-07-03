@@ -15,6 +15,9 @@ import {
   addSeconds,
   differenceInSeconds,
   format,
+  isSameDay,
+  isToday,
+  isYesterday,
   subMinutes,
 } from "date-fns";
 import React, { useState } from "react";
@@ -140,8 +143,34 @@ export const SleepPage = () => {
               sleepsList[i - 1]?.start ?? Date()
             );
 
+            const dates = () => {
+              if (isToday(new Date(sleepsList[i].finish))) {
+                return "Today";
+              } else if (isYesterday(new Date(sleepsList[i].finish))) {
+                return "Yesterday";
+              } else {
+                return format(new Date(sleepsList[i].finish), "LLL d EEEE");
+              }
+            };
+            const isSameDate = isSameDay(
+              new Date(sleepsList[i - 1]?.finish ?? Date()),
+              new Date(sleepsList[i].finish)
+            );
+
             return (
               <>
+                {!isSameDate && (
+                  <ListItem
+                    key={sleep.id + "showdates"}
+                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                  >
+                    <ListItemText
+                      style={{ marginTop: 0, marginBottom: 0 }}
+                      primary={dates()}
+                      // secondary={diff}
+                    />
+                  </ListItem>
+                )}
                 <ListItem
                   key={sleep.id + "-showDiff"}
                   style={{ paddingTop: 0, paddingBottom: 0 }}
