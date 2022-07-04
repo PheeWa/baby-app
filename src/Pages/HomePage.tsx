@@ -7,11 +7,21 @@ import {
   SettingsRounded,
   TimelineRounded,
 } from "@mui/icons-material";
-import { Box, Tabs, Tab, Container, Avatar, Typography } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Tab,
+  Container,
+  Avatar,
+  Typography,
+  createTheme,
+  ScopedCssBaseline,
+} from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeTab } from "./HomeTab";
 import { StatsTab } from "./StatsTab";
+import darkScrollbar from "@mui/material/darkScrollbar";
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -41,6 +51,7 @@ export const HomePage = () => {
           }}
         />
       </Box> */}
+
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}

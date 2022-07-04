@@ -74,7 +74,7 @@ export const HealthDialog = (props: Props) => {
         ) : null}
       </DialogTitle>
       <DialogContent>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             label="Date"
             showToolbar
@@ -89,7 +89,7 @@ export const HealthDialog = (props: Props) => {
           />
         </Box>
 
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <FormControl variant="standard" fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
               Type
@@ -117,6 +117,7 @@ export const HealthDialog = (props: Props) => {
                 Value
               </InputLabel>
               <Input
+                fullWidth
                 id="filled-adornment-weight"
                 value={value}
                 type="number"
@@ -135,7 +136,7 @@ export const HealthDialog = (props: Props) => {
           </Box>
         ) : null}
 
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <TextField
             label="Details"
             id="standard-basic"

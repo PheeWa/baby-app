@@ -69,7 +69,7 @@ export const SleepStopWatch = (props: Props) => {
       >
         <Button
           variant="contained"
-          color="secondary"
+          // color="secondary"
           startIcon={<ForkLeftRounded />}
         >
           Sleep
@@ -86,7 +86,7 @@ export const SleepStopWatch = (props: Props) => {
         <IconButton
           size="large"
           edge="start"
-          color={sleepStopwatch.isEdit ? "secondary" : "inherit"}
+          color={sleepStopwatch.isEdit ? "primary" : "inherit"}
           aria-label="menu"
           onClick={() =>
             dispatch(
@@ -103,6 +103,7 @@ export const SleepStopWatch = (props: Props) => {
 
       {sleepStopwatch.isEdit === true ? (
         <TextField
+          label="Optional details"
           id="standard-basic"
           variant="standard"
           fullWidth
@@ -119,9 +120,10 @@ export const SleepStopWatch = (props: Props) => {
       ) : null}
 
       <Button
+        style={{ marginTop: "16px" }}
         fullWidth
         variant="contained"
-        color="secondary"
+        // color="secondary"
         onClick={() => {
           props.onSave({
             start: subSeconds(new Date(), sleepStopwatch.time).toString(),

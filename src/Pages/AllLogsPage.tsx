@@ -10,10 +10,14 @@ import {
 } from "@mui/material";
 import { format } from "date-fns";
 import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
 import { text } from "stream/consumers";
+import { EndMessage } from "../Components/EndMessage";
 import { getLabel, getUnit } from "../Components/GrowthDialog";
 import { Header } from "../Components/Header";
+import { ScrollLoader } from "../Components/ScrollLoader";
+import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { RootState } from "../Store/store";
 import { Diaper } from "./DiapersPage";
 import { Feeding, formatDuration } from "./FeedPage";
@@ -47,113 +51,124 @@ export const AllLogsPage = () => {
       return 1;
     }
   });
+  const { limit, fetchData, slicedList, dataLength, hasMore } =
+    useInfiniteScroll(allLogs);
 
   return (
     <Box>
       <Header title="All logs" />
       <List>
-        {allLogs.map((log) => {
-          if (
-            log.type === "meal" ||
-            log.type === "left breast" ||
-            log.type === "right breast" ||
-            log.type === "bottle" ||
-            log.type === "tummy time" ||
-            log.type === "play time" ||
-            log.type === "outdoors" ||
-            log.type === "bath time" ||
-            log.type === "Sleep"
-          ) {
-            const logx = log as Feeding;
-            const textFSL = `${format(
-              new Date(log.start),
-              "p"
-            )}, ${formatDuration(logx.start, logx.finish)}, ${logx.type}, ${
-              logx.details
-            }`;
+        <InfiniteScroll
+          dataLength={dataLength}
+          next={fetchData}
+          hasMore={hasMore}
+          loader={<ScrollLoader />}
+          endMessage={<EndMessage />}
+        >
+          {slicedList.map((log) => {
+            if (
+              log.type === "meal" ||
+              log.type === "left breast" ||
+              log.type === "right breast" ||
+              log.type === "bottle" ||
+              log.type === "tummy time" ||
+              log.type === "play time" ||
+              log.type === "outdoors" ||
+              log.type === "bath time" ||
+              log.type === "Sleep"
+            ) {
+              const logx = log as Feeding;
+              const textFSL = `${format(
+                new Date(log.start),
+                "p"
+              )}, ${formatDuration(logx.start, logx.finish)}, ${logx.type}, ${
+                logx.details
+              }`;
 
-            return (
-              <ListItem
-              // key={feeding.id}
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={textFSL} />
-              </ListItem>
-            );
-          } else if (
-            log.type === "pee" ||
-            log.type === "poo" ||
-            log.type === "pee & poo"
-          ) {
-            const logy = log as Diaper;
-            const textDiaper = `${format(new Date(logy.start), "p")},${
-              logy.type
-            },${logy.details}`;
-            return (
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={textDiaper} />
-              </ListItem>
-            );
-          }
-          if (
-            log.type === "weight" ||
-            log.type === "height" ||
-            log.type === "head"
-          ) {
-            const logG = log as Growth;
-            const textGrowth = `${format(new Date(logG.start), "p")},${getLabel(
-              logG.type
-            )},${logG.value}${getUnit(logG.type)}`;
-            return (
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={textGrowth} />
-              </ListItem>
-            );
-          } else if (
-            log.type === "medication" ||
-            log.type === "temperature" ||
-            log.type === "vaccination"
-          ) {
-            const logH = log as Health;
-            const textHealth = `${format(new Date(logH.start), "p")}`;
-            const showValue = () => {
-              if (logH.value) {
-                return `${logH.value} °C`;
-              } else {
-                return "";
-              }
-            };
+              return (
+                <ListItem
+                // key={feeding.id}
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={textFSL} />
+                </ListItem>
+              );
+            } else if (
+              log.type === "pee" ||
+              log.type === "poo" ||
+              log.type === "pee & poo"
+            ) {
+              const logy = log as Diaper;
+              const textDiaper = `${format(new Date(logy.start), "p")},${
+                logy.type
+              },${logy.details}`;
+              return (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={textDiaper} />
+                </ListItem>
+              );
+            }
+            if (
+              log.type === "weight" ||
+              log.type === "height" ||
+              log.type === "head"
+            ) {
+              const logG = log as Growth;
+              const textGrowth = `${format(
+                new Date(logG.start),
+                "p"
+              )},${getLabel(logG.type)},${logG.value}${getUnit(logG.type)}`;
+              return (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={textGrowth} />
+                </ListItem>
+              );
+            } else if (
+              log.type === "medication" ||
+              log.type === "temperature" ||
+              log.type === "vaccination"
+            ) {
+              const logH = log as Health;
+              const textHealth = `${format(new Date(logH.start), "p")}`;
+              const showValue = () => {
+                if (logH.value) {
+                  return `${logH.value} °C`;
+                } else {
+                  return "";
+                }
+              };
 
-            return (
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <MoreVertRounded />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={`${textHealth}, ${logH.type} ${showValue()},${
-                    logH.details
-                  }`}
-                />
-              </ListItem>
-            );
-          }
-        })}
+              return (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MoreVertRounded />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${textHealth}, ${logH.type} ${showValue()},${
+                      logH.details
+                    }`}
+                  />
+                </ListItem>
+              );
+            }
+          })}
+        </InfiniteScroll>
       </List>
     </Box>
   );

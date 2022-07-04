@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Container,
   IconButton,
   List,
@@ -25,10 +26,14 @@ import {
 } from "date-fns";
 import { differenceInMinutes } from "date-fns/esm";
 import { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
+import { EndMessage } from "../Components/EndMessage";
 import { FeedingDialog } from "../Components/FeedingDialog";
 import { Header } from "../Components/Header";
+import { ScrollLoader } from "../Components/ScrollLoader";
 import { StopWatch } from "../Components/StopWatch";
+import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import {
   addFeed,
   deleteFeed,
@@ -68,11 +73,14 @@ export const formatDuration = (start: string, finish: string) => {
 export const FeedPage = () => {
   const feedingsList = useSelector((state: RootState) => {
     return [...state.feed.feedings].sort((a, b) => {
-      if (+new Date(a.start) < +new Date(b.start)) {
+      if (+new Date(a.finish) < +new Date(b.finish)) {
         return 1;
       } else return -1;
     });
   });
+
+  const { limit, fetchData, slicedList, dataLength, hasMore } =
+    useInfiniteScroll(feedingsList);
 
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
   const dispatch = useDispatch();
@@ -129,6 +137,8 @@ export const FeedPage = () => {
     setSelectedFeeding(undefined);
   };
 
+  // setItems(Math.random() > 0.5 ?[...items, 1, 2, 3, 4, 5] : []);
+
   return (
     <Box>
       <Header handleClickOpen={handleClickOpen} title={"Feeding"} />
@@ -141,7 +151,7 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("left breast"))}
             >
@@ -150,7 +160,7 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("right breast"))}
             >
@@ -161,7 +171,7 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("bottle"))}
             >
@@ -170,7 +180,7 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("meal"))}
             >
@@ -182,88 +192,96 @@ export const FeedPage = () => {
 
       <Box>
         <List dense={true}>
-          {feedingsList.map((feeding: Feeding, i: number) => {
-            const text = `${format(
-              new Date(feeding.start),
-              "p"
-            )}, ${formatDuration(feeding.start, feeding.finish)}, ${
-              feeding.type
-            }`;
-            const diff = formatDuration(
-              feedingsList[i].finish,
-              feedingsList[i - 1]?.start ?? Date()
-            );
-            const showDiff = differenceInSeconds(
-              new Date(feedingsList[i - 1]?.start ?? Date()),
-              new Date(feedingsList[i].finish)
-            );
-            const dates = () => {
-              if (isToday(new Date(feedingsList[i].finish))) {
-                return "Today";
-              } else if (isYesterday(new Date(feedingsList[i].finish))) {
-                return "Yesterday";
-              } else {
-                return format(new Date(feedingsList[i].finish), "LLL d EEEE");
-              }
-            };
-            const isSameDate = isSameDay(
-              new Date(feedingsList[i - 1]?.finish ?? Date()),
-              new Date(feedingsList[i].finish)
-            );
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={fetchData}
+            hasMore={hasMore}
+            loader={<ScrollLoader />}
+            endMessage={<EndMessage />}
+          >
+            {slicedList.map((feeding: Feeding, i: number) => {
+              const text = `${format(
+                new Date(feeding.start),
+                "p"
+              )}, ${formatDuration(feeding.start, feeding.finish)}, ${
+                feeding.type
+              }`;
+              const diff = formatDuration(
+                slicedList[i].finish,
+                slicedList[i - 1]?.start ?? Date()
+              );
+              const showDiff = differenceInSeconds(
+                new Date(slicedList[i - 1]?.start ?? Date()),
+                new Date(slicedList[i].finish)
+              );
+              const dates = () => {
+                if (isToday(new Date(slicedList[i].finish))) {
+                  return "Today";
+                } else if (isYesterday(new Date(slicedList[i].finish))) {
+                  return "Yesterday";
+                } else {
+                  return format(new Date(slicedList[i].finish), "LLL d EEEE");
+                }
+              };
+              const isSameDate = isSameDay(
+                new Date(slicedList[i - 1]?.finish ?? Date()),
+                new Date(slicedList[i].finish)
+              );
 
-            return (
-              <>
-                {!isSameDate && (
+              return (
+                <>
+                  {!isSameDate && (
+                    <ListItem
+                      key={feeding.id + "showdates"}
+                      style={{ paddingTop: 30, paddingBottom: 10 }}
+                    >
+                      <ListItemText
+                        style={{ marginTop: 0, marginBottom: 0 }}
+                        primary={dates()}
+                        // secondary={diff}
+                      />
+                    </ListItem>
+                  )}
+                  {showDiff > 3600 && (
+                    <ListItem
+                      key={feeding.id + "-showDiff"}
+                      style={{ paddingTop: 0, paddingBottom: 0 }}
+                    >
+                      <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                        <Avatar>
+                          <MoreVertRounded />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        style={{ marginTop: 0, marginBottom: 0 }}
+                        // primary={text}
+                        secondary={diff}
+                      />
+                    </ListItem>
+                  )}
                   <ListItem
-                    key={feeding.id + "showdates"}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                    key={feeding.id}
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleEdit(feeding)}
+                      >
+                        <MoreVertRounded />
+                      </IconButton>
+                    }
                   >
-                    <ListItemText
-                      style={{ marginTop: 0, marginBottom: 0 }}
-                      primary={dates()}
-                      // secondary={diff}
-                    />
-                  </ListItem>
-                )}
-                {showDiff > 3600 && (
-                  <ListItem
-                    key={feeding.id + "-showDiff"}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
-                  >
-                    <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                    <ListItemAvatar>
                       <Avatar>
                         <MoreVertRounded />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText
-                      style={{ marginTop: 0, marginBottom: 0 }}
-                      // primary={text}
-                      secondary={diff}
-                    />
+                    <ListItemText primary={text} secondary={feeding.details} />
                   </ListItem>
-                )}
-                <ListItem
-                  key={feeding.id}
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleEdit(feeding)}
-                    >
-                      <MoreVertRounded />
-                    </IconButton>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={text} secondary={feeding.details} />
-                </ListItem>
-              </>
-            );
-          })}
+                </>
+              );
+            })}
+          </InfiniteScroll>
         </List>
       </Box>
       <FeedingDialog

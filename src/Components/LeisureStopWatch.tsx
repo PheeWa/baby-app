@@ -93,7 +93,7 @@ export const LeisureStopWatch = (props: Props) => {
         <Button
           //   fullWidth
           variant="contained"
-          color="secondary"
+          // color="secondary"
           startIcon={<ForkLeftRounded />}
         >
           {getLeisureText(stopwatch.type)}
@@ -110,7 +110,7 @@ export const LeisureStopWatch = (props: Props) => {
         <IconButton
           size="large"
           edge="start"
-          color={stopwatch.isEdit ? "secondary" : "inherit"}
+          color={stopwatch.isEdit ? "primary" : "inherit"}
           aria-label="menu"
           //   sx={{ mr: 2 }}
           onClick={() =>
@@ -139,8 +139,9 @@ export const LeisureStopWatch = (props: Props) => {
 
       <Button
         fullWidth
+        style={{ marginTop: "16px" }}
         variant="contained"
-        color="secondary"
+        // color="secondary"
         // startIcon={<ForkLeftRounded />}
         onClick={() => {
           props.onSave({

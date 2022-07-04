@@ -14,9 +14,13 @@ import {
 import { time } from "console";
 import { format, isSameDay, isToday, isYesterday } from "date-fns";
 import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
+import { EndMessage } from "../Components/EndMessage";
 import { getLabel, getUnit, GrowthDialog } from "../Components/GrowthDialog";
 import { Header } from "../Components/Header";
+import { ScrollLoader } from "../Components/ScrollLoader";
+import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { addGrowth, deleteGrowth, editGrowth } from "../Store/growthSlice";
 import { RootState } from "../Store/store";
 import { formatDuration } from "./FeedPage";
@@ -38,6 +42,10 @@ export const GrowthPage = () => {
       } else return -1;
     });
   });
+  //Hooks//
+
+  const { limit, fetchData, slicedList, dataLength, hasMore } =
+    useInfiniteScroll(growthsList);
   const dispatch = useDispatch();
 
   //usestate//
@@ -103,7 +111,7 @@ export const GrowthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => createNewGrowth("weight")}
           >
@@ -112,7 +120,7 @@ export const GrowthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => createNewGrowth("height")}
           >
@@ -123,7 +131,7 @@ export const GrowthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => createNewGrowth("head")}
           >
@@ -138,83 +146,95 @@ export const GrowthPage = () => {
         onDelete={onDelete}
       />
 
-      <Box>
+      <Box
+        style={{
+          marginTop: "16px",
+        }}
+      >
         <List dense={true}>
-          {growthsList.map((growth, i: number) => {
-            const text = `${format(new Date(growth.start), "p")}`;
-            const diff = formatDuration(
-              growthsList[i].start,
-              growthsList[i - 1]?.start ?? Date()
-            );
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={fetchData}
+            hasMore={hasMore}
+            loader={<ScrollLoader />}
+            endMessage={<EndMessage />}
+          >
+            {slicedList.map((growth, i: number) => {
+              const text = `${format(new Date(growth.start), "p")}`;
+              const diff = formatDuration(
+                slicedList[i].start,
+                slicedList[i - 1]?.start ?? Date()
+              );
 
-            const dates = () => {
-              if (isToday(new Date(growthsList[i].start))) {
-                return "Today";
-              } else if (isYesterday(new Date(growthsList[i].start))) {
-                return "Yesterday";
-              } else {
-                return format(new Date(growthsList[i].start), "LLL d EEEE");
-              }
-            };
-            const isSameDate = isSameDay(
-              new Date(growthsList[i - 1]?.start ?? Date()),
-              new Date(growthsList[i].start)
-            );
+              const dates = () => {
+                if (isToday(new Date(slicedList[i].start))) {
+                  return "Today";
+                } else if (isYesterday(new Date(slicedList[i].start))) {
+                  return "Yesterday";
+                } else {
+                  return format(new Date(slicedList[i].start), "LLL d EEEE");
+                }
+              };
+              const isSameDate = isSameDay(
+                new Date(slicedList[i - 1]?.start ?? Date()),
+                new Date(slicedList[i].start)
+              );
 
-            return (
-              <>
-                {!isSameDate && (
+              return (
+                <>
+                  {!isSameDate && (
+                    <ListItem
+                      key={growth.id + "showdates"}
+                      style={{ paddingTop: 0, paddingBottom: 0 }}
+                    >
+                      <ListItemText
+                        style={{ marginTop: 0, marginBottom: 0 }}
+                        primary={dates()}
+                        // secondary={diff}
+                      />
+                    </ListItem>
+                  )}
                   <ListItem
-                    key={growth.id + "showdates"}
+                    key={growth.id + "-showDiff"}
                     style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
+                    <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      primary={dates()}
-                      // secondary={diff}
+                      // primary={text}
+                      secondary={diff}
                     />
                   </ListItem>
-                )}
-                <ListItem
-                  key={growth.id + "-showDiff"}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
-                >
-                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    style={{ marginTop: 0, marginBottom: 0 }}
-                    // primary={text}
-                    secondary={diff}
-                  />
-                </ListItem>
-                <ListItem
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleEdit(growth)}
-                    >
-                      <MoreVertRounded />
-                    </IconButton>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${text} ,${getLabel(growth.type)},${
-                      growth.value
-                    }${getUnit(growth.type)}`}
-                  />
-                </ListItem>
-              </>
-            );
-          })}
+                  <ListItem
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleEdit(growth)}
+                      >
+                        <MoreVertRounded />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemAvatar>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${text} ,${getLabel(growth.type)},${
+                        growth.value
+                      }${getUnit(growth.type)}`}
+                    />
+                  </ListItem>
+                </>
+              );
+            })}
+          </InfiniteScroll>
         </List>
       </Box>
     </Box>

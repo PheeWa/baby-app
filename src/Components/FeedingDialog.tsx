@@ -48,6 +48,7 @@ export const FeedingDialog = (props: Props) => {
 
   return (
     <Dialog
+      fullWidth
       open={!!props.selectedFeeding}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"
@@ -57,8 +58,6 @@ export const FeedingDialog = (props: Props) => {
         Feeding
         {props.selectedFeeding?.id ? (
           <IconButton
-            aria-label="close"
-            // onClick={onClose}
             sx={{
               position: "absolute",
               right: 8,
@@ -75,9 +74,10 @@ export const FeedingDialog = (props: Props) => {
         ) : null}
       </DialogTitle>
       <DialogContent>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             // openTo="hours"
+
             label="Start"
             value={start}
             showToolbar
@@ -85,11 +85,11 @@ export const FeedingDialog = (props: Props) => {
               setStart(new Date(newValue ?? Date()).toString());
             }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" />
+              <TextField {...params} fullWidth variant="standard" />
             )}
           />
         </Box>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             label="Finish"
             // openTo="hours"
@@ -99,12 +99,12 @@ export const FeedingDialog = (props: Props) => {
               setFinish(new Date(newValue ?? Date()).toString());
             }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" />
+              <TextField {...params} fullWidth variant="standard" />
             )}
           />
         </Box>
 
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <FormControl variant="standard" fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
               Type
@@ -136,7 +136,7 @@ export const FeedingDialog = (props: Props) => {
               />
             </Box>
 
-            <Box style={{ display: "flex" }}>
+            <Box style={{ display: "flex", marginBottom: "16px" }}>
               <FormControl variant="standard" fullWidth>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
                   Contents
@@ -152,7 +152,7 @@ export const FeedingDialog = (props: Props) => {
             </Box>
           </Box>
         ) : null}
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <TextField
             label="Details"
             id="standard-basic"

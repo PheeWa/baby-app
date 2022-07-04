@@ -21,10 +21,14 @@ import {
   subMinutes,
 } from "date-fns";
 import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
+import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
 import { LeisureDialog } from "../Components/LeisureDialog";
 import { LeisureStopWatch } from "../Components/LeisureStopWatch";
+import { ScrollLoader } from "../Components/ScrollLoader";
+import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { startStopwatch } from "../Store/LeisureSlice";
 import { stopStopwatch } from "../Store/LeisureSlice";
 import { addLeisure, deleteLeisure, editLeisure } from "../Store/LeisureSlice";
@@ -59,6 +63,9 @@ export const LeisurePage = () => {
     });
   });
   const stopwatch = useSelector((state: RootState) => state.leisure.stopwatch);
+  //Hooks//
+  const { limit, fetchData, slicedList, dataLength, hasMore } =
+    useInfiniteScroll(leisuresList);
   const dispatch = useDispatch();
 
   const calcStartDate = () => {
@@ -113,7 +120,7 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("tummy time"))}
             >
@@ -122,7 +129,7 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               // onClick={() => setIsStopwatch("play time")}
               onClick={() => dispatch(startStopwatch("play time"))}
@@ -134,7 +141,7 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               // onClick={() => setIsStopwatch("outdoors")}
               onClick={() => dispatch(startStopwatch("outdoors"))}
@@ -144,7 +151,7 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
+              // color="secondary"
               startIcon={<ForkLeftRounded />}
               // onClick={() => setIsStopwatch("bath time")}
               onClick={() => dispatch(startStopwatch("bath time"))}
@@ -155,90 +162,98 @@ export const LeisurePage = () => {
         </Container>
       )}
 
-      <Box>
+      <Box style={{ marginTop: "16px" }}>
         <List dense={true}>
-          {leisuresList.map((leisure: any, i: number) => {
-            const text = `${format(
-              new Date(leisure.start),
-              "p"
-            )}, ${formatDuration(leisure.start, leisure.finish)}, ${
-              leisure.type
-            }`;
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={fetchData}
+            hasMore={hasMore}
+            loader={<ScrollLoader />}
+            endMessage={<EndMessage />}
+          >
+            {slicedList.map((leisure: any, i: number) => {
+              const text = `${format(
+                new Date(leisure.start),
+                "p"
+              )}, ${formatDuration(leisure.start, leisure.finish)}, ${
+                leisure.type
+              }`;
 
-            const diff = formatDuration(
-              leisuresList[i].finish,
-              leisuresList[i - 1]?.start ?? Date()
-            );
+              const diff = formatDuration(
+                slicedList[i].finish,
+                slicedList[i - 1]?.start ?? Date()
+              );
 
-            const dates = () => {
-              if (isToday(new Date(leisuresList[i].finish))) {
-                return "Today";
-              } else if (isYesterday(new Date(leisuresList[i].finish))) {
-                return "Yesterday";
-              } else {
-                return format(new Date(leisuresList[i].finish), "LLL d EEEE");
-              }
-            };
-            const isSameDate = isSameDay(
-              new Date(leisuresList[i - 1]?.finish ?? Date()),
-              new Date(leisuresList[i].finish)
-            );
+              const dates = () => {
+                if (isToday(new Date(slicedList[i].finish))) {
+                  return "Today";
+                } else if (isYesterday(new Date(slicedList[i].finish))) {
+                  return "Yesterday";
+                } else {
+                  return format(new Date(slicedList[i].finish), "LLL d EEEE");
+                }
+              };
+              const isSameDate = isSameDay(
+                new Date(slicedList[i - 1]?.finish ?? Date()),
+                new Date(slicedList[i].finish)
+              );
 
-            return (
-              <>
-                {!isSameDate && (
+              return (
+                <>
+                  {!isSameDate && (
+                    <ListItem
+                      key={leisure.id + "showdates"}
+                      style={{ paddingTop: 0, paddingBottom: 0 }}
+                    >
+                      <ListItemText
+                        style={{ marginTop: 0, marginBottom: 0 }}
+                        primary={dates()}
+                        // secondary={diff}
+                      />
+                    </ListItem>
+                  )}
                   <ListItem
-                    key={leisure.id + "showdates"}
+                    key={leisure.id + "-showDiff"}
                     style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
+                    <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      primary={dates()}
-                      // secondary={diff}
+                      // primary={text}
+                      secondary={diff}
                     />
                   </ListItem>
-                )}
-                <ListItem
-                  key={leisure.id + "-showDiff"}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
-                >
-                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    style={{ marginTop: 0, marginBottom: 0 }}
-                    // primary={text}
-                    secondary={diff}
-                  />
-                </ListItem>
-                <ListItem
-                  key={leisure.id}
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleEdit(leisure)}
-                    >
-                      <MoreVertRounded />
-                    </IconButton>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={text} secondary={leisure.details} />
-                  {/* <ListItemText
+                  <ListItem
+                    key={leisure.id}
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleEdit(leisure)}
+                      >
+                        <MoreVertRounded />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemAvatar>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={text} secondary={leisure.details} />
+                    {/* <ListItemText
                     primary={leisure.id}
                     secondary={leisure.details}
                   /> */}
-                </ListItem>
-              </>
-            );
-          })}
+                  </ListItem>
+                </>
+              );
+            })}
+          </InfiniteScroll>
         </List>
       </Box>
 

@@ -28,10 +28,14 @@ import {
 import { type } from "@testing-library/user-event/dist/type";
 import { format, isSameDay, isToday, isYesterday, set } from "date-fns";
 import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
 import { start } from "repl";
 import { text } from "stream/consumers";
+import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
+import { ScrollLoader } from "../Components/ScrollLoader";
+import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import {
   addDiaper,
   deleteDiaper,
@@ -58,7 +62,11 @@ export const DiapersPage = () => {
       } else return -1;
     });
   });
+
+  //Hooks//
   const dispatch = useDispatch();
+  const { limit, fetchData, slicedList, dataLength, hasMore } =
+    useInfiniteScroll(diapersList);
 
   //usetates//
 
@@ -153,7 +161,7 @@ export const DiapersPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => createDiaper("pee")}
           >
@@ -162,7 +170,7 @@ export const DiapersPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => createDiaper("poo")}
           >
@@ -173,7 +181,7 @@ export const DiapersPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => createDiaper("pee & poo")}
           >
@@ -183,6 +191,7 @@ export const DiapersPage = () => {
       </Container>
 
       <Dialog
+        fullWidth
         open={dialogOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -208,7 +217,7 @@ export const DiapersPage = () => {
           ) : null}
         </DialogTitle>
         <DialogContent>
-          <Box style={{ display: "flex" }}>
+          <Box style={{ display: "flex", marginBottom: "16px" }}>
             <MobileDateTimePicker
               showToolbar
               label="Date"
@@ -218,12 +227,12 @@ export const DiapersPage = () => {
                 setDate(newValue ?? "");
               }}
               renderInput={(params) => (
-                <TextField {...params} variant="standard" />
+                <TextField {...params} fullWidth variant="standard" />
               )}
             />
           </Box>
 
-          <Box style={{ display: "flex" }}>
+          <Box style={{ display: "flex", marginBottom: "16px" }}>
             <FormControl variant="standard" fullWidth>
               <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 Type
@@ -236,7 +245,7 @@ export const DiapersPage = () => {
             </FormControl>
           </Box>
 
-          <Box style={{ display: "flex" }}>
+          <Box style={{ display: "flex", marginBottom: "16px" }}>
             <TextField
               label="Details"
               id="standard-basic"
@@ -257,80 +266,88 @@ export const DiapersPage = () => {
 
       <Box>
         <List dense={true}>
-          {diapersList.map((diaper, i: number) => {
-            const text = `${format(new Date(diaper.start), "p")}`;
-            const diff = formatDuration(
-              diapersList[i].start,
-              diapersList[i - 1]?.start ?? Date()
-            );
-            // console.log("hahahha", diff);
-            const dates = () => {
-              if (isToday(new Date(diapersList[i].start))) {
-                return "Today";
-              } else if (isYesterday(new Date(diapersList[i].start))) {
-                return "Yesterday";
-              } else {
-                return format(new Date(diapersList[i].start), "LLL d EEEE");
-              }
-            };
-            const isSameDate = isSameDay(
-              new Date(diapersList[i - 1]?.start ?? Date()),
-              new Date(diapersList[i].start)
-            );
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={fetchData}
+            hasMore={hasMore}
+            loader={<ScrollLoader />}
+            endMessage={<EndMessage />}
+          >
+            {slicedList.map((diaper, i: number) => {
+              const text = `${format(new Date(diaper.start), "p")}`;
+              const diff = formatDuration(
+                slicedList[i].start,
+                slicedList[i - 1]?.start ?? Date()
+              );
+              // console.log("hahahha", diff);
+              const dates = () => {
+                if (isToday(new Date(slicedList[i].start))) {
+                  return "Today";
+                } else if (isYesterday(new Date(slicedList[i].start))) {
+                  return "Yesterday";
+                } else {
+                  return format(new Date(slicedList[i].start), "LLL d EEEE");
+                }
+              };
+              const isSameDate = isSameDay(
+                new Date(slicedList[i - 1]?.start ?? Date()),
+                new Date(slicedList[i].start)
+              );
 
-            return (
-              <>
-                {!isSameDate && (
+              return (
+                <>
+                  {!isSameDate && (
+                    <ListItem
+                      key={diaper.id + "showdates"}
+                      style={{ paddingTop: 0, paddingBottom: 0 }}
+                    >
+                      <ListItemText
+                        style={{ marginTop: 0, marginBottom: 0 }}
+                        primary={dates()}
+                        // secondary={diff}
+                      />
+                    </ListItem>
+                  )}
                   <ListItem
-                    key={diaper.id + "showdates"}
+                    key={diaper.id + "-showDiff"}
                     style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
+                    <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      primary={dates()}
-                      // secondary={diff}
+                      // primary={text}
+                      secondary={diff}
                     />
                   </ListItem>
-                )}
-                <ListItem
-                  key={diaper.id + "-showDiff"}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
-                >
-                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    style={{ marginTop: 0, marginBottom: 0 }}
-                    // primary={text}
-                    secondary={diff}
-                  />
-                </ListItem>
-                <ListItem
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => onEdit(diaper)}
-                    >
-                      <MoreVertRounded />
-                    </IconButton>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${text} ,${diaper.type}`}
-                    secondary={diaper.details}
-                  />
-                </ListItem>
-              </>
-            );
-          })}
+                  <ListItem
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => onEdit(diaper)}
+                      >
+                        <MoreVertRounded />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemAvatar>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${text} ,${diaper.type}`}
+                      secondary={diaper.details}
+                    />
+                  </ListItem>
+                </>
+              );
+            })}
+          </InfiniteScroll>
         </List>
       </Box>
     </Box>

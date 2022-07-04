@@ -21,6 +21,7 @@ import {
   ListItemAvatar,
   ListItemText,
   ListSubheader,
+  Paper,
   Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
@@ -306,9 +307,33 @@ export const HomeTab = () => {
     return `${peeCounter}pee, ${pooCounter}poo`;
   };
 
+  const noRecordToday = () => {
+    if (
+      sumFeedings.length === 0 &&
+      sumSleeps.length === 0 &&
+      sumLeisures.length === 0 &&
+      sumDiapers.length === 0
+    ) {
+      return true;
+    }
+  };
+
+  const noLatestActivity = () => {
+    if (
+      !latestFeeding &&
+      !latestSleep &&
+      !latestDiaper &&
+      !latestGrowth &&
+      !latestHealth &&
+      !latestLeisure
+    ) {
+      return true;
+    }
+  };
+
   return (
     <Box>
-      <Box>
+      <Box style={{ display: "flex", overflow: "auto" }}>
         <Link to="/feed">
           <IconButton aria-label="delete" size="large">
             <LocalCafeRounded fontSize="inherit" />
@@ -345,100 +370,124 @@ export const HomeTab = () => {
           </IconButton>
         </Link>
       </Box>
-      <List>
-        {stopwatch.isRunning ? (
-          <InProgress
-            route="/feed"
-            type={stopwatch.type}
-            time={stopwatch.time}
-          />
-        ) : null}
-        {sleepStopwatch.isRunning ? (
-          <InProgress route="/sleep" type="Sleep" time={sleepStopwatch.time} />
-        ) : null}
-        {leisureStopwatch.isRunning ? (
-          <InProgress
-            route="/leisure"
-            type={leisureStopwatch.type}
-            time={leisureStopwatch.time}
-          />
-        ) : null}
-      </List>
-      <List
-        subheader={
-          <ListSubheader
-          // component="div" id="nested-list-subheader"
+      <Container>
+        <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
+          <List>
+            {stopwatch.isRunning ? (
+              <InProgress
+                route="/feed"
+                type={stopwatch.type}
+                time={stopwatch.time}
+              />
+            ) : null}
+            {sleepStopwatch.isRunning ? (
+              <InProgress
+                route="/sleep"
+                type="Sleep"
+                time={sleepStopwatch.time}
+              />
+            ) : null}
+            {leisureStopwatch.isRunning ? (
+              <InProgress
+                route="/leisure"
+                type={leisureStopwatch.type}
+                time={leisureStopwatch.time}
+              />
+            ) : null}
+          </List>
+        </Paper>
+        <Paper>
+          <List
+            subheader={
+              <ListSubheader
+                style={{ background: "transparent" }}
+                // component="div" id="nested-list-subheader"
+              >
+                Latest activity
+              </ListSubheader>
+            }
           >
-            Latest activity
-          </ListSubheader>
-        }
-      >
-        {latestFeeding ? (
-          <LatestActivity text={getFeedingText()} route="/feed" />
-        ) : null}
-        {latestSleep ? (
-          <LatestActivity text={getSleepText()} route="/sleep" />
-        ) : null}
-        {latestLeisure ? (
-          <LatestActivity text={getLeisureText()} route="/leisure" />
-        ) : null}
-        {latestDiaper ? (
-          <LatestActivity text={getDiaperText()} route="/diapers" />
-        ) : null}
-        {latestHealth ? (
-          <LatestActivity text={getHealthText()} route="/health" />
-        ) : null}
-        {latestGrowth ? (
-          <LatestActivity text={getGrowthText()} route="/growth" />
-        ) : null}
-      </List>
-      <List
-        subheader={
-          <ListSubheader
-          // component="div" id="nested-list-subheader"
+            {noLatestActivity() ? (
+              <ListItem>
+                <ListItemText primary="No any latest activity" />
+              </ListItem>
+            ) : (
+              <>
+                {latestFeeding ? (
+                  <LatestActivity text={getFeedingText()} route="/feed" />
+                ) : null}
+                {latestSleep ? (
+                  <LatestActivity text={getSleepText()} route="/sleep" />
+                ) : null}
+                {latestLeisure ? (
+                  <LatestActivity text={getLeisureText()} route="/leisure" />
+                ) : null}
+                {latestDiaper ? (
+                  <LatestActivity text={getDiaperText()} route="/diapers" />
+                ) : null}
+                {latestHealth ? (
+                  <LatestActivity text={getHealthText()} route="/health" />
+                ) : null}
+                {latestGrowth ? (
+                  <LatestActivity text={getGrowthText()} route="/growth" />
+                ) : null}
+              </>
+            )}
+          </List>
+        </Paper>
+        <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
+          <List
+            subheader={
+              <ListSubheader style={{ background: "transparent" }}>
+                Summary for today
+              </ListSubheader>
+            }
           >
-            Summary for today
-          </ListSubheader>
-        }
-      >
-        {sumFeedings.length ? (
-          <SummaryToday
-            text="Feedings"
-            totalTimes={sumFeedings.length}
-            totalDuration={totalFeedDuration}
-          />
-        ) : null}
+            {noRecordToday() ? (
+              <ListItem>
+                <ListItemText primary="No record for Today" />
+              </ListItem>
+            ) : (
+              <>
+                {sumFeedings.length ? (
+                  <SummaryToday
+                    text="Feedings"
+                    totalTimes={sumFeedings.length}
+                    totalDuration={totalFeedDuration}
+                  />
+                ) : null}
 
-        {sumSleeps.length ? (
-          <SummaryToday
-            text="Sleeps"
-            totalTimes={sumSleeps.length}
-            totalDuration={totalSleepDuration}
-          />
-        ) : null}
-        {sumLeisures.length ? (
-          <SummaryToday
-            text="Leisures"
-            totalTimes={sumLeisures.length}
-            totalDuration={totalLeisureDuration}
-          />
-        ) : null}
-        {sumDiapers.length ? (
-          <SummaryToday
-            text="Diapers"
-            totalTimes={sumDiapers.length}
-            totalDuration={totalDiapers}
-          />
-        ) : null}
-      </List>
-      <Container
-      // sx={{ display: "flex", position: "absolute", bottom: "16px" }}
-      >
+                {sumSleeps.length ? (
+                  <SummaryToday
+                    text="Sleeps"
+                    totalTimes={sumSleeps.length}
+                    totalDuration={totalSleepDuration}
+                  />
+                ) : null}
+                {sumLeisures.length ? (
+                  <SummaryToday
+                    text="Leisures"
+                    totalTimes={sumLeisures.length}
+                    totalDuration={totalLeisureDuration}
+                  />
+                ) : null}
+                {sumDiapers.length ? (
+                  <SummaryToday
+                    text="Diapers"
+                    totalTimes={sumDiapers.length}
+                    totalDuration={totalDiapers}
+                  />
+                ) : null}
+              </>
+            )}
+          </List>
+        </Paper>
+
         <Button
-          style={{ marginTop: "16px" }}
+          style={{ marginTop: "16px", marginBottom: "16px" }}
           fullWidth
           variant="contained"
-          color="secondary"
+          // color="secondary"
           onClick={() => {
             navigate("/all-log");
           }}

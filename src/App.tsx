@@ -35,17 +35,29 @@ import { SettingPage } from "./Pages/SettingPage";
 function App() {
   const themeOptions: ThemeOptions = {
     palette: {
-      mode: "light",
+      mode: "dark",
       primary: {
-        main: "#000000",
+        main: "#6c8ce0",
       },
       secondary: {
-        main: "#ffdfcc",
+        main: "#ed5990",
+      },
+      success: {
+        main: "#59EDA6",
+      },
+      info: {
+        main: "#404f6c",
+      },
+      error: {
+        main: "#ED6B59",
       },
       background: {
-        default: "#f9f5ec",
-        paper: "#f3e9e4",
+        default: "#081228",
+        paper: "#081228",
       },
+    },
+    shape: {
+      borderRadius: 10,
     },
   };
 

@@ -47,6 +47,7 @@ export const LeisureDialog = (props: Props) => {
 
   return (
     <Dialog
+      fullWidth
       open={!!props.selectedLeisure}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"
@@ -74,7 +75,7 @@ export const LeisureDialog = (props: Props) => {
         ) : null}
       </DialogTitle>
       <DialogContent>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             label="Start"
             showToolbar
@@ -84,11 +85,11 @@ export const LeisureDialog = (props: Props) => {
               setStart(newValue ?? "");
             }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" />
+              <TextField {...params} fullWidth variant="standard" />
             )}
           />
         </Box>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             label="Finish"
             showToolbar
@@ -98,12 +99,12 @@ export const LeisureDialog = (props: Props) => {
               setFinish(newValue ?? "");
             }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" />
+              <TextField {...params} fullWidth variant="standard" />
             )}
           />
         </Box>
 
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <FormControl variant="standard" fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
               Type
@@ -122,7 +123,7 @@ export const LeisureDialog = (props: Props) => {
           </FormControl>
         </Box>
 
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <TextField
             label="Details"
             id="standard-basic"

@@ -37,6 +37,7 @@ export const SleepDialog = (props: Props) => {
 
   return (
     <Dialog
+      fullWidth
       open={!!props.selectedSleep}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"
@@ -63,7 +64,7 @@ export const SleepDialog = (props: Props) => {
         ) : null}
       </DialogTitle>
       <DialogContent>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             // openTo="hours"
             label="Start"
@@ -73,11 +74,11 @@ export const SleepDialog = (props: Props) => {
               setStart(newValue ?? "");
             }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" />
+              <TextField {...params} fullWidth variant="standard" />
             )}
           />
         </Box>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             label="Finish"
             // openTo="hours"
@@ -87,12 +88,12 @@ export const SleepDialog = (props: Props) => {
               setFinish(newValue ?? "");
             }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" />
+              <TextField {...params} fullWidth variant="standard" />
             )}
           />
         </Box>
 
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex", marginBottom: "16px" }}>
           <TextField
             label="Details"
             id="standard-basic"

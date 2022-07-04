@@ -48,7 +48,7 @@ export const ViewPhotoPage = () => {
         <Button
           fullWidth
           variant="contained"
-          color="secondary"
+          // color="secondary"
           //   startIcon={<ForkLeftRounded />}
           onClick={() => onDelete(photo.id)}
         >
@@ -57,7 +57,7 @@ export const ViewPhotoPage = () => {
         <Button
           fullWidth
           variant="contained"
-          color="secondary"
+          // color="secondary"
           //   startIcon={<ForkLeftRounded />}
           onClick={() => navigate("../photo")}
         >

@@ -12,9 +12,13 @@ import {
 import { Box } from "@mui/system";
 import { format, isSameDay, isToday, isYesterday, subMinutes } from "date-fns";
 import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
+import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
 import { HealthDialog } from "../Components/HealthDialog";
+import { ScrollLoader } from "../Components/ScrollLoader";
+import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { addHealth, deleteHealth, editHealth } from "../Store/healthSlice";
 import { RootState } from "../Store/store";
 import { formatDuration } from "./FeedPage";
@@ -37,6 +41,9 @@ export const HealthPage = () => {
       } else return -1;
     });
   });
+  //Hooks//
+  const { limit, fetchData, slicedList, dataLength, hasMore } =
+    useInfiniteScroll(healthsList);
   const dispatch = useDispatch();
   //usestates//
   const [health, setHealth] = useState<Health | undefined>(undefined);
@@ -105,7 +112,7 @@ export const HealthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => handleClickOpen("medication")}
           >
@@ -114,7 +121,7 @@ export const HealthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => handleClickOpen("temperature")}
           >
@@ -125,7 +132,7 @@ export const HealthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            // color="secondary"
             startIcon={<ForkLeftRounded />}
             onClick={() => handleClickOpen("vaccination")}
           >
@@ -140,90 +147,102 @@ export const HealthPage = () => {
         hanleDelete={hanleDelete}
       />
 
-      <Box>
+      <Box
+        style={{
+          marginTop: "16px",
+        }}
+      >
         <List dense={true}>
-          {healthsList.map((health, i: number) => {
-            const text = `${format(new Date(health.start), "p")}`;
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={fetchData}
+            hasMore={hasMore}
+            loader={<ScrollLoader />}
+            endMessage={<EndMessage />}
+          >
+            {slicedList.map((health, i: number) => {
+              const text = `${format(new Date(health.start), "p")}`;
 
-            const showValue = () => {
-              if (health.value) {
-                return `${health.value} °C`;
-              } else {
-                return "";
-              }
-            };
+              const showValue = () => {
+                if (health.value) {
+                  return `${health.value} °C`;
+                } else {
+                  return "";
+                }
+              };
 
-            const diff = formatDuration(
-              healthsList[i].start,
-              healthsList[i - 1]?.start ?? Date()
-            );
-            const dates = () => {
-              if (isToday(new Date(healthsList[i].start))) {
-                return "Today";
-              } else if (isYesterday(new Date(healthsList[i].start))) {
-                return "Yesterday";
-              } else {
-                return format(new Date(healthsList[i].start), "LLL d EEEE");
-              }
-            };
-            const isSameDate = isSameDay(
-              new Date(healthsList[i - 1]?.start ?? Date()),
-              new Date(healthsList[i].start)
-            );
+              const diff = formatDuration(
+                slicedList[i].start,
+                slicedList[i - 1]?.start ?? Date()
+              );
+              const dates = () => {
+                if (isToday(new Date(slicedList[i].start))) {
+                  return "Today";
+                } else if (isYesterday(new Date(slicedList[i].start))) {
+                  return "Yesterday";
+                } else {
+                  return format(new Date(slicedList[i].start), "LLL d EEEE");
+                }
+              };
+              const isSameDate = isSameDay(
+                new Date(slicedList[i - 1]?.start ?? Date()),
+                new Date(slicedList[i].start)
+              );
 
-            return (
-              <>
-                {!isSameDate && (
+              return (
+                <>
+                  {!isSameDate && (
+                    <ListItem
+                      key={health.id + "showdates"}
+                      style={{ paddingTop: 0, paddingBottom: 0 }}
+                    >
+                      <ListItemText
+                        style={{ marginTop: 0, marginBottom: 0 }}
+                        primary={dates()}
+                        // secondary={diff}
+                      />
+                    </ListItem>
+                  )}
                   <ListItem
-                    key={health.id + "showdates"}
+                    key={health.id + "-showDiff"}
                     style={{ paddingTop: 0, paddingBottom: 0 }}
                   >
+                    <ListItemAvatar style={{ opacity: 0, height: 0 }}>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      primary={dates()}
-                      // secondary={diff}
+                      // primary={text}
+                      secondary={diff}
                     />
                   </ListItem>
-                )}
-                <ListItem
-                  key={health.id + "-showDiff"}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
-                >
-                  <ListItemAvatar style={{ opacity: 0, height: 0 }}>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    style={{ marginTop: 0, marginBottom: 0 }}
-                    // primary={text}
-                    secondary={diff}
-                  />
-                </ListItem>
-                <ListItem
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleEdit(health)}
-                    >
-                      <MoreVertRounded />
-                    </IconButton>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${text}, ${health.type} ${showValue()}`}
-                    secondary={health.details}
-                  />
-                </ListItem>
-              </>
-            );
-          })}
+                  <ListItem
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleEdit(health)}
+                      >
+                        <MoreVertRounded />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemAvatar>
+                      <Avatar>
+                        <MoreVertRounded />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${text}, ${health.type} ${showValue()}`}
+                      secondary={health.details}
+                    />
+                  </ListItem>
+                </>
+              );
+            })}
+          </InfiniteScroll>
         </List>
       </Box>
     </Box>

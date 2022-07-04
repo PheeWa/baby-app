@@ -101,7 +101,7 @@ export const StopWatch = (props: Props) => {
         <Button
           //   fullWidth
           variant="contained"
-          color="secondary"
+          // color="secondary"
           startIcon={<ForkLeftRounded />}
         >
           {getFeedText(props.feedingType)}
@@ -118,7 +118,7 @@ export const StopWatch = (props: Props) => {
         <IconButton
           size="large"
           edge="start"
-          color={stopwatch.isEdit ? "secondary" : "inherit"}
+          color={stopwatch.isEdit ? "primary" : "inherit"}
           aria-label="menu"
           //   sx={{ mr: 2 }}
           onClick={() =>
@@ -133,6 +133,7 @@ export const StopWatch = (props: Props) => {
 
       {stopwatch.isEdit === true ? (
         <TextField
+          label="Optional details"
           id="standard-basic"
           variant="standard"
           fullWidth
@@ -146,7 +147,8 @@ export const StopWatch = (props: Props) => {
       <Button
         fullWidth
         variant="contained"
-        color="secondary"
+        style={{ marginTop: "16px" }}
+        // color="secondary"
         // startIcon={<ForkLeftRounded />}
         onClick={() => {
           props.onSave({
