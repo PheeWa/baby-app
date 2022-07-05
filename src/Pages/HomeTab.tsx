@@ -331,9 +331,20 @@ export const HomeTab = () => {
     }
   };
 
+  const stopwatchNotRun = () => {
+    if (
+      !stopwatch.isRunning &&
+      !sleepStopwatch.isRunning &&
+      !leisureStopwatch.isRunning
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Box>
-      <Box style={{ display: "flex", overflow: "auto" }}>
+      <Box style={{ display: "flex", overflow: "auto", marginBottom: "16px" }}>
         <Link to="/feed">
           <IconButton aria-label="delete" size="large">
             <LocalCafeRounded fontSize="inherit" />
@@ -371,35 +382,38 @@ export const HomeTab = () => {
         </Link>
       </Box>
       <Container>
-        <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
-          <List>
-            {stopwatch.isRunning ? (
-              <InProgress
-                route="/feed"
-                type={stopwatch.type}
-                time={stopwatch.time}
-              />
-            ) : null}
-            {sleepStopwatch.isRunning ? (
-              <InProgress
-                route="/sleep"
-                type="Sleep"
-                time={sleepStopwatch.time}
-              />
-            ) : null}
-            {leisureStopwatch.isRunning ? (
-              <InProgress
-                route="/leisure"
-                type={leisureStopwatch.type}
-                time={leisureStopwatch.time}
-              />
-            ) : null}
-          </List>
-        </Paper>
+        {!stopwatchNotRun() ? (
+          <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
+            <List>
+              {stopwatch.isRunning ? (
+                <InProgress
+                  route="/feed"
+                  type={stopwatch.type}
+                  time={stopwatch.time}
+                />
+              ) : null}
+              {sleepStopwatch.isRunning ? (
+                <InProgress
+                  route="/sleep"
+                  type="Sleep"
+                  time={sleepStopwatch.time}
+                />
+              ) : null}
+              {leisureStopwatch.isRunning ? (
+                <InProgress
+                  route="/leisure"
+                  type={leisureStopwatch.type}
+                  time={leisureStopwatch.time}
+                />
+              ) : null}
+            </List>
+          </Paper>
+        ) : null}
         <Paper>
           <List
             subheader={
               <ListSubheader
+                disableSticky={true}
                 style={{ background: "transparent" }}
                 // component="div" id="nested-list-subheader"
               >
@@ -438,7 +452,10 @@ export const HomeTab = () => {
         <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
           <List
             subheader={
-              <ListSubheader style={{ background: "transparent" }}>
+              <ListSubheader
+                style={{ background: "transparent" }}
+                disableSticky={true}
+              >
                 Summary for today
               </ListSubheader>
             }

@@ -5,7 +5,10 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Paper,
+  Chip,
 } from "@mui/material";
+import { Container } from "@mui/system";
 import {
   format,
   addSeconds,
@@ -32,6 +35,7 @@ import {
   Line,
   LineChart,
   YAxis,
+  ResponsiveContainer,
 } from "recharts";
 import { RootState } from "../Store/store";
 import { Leisure } from "./LeisurePage";
@@ -175,112 +179,144 @@ export const StatsSleep = () => {
   //Statistics functions//
 
   return (
-    <Box>
-      <List
-        subheader={
-          <ListSubheader
-          // component="div" id="nested-list-subheader"
-          >
-            Statistics
-          </ListSubheader>
-        }
-      >
-        <ListItem>
-          <ListItemText primary="Avg sleep per day" />
-          <Typography
-            variant="body1"
-            component="div"
-            sx={{ flexGrow: 1, textAlign: "center" }}
-          >
-            {avgEvent(weeklySleeps).avgEvents}
-          </Typography>
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Avg times per day" />
-          <Typography
-            variant="body1"
-            component="div"
-            sx={{ flexGrow: 1, textAlign: "center" }}
-          >
-            {avgEvent(weeklySleeps).avgEventsTimes}
-          </Typography>
-        </ListItem>
-      </List>
-      <Box>
-        <Typography>Sleep duration by days</Typography>
-
-        <BarChart
-          width={400}
-          height={300}
-          data={getBarData(weeklySleeps)}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <XAxis
-            dataKey="date"
-            tickFormatter={(value) => {
-              return format(value, "EEE");
-            }}
-          />
-          <Tooltip
-            labelFormatter={(value: any) => {
-              return format(value, "LLL d yyyy");
-            }}
-            formatter={(value: any) => {
-              return formatSeconds(value);
-            }}
-          />
-          <Bar dataKey="time" stackId="a" fill="#82ca9d">
-            <LabelList
-              position={"top"}
-              formatter={(value: any) => {
-                return formatSeconds(value);
+    <Container>
+      <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
+        <List
+          subheader={
+            <ListSubheader
+              disableSticky={true}
+              style={{
+                background: "transparent",
               }}
-            />
-          </Bar>
-        </BarChart>
-        <Typography>Sleep schedule</Typography>
-        <LineChart width={350} height={600}>
-          <XAxis
-            dataKey="date"
-            type="category"
-            allowDuplicatedCategory={false}
-            tickFormatter={(value) => {
-              console.log(value);
-              if (value === 0) {
-                return "";
-              }
-              return format(new Date(value), "EEE");
-            }}
-          />
-          <YAxis
-            tickFormatter={(value) => {
-              const date = addSeconds(startOfToday(), value);
-              return format(date, "h a");
-            }}
-            tickCount={13}
-            interval="preserveStartEnd"
-            allowDataOverflow={false}
-            domain={[0, 86400]}
-          />
-          {getLineChartData(weeklySleeps).map((s: any) => {
-            return (
-              <Line
-                dataKey="time"
-                data={s.data}
-                name={s.name}
-                key={s.name}
-                dot={false}
-                strokeWidth={7}
+              // component="div" id="nested-list-subheader"
+            >
+              Statistics
+            </ListSubheader>
+          }
+        >
+          <ListItem>
+            <ListItemText primary="Avg sleep per day" />
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center" }}
+            >
+              {avgEvent(weeklySleeps).avgEvents}
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Avg times per day" />
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center" }}
+            >
+              {avgEvent(weeklySleeps).avgEventsTimes}
+            </Typography>
+          </ListItem>
+        </List>
+      </Paper>
+      <Paper>
+        <ListSubheader
+          disableSticky={true}
+          style={{ background: "transparent" }}
+        >
+          Sleep duration by days
+        </ListSubheader>
+        <Box style={{ marginBottom: "16px", padding: "16px" }}>
+          <ResponsiveContainer width="100%" minHeight={300}>
+            <BarChart
+              data={getBarData(weeklySleeps)}
+              margin={{
+                top: 10,
+                right: 10,
+                left: 10,
+              }}
+            >
+              <XAxis
+                style={{ fontSize: "12px" }}
+                dataKey="date"
+                tickFormatter={(value) => {
+                  return format(value, "EEE");
+                }}
               />
-            );
-          })}
-        </LineChart>
-      </Box>
-    </Box>
+              <Tooltip
+                cursor={{ fill: "#1b2641" }}
+                contentStyle={{
+                  backgroundColor: "#081228",
+                  border: "none",
+                  borderRadius: "10px",
+                }}
+                labelFormatter={(value: any) => {
+                  return format(value, "LLL d yyyy");
+                }}
+                formatter={(value: any) => {
+                  return formatSeconds(value);
+                }}
+              />
+              <Bar dataKey="time" stackId="a" fill="#82ca9d">
+                <LabelList
+                  style={{ fill: "#82ca9d", fontSize: "12px" }}
+                  position={"top"}
+                  formatter={(value: any) => {
+                    return formatSeconds(value);
+                  }}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
+      <Paper>
+        <ListSubheader
+          disableSticky={true}
+          style={{ background: "transparent" }}
+        >
+          Sleep duration by days
+        </ListSubheader>
+        <Box style={{ marginBottom: "16px", padding: "16px" }}>
+          <ResponsiveContainer width="100%" minHeight={500}>
+            <LineChart margin={{ left: -15, right: 5 }}>
+              <XAxis
+                style={{ fontSize: "12px" }}
+                dataKey="date"
+                type="category"
+                allowDuplicatedCategory={false}
+                tickFormatter={(value) => {
+                  console.log(value);
+                  if (value === 0) {
+                    return "";
+                  }
+                  return format(new Date(value), "EEE");
+                }}
+              />
+              <YAxis
+                style={{ fontSize: "12px" }}
+                tickFormatter={(value) => {
+                  const date = addSeconds(startOfToday(), value);
+                  return format(date, "h a");
+                }}
+                tickCount={13}
+                interval="preserveStartEnd"
+                allowDataOverflow={false}
+                domain={[0, 86400]}
+              />
+              {getLineChartData(weeklySleeps).map((s: any) => {
+                return (
+                  <Line
+                    dataKey="time"
+                    data={s.data}
+                    name={s.name}
+                    key={s.name}
+                    dot={false}
+                    strokeWidth={7}
+                  />
+                );
+              })}
+            </LineChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
+    </Container>
   );
 };

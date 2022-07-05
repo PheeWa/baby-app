@@ -4,9 +4,11 @@ import {
   ListItem,
   ListItemText,
   ListSubheader,
+  Paper,
   Tooltip,
   Typography,
 } from "@mui/material";
+import { Container } from "@mui/system";
 import {
   addSeconds,
   differenceInSeconds,
@@ -31,6 +33,7 @@ import {
   Scatter,
   ScatterChart,
   ZAxis,
+  ResponsiveContainer,
 } from "recharts";
 import { RootState } from "../Store/store";
 import { formatSeconds } from "./StatsFeeding";
@@ -142,89 +145,103 @@ export const StasDiapers = () => {
   };
 
   return (
-    <Box>
-      <List
-        subheader={
-          <ListSubheader
-          // component="div" id="nested-list-subheader"
-          >
-            Statistics
-          </ListSubheader>
-        }
-      >
-        <ListItem>
-          <ListItemText primary="Avg pee per day" />
-          <Typography
-            variant="body1"
-            component="div"
-            sx={{ flexGrow: 1, textAlign: "center" }}
-          >
-            {/* {avgSleep().avgSleeps} */}
-            {/* {avgEvent(xxx).avgEvents} */}
-            {avgDiapers().avgPee}
-          </Typography>
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Avg poo per day" />
-          <Typography
-            variant="body1"
-            component="div"
-            sx={{ flexGrow: 1, textAlign: "center" }}
-          >
-            {/* {avgSleep().avgSleeps} */}
-            {/* {avgEvent(xxx).avgEvents} */}
-            {avgDiapers().avgPoo}
-          </Typography>
-        </ListItem>
-      </List>
-      <Box>
-        <Typography>Diapering by days</Typography>
-        <ComposedChart
-          width={350}
-          height={400}
-          data={getComposedChartData()}
-          margin={{
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
+    <Container>
+      <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
+        <List
+          subheader={
+            <ListSubheader
+              disableSticky={true}
+              style={{
+                background: "transparent",
+              }}
+            >
+              Statistics
+            </ListSubheader>
+          }
+        >
+          <ListItem>
+            <ListItemText primary="Avg pee per day" />
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center" }}
+            >
+              {/* {avgSleep().avgSleeps} */}
+              {/* {avgEvent(xxx).avgEvents} */}
+              {avgDiapers().avgPee}
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Avg poo per day" />
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center" }}
+            >
+              {/* {avgSleep().avgSleeps} */}
+              {/* {avgEvent(xxx).avgEvents} */}
+              {avgDiapers().avgPoo}
+            </Typography>
+          </ListItem>
+        </List>
+      </Paper>
+      <Paper>
+        <ListSubheader
+          disableSticky={true}
+          style={{
+            background: "transparent",
           }}
         >
-          {/* <CartesianGrid stroke="#f5f5f5" /> */}
-          <XAxis
-            dataKey="date"
-            // scale="band"
-            tickFormatter={(value) => {
-              return format(new Date(value), "EEE");
-            }}
-          />
-          {/* <YAxis /> */}
-          {/* <Tooltip /> */}
-          <Legend />
-          <Bar dataKey="pee" barSize={20} fill="#413ea0">
-            <LabelList
-              position={"top"}
-              formatter={(value: any) => {
-                return value;
+          Diapering by days
+        </ListSubheader>
+        <Box style={{ marginBottom: "16px", padding: "16px" }}>
+          <ResponsiveContainer width="100%" minHeight={400}>
+            <ComposedChart
+              data={getComposedChartData()}
+              margin={{
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20,
               }}
-            />
-          </Bar>
-          <Line
-            type="monotone"
-            dataKey="poo"
-            stroke="#ff7300"
-            // dot={{ stroke: "#ff7300", strokeWidth: 10 }}
-            activeDot={{ r: 8 }}
-          >
-            <LabelList
-              position={"top"}
-              formatter={(value: any) => {
-                return value;
-              }}
-            />
-          </Line>
-        </ComposedChart>
-      </Box>
+            >
+              {/* <CartesianGrid stroke="#f5f5f5" /> */}
+              <XAxis
+                dataKey="date"
+                // scale="band"
+                tickFormatter={(value) => {
+                  return format(new Date(value), "EEE");
+                }}
+              />
+              {/* <YAxis /> */}
+              {/* <Tooltip /> */}
+              <Legend />
+              <Bar dataKey="pee" barSize={20} fill="#8884d8">
+                <LabelList
+                  position={"top"}
+                  formatter={(value: any) => {
+                    return value;
+                  }}
+                />
+              </Bar>
+              <Line
+                type="monotone"
+                dataKey="poo"
+                stroke="#82ca9d"
+                // dot={{ stroke: "#ff7300", strokeWidth: 10 }}
+                activeDot={{ r: 8 }}
+              >
+                <LabelList
+                  position={"top"}
+                  formatter={(value: any) => {
+                    return value;
+                  }}
+                />
+              </Line>
+            </ComposedChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
       <Box>
         <Typography>Diapering pattern by hours</Typography>
         <ScatterChart
@@ -237,7 +254,7 @@ export const StasDiapers = () => {
             left: 20,
           }}
         >
-          <CartesianGrid />
+          {/* <CartesianGrid /> */}
           <XAxis
             type="category"
             dataKey="date"
@@ -276,11 +293,11 @@ export const StasDiapers = () => {
           <Scatter
             name="poo"
             data={getScatterChartDate().poo}
-            fill="#ff7300"
+            fill="#82ca9d"
             shape="circle"
           />
         </ScatterChart>
       </Box>
-    </Box>
+    </Container>
   );
 };
