@@ -199,14 +199,14 @@ export const StasDiapers = () => {
             <ComposedChart
               data={getComposedChartData()}
               margin={{
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 20,
+                top: 15,
+                // right: 10,
+                // left: 10,
               }}
             >
               {/* <CartesianGrid stroke="#f5f5f5" /> */}
               <XAxis
+                fontSize="12px"
                 dataKey="date"
                 // scale="band"
                 tickFormatter={(value) => {
@@ -215,9 +215,10 @@ export const StasDiapers = () => {
               />
               {/* <YAxis /> */}
               {/* <Tooltip /> */}
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
               <Bar dataKey="pee" barSize={20} fill="#8884d8">
                 <LabelList
+                  style={{ fill: "#8884d8", fontSize: "12px" }}
                   position={"top"}
                   formatter={(value: any) => {
                     return value;
@@ -232,6 +233,7 @@ export const StasDiapers = () => {
                 activeDot={{ r: 8 }}
               >
                 <LabelList
+                  style={{ fill: "#82ca9d", fontSize: "12px" }}
                   position={"top"}
                   formatter={(value: any) => {
                     return value;
