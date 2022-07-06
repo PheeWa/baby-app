@@ -1,4 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  List,
+  ListSubheader,
+  Paper,
+  Typography,
+} from "@mui/material";
 import {
   addDays,
   differenceInDays,
@@ -15,6 +22,7 @@ import {
   Legend,
   Line,
   Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 import { RootState } from "../Store/store";
 
@@ -110,7 +118,7 @@ export const StasGrowth = () => {
     { day: 135, min: 39.95673, max: 45.17877 },
     { day: 165, min: 40.81642, max: 45.893 },
     { day: 195, min: 41.53109, max: 46.50524 },
-    // {day:7.5,min:42.13521,max:47.0388},
+    // { day: 225, min: 42.13521, max: 47.0388 },
     // {day:8.5,min:42.65253,max:47.5099},
     // {day:9.5,min:43.10009,max:47.93027},
     // {day:10.5,min:43.49049,max:48.30867},
@@ -125,189 +133,240 @@ export const StasGrowth = () => {
   const getHeadCirData = [...projectedHeadCir, ...actualHeadCir];
 
   return (
-    <Box>
-      <Box>
-        <Typography>Weight chart</Typography>
-        <LineChart
-          width={400}
-          height={300}
-          data={getWeightData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
+    <Container>
+      <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
+        <ListSubheader
+          disableSticky={true}
+          style={{
+            background: "transparent",
+            marginBottom: "16px",
           }}
         >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
-          <XAxis
-            type="number"
-            dataKey="day"
-            ticks={[30, 60, 90, 120, 150, 180, 210]}
-            tickFormatter={(value) => {
-              const day = addDays(new Date(), value);
-              const months = formatDistanceStrict(day, new Date());
-              return months.replace(" month", "m").replace("s", "");
-            }}
-          />
-          <YAxis
-            unit="kg"
-            domain={["dataMin", "dataMax"]}
-            tickCount={15}
-            tickFormatter={(value) => {
-              return value.toFixed(1);
-            }}
-          />
-          <Tooltip
-            labelFormatter={(value: any) => {
-              const day = addDays(new Date(babyBirthDate), value);
-              return format(day, "LLL d yyyy");
-            }}
-          />
-          <Legend />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="max"
-            stroke="#82ca9d"
-            strokeDasharray="5 5"
-            dot={false}
-          />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="Weight"
-            stroke="#8884d8"
-          />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="min"
-            stroke="#82ca9d"
-            strokeDasharray="5 5"
-            dot={false}
-          />
-        </LineChart>
-      </Box>
-      <Box>
-        <Typography>Height chart</Typography>
-        <LineChart
-          width={400}
-          height={300}
-          data={getHeightData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
+          Weight chart
+        </ListSubheader>
+        <Box style={{ paddingBottom: "16px" }}>
+          <ResponsiveContainer width="100%" minHeight={400}>
+            <LineChart
+              data={getWeightData}
+              margin={{
+                right: 10,
+                left: 0,
+              }}
+            >
+              {/* <CartesianGrid strokeDasharray="3 3" /> */}
+              <XAxis
+                fontSize="12px"
+                type="number"
+                dataKey="day"
+                ticks={[30, 60, 90, 120, 150, 180, 210]}
+                tickFormatter={(value) => {
+                  const day = addDays(new Date(), value);
+                  const months = formatDistanceStrict(day, new Date());
+                  return months.replace(" month", "m").replace("s", "");
+                }}
+              />
+              <YAxis
+                fontSize="12px"
+                unit="kg"
+                domain={["dataMin", "dataMax"]}
+                tickCount={15}
+                tickFormatter={(value) => {
+                  return value.toFixed(1);
+                }}
+              />
+              <Tooltip
+                cursor={{ fill: "#1b2641" }}
+                contentStyle={{
+                  backgroundColor: "#081228",
+                  border: "none",
+                  borderRadius: "10px",
+                }}
+                labelFormatter={(value: any) => {
+                  const day = addDays(new Date(babyBirthDate), value);
+                  return format(day, "LLL d yyyy");
+                }}
+              />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="max"
+                stroke="#82ca9d"
+                strokeDasharray="5 5"
+                dot={false}
+              />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="Weight"
+                stroke="#8884d8"
+              />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="min"
+                stroke="#82ca9d"
+                strokeDasharray="5 5"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
+      <Paper>
+        <ListSubheader
+          disableSticky={true}
+          style={{
+            background: "transparent",
           }}
         >
-          <XAxis
-            type="number"
-            dataKey="day"
-            ticks={[30, 60, 90, 120, 150, 180, 210]}
-            tickFormatter={(value) => {
-              const day = addDays(new Date(), value);
-              const months = formatDistanceStrict(day, new Date());
-              return months.replace(" month", "m").replace("s", "");
-            }}
-          />
-          <YAxis
-            unit="cm"
-            domain={["dataMin", "dataMax"]}
-            tickCount={15}
-            tickFormatter={(value) => {
-              return value.toFixed(1);
-            }}
-          />
-          <Tooltip
-            labelFormatter={(value: any) => {
-              const day = addDays(new Date(babyBirthDate), value);
-              return format(day, "LLL d yyyy");
-            }}
-          />
-          <Legend />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="max"
-            stroke="#82ca9d"
-            strokeDasharray="5 5"
-            dot={false}
-          />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="Height"
-            stroke="#8884d8"
-          />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="min"
-            stroke="#82ca9d"
-            strokeDasharray="5 5"
-            dot={false}
-          />
-        </LineChart>
-      </Box>
-      <Box>
-        <Typography>Height chart</Typography>
-        <LineChart
-          width={400}
-          height={300}
-          data={getHeadCirData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
+          Height chart
+        </ListSubheader>
+        <Box style={{ marginBottom: "16px", padding: "16px" }}>
+          <ResponsiveContainer width="100%" minHeight={400}>
+            <LineChart
+              data={getHeightData}
+              margin={{
+                // right: 5,
+                left: -10,
+              }}
+            >
+              <XAxis
+                fontSize="12px"
+                type="number"
+                dataKey="day"
+                ticks={[30, 60, 90, 120, 150, 180, 210]}
+                tickFormatter={(value) => {
+                  const day = addDays(new Date(), value);
+                  const months = formatDistanceStrict(day, new Date());
+                  return months.replace(" month", "m").replace("s", "");
+                }}
+              />
+              <YAxis
+                fontSize="12px"
+                unit="cm"
+                domain={["dataMin", "dataMax"]}
+                tickCount={15}
+                tickFormatter={(value) => {
+                  return value.toFixed(1);
+                }}
+              />
+              <Tooltip
+                cursor={{ fill: "#1b2641" }}
+                contentStyle={{
+                  backgroundColor: "#081228",
+                  border: "none",
+                  borderRadius: "10px",
+                }}
+                labelFormatter={(value: any) => {
+                  const day = addDays(new Date(babyBirthDate), value);
+                  return format(day, "LLL d yyyy");
+                }}
+              />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="max"
+                stroke="#82ca9d"
+                strokeDasharray="5 5"
+                dot={false}
+              />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="Height"
+                stroke="#8884d8"
+              />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="min"
+                stroke="#82ca9d"
+                strokeDasharray="5 5"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
+      <Paper>
+        <ListSubheader
+          disableSticky={true}
+          style={{
+            background: "transparent",
           }}
         >
-          <XAxis
-            type="number"
-            dataKey="day"
-            ticks={[30, 60, 90, 120, 150, 180, 210]}
-            tickFormatter={(value) => {
-              const day = addDays(new Date(), value);
-              const months = formatDistanceStrict(day, new Date());
-              return months.replace(" month", "m").replace("s", "");
-            }}
-          />
-          <YAxis
-            unit="cm"
-            domain={["dataMin", "dataMax"]}
-            tickCount={15}
-            tickFormatter={(value) => {
-              return value.toFixed(1);
-            }}
-          />
-          <Tooltip
-            labelFormatter={(value: any) => {
-              const day = addDays(new Date(babyBirthDate), value);
-              return format(day, "LLL d yyyy");
-            }}
-          />
-          <Legend />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="max"
-            stroke="#82ca9d"
-            strokeDasharray="5 5"
-            dot={false}
-          />
-          <Line connectNulls type="monotone" dataKey="Head" stroke="#8884d8" />
-          <Line
-            connectNulls
-            type="monotone"
-            dataKey="min"
-            stroke="#82ca9d"
-            strokeDasharray="5 5"
-            dot={false}
-          />
-        </LineChart>
-      </Box>
-    </Box>
+          Head circumference
+        </ListSubheader>
+        <Box style={{ marginBottom: "16px", padding: "16px" }}>
+          <ResponsiveContainer width="100%" minHeight={400}>
+            <LineChart
+              data={getHeadCirData}
+              margin={{
+                // right: 5,
+                left: -10,
+              }}
+            >
+              <XAxis
+                fontSize="12px"
+                type="number"
+                dataKey="day"
+                ticks={[30, 60, 90, 120, 150, 180, 210]}
+                tickFormatter={(value) => {
+                  const day = addDays(new Date(), value);
+                  const months = formatDistanceStrict(day, new Date());
+                  return months.replace(" month", "m").replace("s", "");
+                }}
+              />
+              <YAxis
+                fontSize="12px"
+                unit="cm"
+                domain={["dataMin", "dataMax"]}
+                tickCount={15}
+                tickFormatter={(value) => {
+                  return value.toFixed(1);
+                }}
+              />
+              <Tooltip
+                cursor={{ fill: "#1b2641" }}
+                contentStyle={{
+                  backgroundColor: "#081228",
+                  border: "none",
+                  borderRadius: "10px",
+                }}
+                labelFormatter={(value: any) => {
+                  const day = addDays(new Date(babyBirthDate), value);
+                  return format(day, "LLL d yyyy");
+                }}
+              />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="max"
+                stroke="#82ca9d"
+                strokeDasharray="5 5"
+                dot={false}
+              />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="Head"
+                stroke="#8884d8"
+              />
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey="min"
+                stroke="#82ca9d"
+                strokeDasharray="5 5"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
+    </Container>
   );
 };

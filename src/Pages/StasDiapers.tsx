@@ -244,62 +244,71 @@ export const StasDiapers = () => {
           </ResponsiveContainer>
         </Box>
       </Paper>
-      <Box>
-        <Typography>Diapering pattern by hours</Typography>
-        <ScatterChart
-          width={400}
-          height={600}
-          margin={{
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
+      <Paper>
+        <ListSubheader
+          disableSticky={true}
+          style={{
+            background: "transparent",
           }}
         >
-          {/* <CartesianGrid /> */}
-          <XAxis
-            type="category"
-            dataKey="date"
-            allowDuplicatedCategory={false}
-            tickFormatter={(value) => {
-              console.log("bbbb " + value);
-              // return "x";
-              if (value) {
-                return format(new Date(value), "EEE");
-              }
-              return "x";
-            }}
-          />
-          <YAxis
-            type="number"
-            dataKey="time"
-            tickFormatter={(value) => {
-              const date = addSeconds(startOfToday(), value);
-              return format(date, "h a");
-            }}
-            tickCount={13}
-            interval="preserveStartEnd"
-            allowDataOverflow={false}
-            domain={[0, 86400]}
-          />
-          {/* <ZAxis type="number" dataKey="z" range={[60, 400]} name="score" unit="km" /> */}
-          {/* <Tooltip cursor={{ strokeDasharray: '3 3' }} /> */}
-          <Legend />
+          Diapering pattern by hours
+        </ListSubheader>
+        <Box style={{ marginBottom: "16px", padding: "16px" }}>
+          <ResponsiveContainer width="100%" minHeight={600}>
+            <ScatterChart
+              margin={{
+                top: 15,
+                // right: 20,
+                // bottom: 20,
+                left: -15,
+              }}
+            >
+              {/* <CartesianGrid /> */}
+              <XAxis
+                fontSize="12px"
+                type="category"
+                dataKey="date"
+                allowDuplicatedCategory={false}
+                tickFormatter={(value) => {
+                  console.log("bbbb " + value);
+                  // return "x";
+                  if (value) {
+                    return format(new Date(value), "EEE");
+                  }
+                  return "x";
+                }}
+              />
+              <YAxis
+                fontSize="12px"
+                type="number"
+                dataKey="time"
+                tickFormatter={(value) => {
+                  const date = addSeconds(startOfToday(), value);
+                  return format(date, "h a");
+                }}
+                tickCount={13}
+                interval="preserveStartEnd"
+                allowDataOverflow={false}
+                domain={[0, 86400]}
+              />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
 
-          <Scatter
-            name="pee"
-            data={getScatterChartDate().pee}
-            fill="#8884d8"
-            shape="triangle"
-          />
-          <Scatter
-            name="poo"
-            data={getScatterChartDate().poo}
-            fill="#82ca9d"
-            shape="circle"
-          />
-        </ScatterChart>
-      </Box>
+              <Scatter
+                name="pee"
+                data={getScatterChartDate().pee}
+                fill="#8884d8"
+                shape="triangle"
+              />
+              <Scatter
+                name="poo"
+                data={getScatterChartDate().poo}
+                fill="#82ca9d"
+                shape="circle"
+              />
+            </ScatterChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
     </Container>
   );
 };

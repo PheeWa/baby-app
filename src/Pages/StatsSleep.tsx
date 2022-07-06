@@ -228,9 +228,7 @@ export const StatsSleep = () => {
             <BarChart
               data={getBarData(weeklySleeps)}
               margin={{
-                top: 10,
-                right: 10,
-                left: 10,
+                top: 15,
               }}
             >
               <XAxis
