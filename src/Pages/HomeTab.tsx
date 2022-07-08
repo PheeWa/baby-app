@@ -3,6 +3,7 @@ import {
   ArrowForwardRounded,
   BabyChangingStationRounded,
   CribRounded,
+  Image,
   LastPageSharp,
   LocalCafeRounded,
   LocalHospitalRounded,
@@ -53,6 +54,13 @@ import { Growth } from "./GrowthPage";
 import { Health } from "./HealthPage";
 import { Leisure } from "./LeisurePage";
 import { Sleep } from "./SleepPage";
+import babyBottle from "../Assets/milkBottle.png";
+import sleep from "../Assets/sleep.png";
+import nappy from "../Assets/nappy.png";
+import leisureIcon from "../Assets/leisureIcon.png";
+import growthIcon from "../Assets/growthIcon.png";
+import healthIcon from "../Assets/healthIcon.png";
+import cameraIcon from "../Assets/cameraIcon.png";
 
 export const HomeTab = () => {
   const navigate = useNavigate();
@@ -122,19 +130,18 @@ export const HomeTab = () => {
     }
   })[0];
 
-  // TODO: fix , at the end, when there is no details
-
   //For Latest activity//
   const getFeedingText = () => {
     if (!latestFeeding) {
       return "";
     }
-    const text = `${format(
-      new Date(latestFeeding.start),
-      "p"
-    )}, ${formatDuration(latestFeeding.start, latestFeeding.finish)}, ${
+    const text = `${formatDuration(
+      latestFeeding.finish,
+      Date()
+    )} ago, ${formatDuration(latestFeeding.start, latestFeeding.finish)}, ${
       latestFeeding.type
-    }, ${latestFeeding.details}`;
+    } ${latestFeeding.details ? "," : ""} ${latestFeeding.details}`;
+
     return text;
   };
 
@@ -143,10 +150,12 @@ export const HomeTab = () => {
       return "";
     }
     // return latestSleep.id + "";
-    const text = `${format(new Date(latestSleep.start), "p")}, ${formatDuration(
-      latestSleep.start,
-      latestSleep.finish
-    )},sleep,${latestSleep.details}
+    const text = `${formatDuration(
+      latestSleep.finish,
+      Date()
+    )} ago, ${formatDuration(latestSleep.start, latestSleep.finish)},sleep ${
+      latestSleep.details ? "," : ""
+    } ${latestSleep.details}
     `;
     return text;
   };
@@ -155,12 +164,12 @@ export const HomeTab = () => {
     if (!latestLeisure) {
       return "";
     }
-    const text = `${format(
-      new Date(latestLeisure.start),
-      "p"
-    )}, ${formatDuration(latestLeisure.start, latestLeisure.finish)}, ${
+    const text = `${formatDuration(
+      latestLeisure.finish,
+      Date()
+    )} ago, ${formatDuration(latestLeisure.start, latestLeisure.finish)}, ${
       latestLeisure.type
-    }, ${latestLeisure.details}`;
+    } ${latestLeisure.details ? "," : ""} ${latestLeisure.details}`;
     return text;
   };
 
@@ -168,9 +177,9 @@ export const HomeTab = () => {
     if (!latestDiaper) {
       return "";
     }
-    const text = `${format(new Date(latestDiaper.start), "p")},${
+    const text = `${formatDuration(latestDiaper.start, Date())} ago,${
       latestDiaper.type
-    },${latestDiaper.details}`;
+    } ${latestDiaper.details ? "," : ""} ${latestDiaper.details}`;
     return text;
   };
 
@@ -185,9 +194,11 @@ export const HomeTab = () => {
         return "";
       }
     };
-    const text = `${format(new Date(latestHealth.start), "p")}, ${
+    const text = `${formatDuration(latestHealth.start, Date())} ago, ${
       latestHealth.type
-    } ${showValue()},${latestHealth.details}`;
+    } ${showValue()} ${latestHealth.details ? "," : ""} ${
+      latestHealth.details
+    }`;
 
     return text;
   };
@@ -196,7 +207,7 @@ export const HomeTab = () => {
     if (!latestGrowth) {
       return "";
     }
-    const text = `${format(new Date(latestGrowth.start), "p")}, ${getLabel(
+    const text = `${formatDuration(latestGrowth.start, Date())} ago, ${getLabel(
       latestGrowth.type
     )}, ${latestGrowth.value}${getUnit(latestGrowth.type)}`;
     return text;
@@ -344,41 +355,49 @@ export const HomeTab = () => {
 
   return (
     <Box>
-      <Box style={{ display: "flex", overflow: "auto", marginBottom: "16px" }}>
+      <Box
+        style={{
+          display: "flex",
+          overflow: "auto",
+          marginBottom: "16px",
+          padding: "16px",
+          gap: "16px",
+        }}
+      >
         <Link to="/feed">
-          <IconButton aria-label="delete" size="large">
-            <LocalCafeRounded fontSize="inherit" />
-          </IconButton>
+          <Button style={{ backgroundColor: "#151e33" }}>
+            <img width="50px" src={babyBottle}></img>
+          </Button>
         </Link>
         <Link to="/sleep">
-          <IconButton aria-label="delete" size="large">
-            <CribRounded fontSize="inherit" />
-          </IconButton>
+          <Button style={{ backgroundColor: "#151e33" }}>
+            <img width="50px" src={sleep}></img>
+          </Button>
         </Link>
         <Link to="/diapers">
-          <IconButton aria-label="delete" size="large">
-            <BabyChangingStationRounded fontSize="inherit" />
-          </IconButton>
+          <Button style={{ backgroundColor: "#151e33" }}>
+            <img width="50px" src={nappy}></img>
+          </Button>
         </Link>
         <Link to="/leisure">
-          <IconButton aria-label="delete" size="large">
-            <SportsBasketballRounded fontSize="inherit" />
-          </IconButton>
+          <Button style={{ backgroundColor: "#151e33" }}>
+            <img width="50px" src={leisureIcon}></img>
+          </Button>
         </Link>
         <Link to="/growth">
-          <IconButton aria-label="delete" size="large">
-            <MonitorWeightRounded fontSize="inherit" />
-          </IconButton>
+          <Button style={{ backgroundColor: "#151e33" }}>
+            <img width="50px" src={growthIcon}></img>
+          </Button>
         </Link>
         <Link to="/health">
-          <IconButton aria-label="delete" size="large">
-            <LocalHospitalRounded fontSize="inherit" />
-          </IconButton>
+          <Button style={{ backgroundColor: "#151e33" }}>
+            <img width="50px" src={healthIcon}></img>
+          </Button>
         </Link>
         <Link to="/photo">
-          <IconButton aria-label="delete" size="large">
-            <PhotoCameraRounded fontSize="inherit" />
-          </IconButton>
+          <Button style={{ backgroundColor: "#151e33" }}>
+            <img width="50px" src={cameraIcon}></img>
+          </Button>
         </Link>
       </Box>
       <Container>
@@ -515,5 +534,3 @@ export const HomeTab = () => {
     </Box>
   );
 };
-
-// TODO: Add timeframe to display latest activity

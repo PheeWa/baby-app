@@ -188,6 +188,7 @@ export const StasGrowth = () => {
               />
               <Legend wrapperStyle={{ fontSize: "12px" }} />
               <Line
+                tooltipType="none"
                 connectNulls
                 type="monotone"
                 dataKey="max"
@@ -202,6 +203,7 @@ export const StasGrowth = () => {
                 stroke="#8884d8"
               />
               <Line
+                tooltipType="none"
                 connectNulls
                 type="monotone"
                 dataKey="min"
@@ -265,6 +267,7 @@ export const StasGrowth = () => {
               />
               <Legend wrapperStyle={{ fontSize: "12px" }} />
               <Line
+                tooltipType="none"
                 connectNulls
                 type="monotone"
                 dataKey="max"
@@ -279,6 +282,7 @@ export const StasGrowth = () => {
                 stroke="#8884d8"
               />
               <Line
+                tooltipType="none"
                 connectNulls
                 type="monotone"
                 dataKey="min"
@@ -342,6 +346,7 @@ export const StasGrowth = () => {
               />
               <Legend wrapperStyle={{ fontSize: "12px" }} />
               <Line
+                tooltipType="none"
                 connectNulls
                 type="monotone"
                 dataKey="max"
@@ -356,6 +361,7 @@ export const StasGrowth = () => {
                 stroke="#8884d8"
               />
               <Line
+                tooltipType="none"
                 connectNulls
                 type="monotone"
                 dataKey="min"

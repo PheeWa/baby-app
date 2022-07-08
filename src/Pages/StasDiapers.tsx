@@ -11,6 +11,7 @@ import {
 import { Container } from "@mui/system";
 import {
   addSeconds,
+  differenceInDays,
   differenceInSeconds,
   endOfToday,
   format,
@@ -42,14 +43,7 @@ import { avgEvent, getLineChartData } from "./StatsSleep";
 export const StasDiapers = () => {
   const weeklyDiapers = useSelector((state: RootState) => {
     return state.diaper.diapers.filter((diaper) => {
-      const thisWeek = isWithinInterval(new Date(diaper.start), {
-        start: subDays(new Date(), 7),
-        end: new Date(),
-      });
-
-      if (thisWeek) {
-        return true;
-      }
+      return differenceInDays(endOfToday(), new Date(diaper.start)) < 7;
     });
   });
   //   console.log("hahahahah", weeklyDiapers);
@@ -73,7 +67,14 @@ export const StasDiapers = () => {
   };
 
   const getComposedChartData = () => {
-    let x: any[] = [];
+    const placeholders = [...Array(7)].map((_, i) => {
+      return {
+        pee: 0,
+        poo: 0,
+        date: +startOfDay(subDays(new Date(), i)),
+      };
+    });
+    let x: any[] = placeholders;
     weeklyDiapers.forEach((diaper) => {
       let current = x.find((item) => {
         return (
@@ -82,8 +83,7 @@ export const StasDiapers = () => {
       });
 
       if (!current) {
-        x = [{ date: diaper.start, pee: 0, poo: 0 }, ...x];
-        current = x[0];
+        return;
       }
 
       if (diaper.type === "pee") {
@@ -105,43 +105,41 @@ export const StasDiapers = () => {
     // });
   };
 
-  const data01 = [
-    { x: 100, y: 200, z: 200 },
-    { x: 120, y: 100, z: 260 },
-    { x: 170, y: 300, z: 400 },
-    { x: 140, y: 250, z: 280 },
-    { x: 150, y: 400, z: 500 },
-    { x: 110, y: 280, z: 200 },
-  ];
-  const data02 = [
-    { x: 200, y: 260, z: 240 },
-    { x: 240, y: 290, z: 220 },
-    { x: 190, y: 290, z: 250 },
-    { x: 198, y: 250, z: 210 },
-    { x: 180, y: 280, z: 260 },
-    { x: 210, y: 220, z: 230 },
-  ];
-
   const getScatterChartDate = () => {
-    let pee: any[] = [];
-    let poo: any[] = [];
+    let pee = [...Array(7)].map((_, i) => {
+      return {
+        time: -1000,
+        date: +startOfDay(subDays(new Date(), i)),
+      };
+    });
+    let poo = [...Array(7)].map((_, i) => {
+      return {
+        time: 0,
+        date: +startOfDay(subDays(new Date(), i)),
+      };
+    });
     weeklyDiapers.forEach((diaper) => {
       const time = differenceInSeconds(
         new Date(diaper.start),
         startOfDay(new Date(diaper.start))
       );
-      const date = startOfDay(new Date(diaper.start)).toString();
+      const date = +startOfDay(new Date(diaper.start));
 
       if (diaper.type === "pee") {
         pee = [{ time: time, date: date }, ...pee];
       } else if (diaper.type === "poo") {
         poo = [{ time: time, date: date }, ...poo];
       } else {
-        pee = [{ time: time + 600, date: date }, ...pee];
+        pee = [{ time: time + 1000, date: date }, ...pee];
         poo = [{ time: time, date: date }, ...poo];
       }
     });
-    return { pee, poo };
+    const peex = pee.sort((a, b) => (a.date < b.date ? 1 : -1));
+    console.log("hahahha", peex);
+    return {
+      pee: pee.sort((a, b) => (a.date < b.date ? 1 : -1)),
+      poo: poo.sort((a, b) => (a.date < b.date ? 1 : -1)),
+    };
   };
 
   return (
@@ -206,6 +204,7 @@ export const StasDiapers = () => {
             >
               {/* <CartesianGrid stroke="#f5f5f5" /> */}
               <XAxis
+                reversed
                 fontSize="12px"
                 dataKey="date"
                 // scale="band"
@@ -265,20 +264,21 @@ export const StasDiapers = () => {
             >
               {/* <CartesianGrid /> */}
               <XAxis
+                interval={0}
+                reversed
                 fontSize="12px"
                 type="category"
                 dataKey="date"
                 allowDuplicatedCategory={false}
                 tickFormatter={(value) => {
-                  console.log("bbbb " + value);
-                  // return "x";
                   if (value) {
                     return format(new Date(value), "EEE");
                   }
-                  return "x";
+                  return "";
                 }}
               />
               <YAxis
+                reversed
                 fontSize="12px"
                 type="number"
                 dataKey="time"

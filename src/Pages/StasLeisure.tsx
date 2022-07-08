@@ -10,7 +10,9 @@ import {
 } from "@mui/material";
 import {
   addSeconds,
+  differenceInDays,
   differenceInSeconds,
+  endOfToday,
   format,
   isWithinInterval,
   startOfToday,
@@ -39,15 +41,10 @@ import { getBarData } from "./StatsTab";
 export const StasLeisure = () => {
   const weeklyLeisures = useSelector((state: RootState) => {
     return state.leisure.leisures.filter((leisure) => {
-      const thisWeek = isWithinInterval(new Date(leisure.finish), {
-        start: subDays(new Date(), 7),
-        end: new Date(),
-      });
-      if (thisWeek) {
-        return true;
-      }
+      return differenceInDays(endOfToday(), new Date(leisure.start)) < 7;
     });
   });
+
   //for statistics//
 
   const weeklyTummyTime = weeklyLeisures.filter((leisure) => {
@@ -149,19 +146,23 @@ export const StasLeisure = () => {
           <ResponsiveContainer width="100%" minHeight={600}>
             <LineChart margin={{ left: -15, right: 5 }}>
               <XAxis
+                reversed
                 fontSize="12px"
                 dataKey="date"
                 type="category"
+                interval={0}
+                padding={{ left: 20, right: 20 }}
                 allowDuplicatedCategory={false}
                 tickFormatter={(value) => {
-                  console.log(value);
-                  if (value === 0) {
-                    return "";
-                  }
+                  // console.log(value);
+                  // if (value === 0) {
+                  //   return "";
+                  // }
                   return format(new Date(value), "EEE");
                 }}
               />
               <YAxis
+                reversed
                 fontSize="12px"
                 tickFormatter={(value) => {
                   const date = addSeconds(startOfToday(), value);

@@ -21,6 +21,7 @@ import {
   subDays,
   startOfDay,
   endOfDay,
+  addDays,
 } from "date-fns";
 import { syncBuiltinESMExports } from "module";
 import React from "react";
@@ -56,6 +57,24 @@ export const getLineChartData = (
   //     return true;
   //   }
   // });
+
+  const placeholders = [...Array(7)].map((_, i) => {
+    return {
+      name: `}${i}`,
+      data: [
+        {
+          time: 0,
+          date: +startOfDay(subDays(new Date(), i)),
+        },
+
+        {
+          time: 1,
+          date: +startOfDay(subDays(new Date(), i)),
+        },
+      ],
+    };
+  });
+
   let extraChartData: any = [];
   const chartData = events.map((event, i) => {
     const startDate = new Date(event.start);
@@ -82,22 +101,24 @@ export const getLineChartData = (
         ],
       };
     } else {
-      const extraChartItem = {
-        name: `${i}-extra`,
-        type: event.type,
-        data: [
-          {
-            time: 0,
-            date: +startOfDay(finishDate),
-          },
+      if (differenceInDays(startOfToday(), startOfDay(finishDate)) < 7) {
+        const extraChartItem = {
+          name: `${i}-extra`,
+          type: event.type,
+          data: [
+            {
+              time: 0,
+              date: +startOfDay(finishDate),
+            },
 
-          {
-            time: differenceInSeconds(finishDate, startOfDay(finishDate)),
-            date: +startOfDay(finishDate),
-          },
-        ],
-      };
-      extraChartData = [...extraChartData, extraChartItem];
+            {
+              time: differenceInSeconds(finishDate, startOfDay(finishDate)),
+              date: +startOfDay(finishDate),
+            },
+          ],
+        };
+        extraChartData = [...extraChartData, extraChartItem];
+      }
 
       return {
         name: `${i}`,
@@ -119,24 +140,7 @@ export const getLineChartData = (
       };
     }
   });
-  return [
-    {
-      name: `}`,
-      data: [
-        {
-          time: 0,
-          date: 0,
-        },
-
-        {
-          time: 1,
-          date: 0,
-        },
-      ],
-    },
-    ...chartData,
-    ...extraChartData,
-  ];
+  return [...placeholders, ...chartData, ...extraChartData];
 };
 
 export const avgEvent = (events: Sleep[] | Leisure[]) => {
@@ -165,16 +169,10 @@ export const StatsSleep = () => {
   // From Redux//
   const weeklySleeps = useSelector((state: RootState) => {
     return state.sleep.sleeps.filter((sleep) => {
-      const thisWeek = isWithinInterval(new Date(sleep.finish), {
-        start: subDays(new Date(), 7),
-        end: new Date(),
-      });
-
-      if (thisWeek) {
-        return true;
-      }
+      return differenceInDays(endOfToday(), new Date(sleep.start)) < 7;
     });
   });
+  console.log(weeklySleeps);
 
   //Statistics functions//
 
@@ -270,25 +268,25 @@ export const StatsSleep = () => {
           disableSticky={true}
           style={{ background: "transparent" }}
         >
-          Sleep duration by days
+          Sleep schedule
         </ListSubheader>
         <Box style={{ marginBottom: "16px", padding: "16px" }}>
           <ResponsiveContainer width="100%" minHeight={500}>
             <LineChart margin={{ left: -15, right: 5 }}>
               <XAxis
+                reversed
                 style={{ fontSize: "12px" }}
                 dataKey="date"
+                padding={{ left: 20, right: 20 }}
                 type="category"
+                interval={0}
                 allowDuplicatedCategory={false}
                 tickFormatter={(value) => {
-                  console.log(value);
-                  if (value === 0) {
-                    return "";
-                  }
                   return format(new Date(value), "EEE");
                 }}
               />
               <YAxis
+                reversed
                 style={{ fontSize: "12px" }}
                 tickFormatter={(value) => {
                   const date = addSeconds(startOfToday(), value);

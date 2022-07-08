@@ -222,19 +222,23 @@ export const StatsFeeding = () => {
           <ResponsiveContainer width="100%" minHeight={500}>
             <LineChart margin={{ left: -15, right: 5 }}>
               <XAxis
+                reversed
+                interval={0}
+                padding={{ left: 20, right: 20 }}
                 fontSize="12px"
                 dataKey="date"
                 type="category"
                 allowDuplicatedCategory={false}
                 tickFormatter={(value) => {
-                  console.log(value);
-                  if (value === 0) {
-                    return "";
-                  }
+                  // console.log(value);
+                  // if (value === 0) {
+                  //   return "";
+                  // }
                   return format(new Date(value), "EEE");
                 }}
               />
               <YAxis
+                reversed
                 fontSize="12px"
                 tickFormatter={(value) => {
                   const date = addSeconds(startOfToday(), value);
