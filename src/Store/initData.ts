@@ -612,7 +612,7 @@ export const sleepData: Sleep[] = [
 export const feedingData: Feeding[] = [
   {
     id: 2,
-    type: "right breast",
+    type: "bottle",
     start: "6-Jul-2022 6:50 PM",
     finish: "6-Jul-2022 6:54 PM",
     details: "",
@@ -620,7 +620,7 @@ export const feedingData: Feeding[] = [
   },
   {
     id: 3,
-    type: "left breast",
+    type: "meal",
     start: "6-Jul-2022 6:46 PM",
     finish: "6-Jul-2022 6:50 PM",
     details: "",
