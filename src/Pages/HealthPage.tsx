@@ -1,4 +1,4 @@
-import { ForkLeftRounded, MoreVertRounded } from "@mui/icons-material";
+import { MoreVertRounded } from "@mui/icons-material";
 import {
   Container,
   Button,
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
 import { HealthDialog } from "../Components/HealthDialog";
+import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { addHealth, deleteHealth, editHealth } from "../Store/healthSlice";
@@ -112,8 +113,6 @@ export const HealthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => handleClickOpen("medication")}
           >
             Medication
@@ -121,8 +120,6 @@ export const HealthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => handleClickOpen("temperature")}
           >
             Temperature
@@ -132,8 +129,6 @@ export const HealthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => handleClickOpen("vaccination")}
           >
             Vaccination
@@ -199,7 +194,6 @@ export const HealthPage = () => {
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
-                        // secondary={diff}
                       />
                     </ListItem>
                   )}
@@ -214,7 +208,6 @@ export const HealthPage = () => {
                     </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      // primary={text}
                       secondary={diff}
                     />
                   </ListItem>
@@ -230,8 +223,8 @@ export const HealthPage = () => {
                     }
                   >
                     <ListItemAvatar>
-                      <Avatar>
-                        <MoreVertRounded />
+                      <Avatar style={{ backgroundColor: "#151e33" }}>
+                        <IconType type={health.type} />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText

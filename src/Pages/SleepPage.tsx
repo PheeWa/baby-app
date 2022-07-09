@@ -1,4 +1,4 @@
-import { ForkLeftRounded, MoreVertRounded } from "@mui/icons-material";
+import { MoreVertRounded } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -10,21 +10,13 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
-import {
-  addHours,
-  addSeconds,
-  differenceInSeconds,
-  format,
-  isSameDay,
-  isToday,
-  isYesterday,
-  subMinutes,
-} from "date-fns";
+import { format, isSameDay, isToday, isYesterday, subMinutes } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
+import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { SleepDialog } from "../Components/SleepDialog";
 import { SleepStopWatch } from "../Components/SleepStopWatch";
@@ -67,7 +59,6 @@ export const SleepPage = () => {
   const [selectedSleep, setSelectedSleep] = useState<Sleep | undefined>(
     undefined
   );
-  // const [isStopWatch, setIsStopWatch] = useState(false);
 
   //function/
 
@@ -128,8 +119,6 @@ export const SleepPage = () => {
             style={{ marginBottom: "16px" }}
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => dispatch(startSleepWatch())}
           >
             Sleep
@@ -180,7 +169,6 @@ export const SleepPage = () => {
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
-                        // secondary={diff}
                       />
                     </ListItem>
                   )}
@@ -195,7 +183,6 @@ export const SleepPage = () => {
                     </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      // primary={text}
                       secondary={diff}
                     />
                   </ListItem>
@@ -211,8 +198,8 @@ export const SleepPage = () => {
                     }
                   >
                     <ListItemAvatar>
-                      <Avatar>
-                        <MoreVertRounded />
+                      <Avatar style={{ backgroundColor: "#151e33" }}>
+                        <IconType type={sleep.type} />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText primary={text} secondary={sleep.details} />

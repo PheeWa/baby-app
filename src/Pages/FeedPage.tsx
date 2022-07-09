@@ -3,7 +3,6 @@ import {
   Avatar,
   Box,
   Button,
-  CircularProgress,
   Container,
   IconButton,
   List,
@@ -31,6 +30,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { FeedingDialog } from "../Components/FeedingDialog";
 import { Header } from "../Components/Header";
+import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { StopWatch } from "../Components/StopWatch";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
@@ -89,13 +89,9 @@ export const FeedPage = () => {
   const [selectedFeeding, setSelectedFeeding] = useState<Feeding | undefined>(
     undefined
   );
-  // const [isStopwatch, setIsStopwatch] = useState<FeedingType | undefined>(
-  //   undefined
-  // );
 
   const onSave = (newFeeding: Feeding) => {
     handleClose();
-    // setIsStopwatch(undefined);
     dispatch(stopStopwatch());
     if (newFeeding.id === 0) {
       const newFeedingWithId = { ...newFeeding, id: Math.random() };
@@ -108,7 +104,6 @@ export const FeedPage = () => {
   const onDelete = (id: number) => {
     handleClose();
     dispatch(deleteFeed(id));
-    // setfeedings(feedings.filter((feeding) => feeding.id !== id));
   };
 
   const calcStartDate = () => {
@@ -137,8 +132,6 @@ export const FeedPage = () => {
     setSelectedFeeding(undefined);
   };
 
-  // setItems(Math.random() > 0.5 ?[...items, 1, 2, 3, 4, 5] : []);
-
   return (
     <Box>
       <Header handleClickOpen={handleClickOpen} title={"Feeding"} />
@@ -151,8 +144,6 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("left breast"))}
             >
               Left
@@ -160,8 +151,6 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("right breast"))}
             >
               Right
@@ -171,8 +160,6 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("bottle"))}
             >
               Bottle
@@ -180,8 +167,6 @@ export const FeedPage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("meal"))}
             >
               Meal
@@ -238,7 +223,6 @@ export const FeedPage = () => {
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
-                        // secondary={diff}
                       />
                     </ListItem>
                   )}
@@ -254,7 +238,6 @@ export const FeedPage = () => {
                       </ListItemAvatar>
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
-                        // primary={text}
                         secondary={diff}
                       />
                     </ListItem>
@@ -272,8 +255,8 @@ export const FeedPage = () => {
                     }
                   >
                     <ListItemAvatar>
-                      <Avatar>
-                        <MoreVertRounded />
+                      <Avatar style={{ backgroundColor: "#151e33" }}>
+                        <IconType type={feeding.type} />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText primary={text} secondary={feeding.details} />

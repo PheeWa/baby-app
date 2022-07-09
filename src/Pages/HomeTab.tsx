@@ -54,7 +54,7 @@ import { Growth } from "./GrowthPage";
 import { Health } from "./HealthPage";
 import { Leisure } from "./LeisurePage";
 import { Sleep } from "./SleepPage";
-import babyBottle from "../Assets/milkBottle.png";
+import milkBottle from "../Assets/milkBottle.png";
 import sleep from "../Assets/sleep.png";
 import nappy from "../Assets/nappy.png";
 import leisureIcon from "../Assets/leisureIcon.png";
@@ -366,7 +366,7 @@ export const HomeTab = () => {
       >
         <Link to="/feed">
           <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={babyBottle}></img>
+            <img width="50px" src={milkBottle}></img>
           </Button>
         </Link>
         <Link to="/sleep">
@@ -447,22 +447,46 @@ export const HomeTab = () => {
             ) : (
               <>
                 {latestFeeding ? (
-                  <LatestActivity text={getFeedingText()} route="/feed" />
+                  <LatestActivity
+                    text={getFeedingText()}
+                    route="/feed"
+                    type={latestFeeding.type}
+                  />
                 ) : null}
                 {latestSleep ? (
-                  <LatestActivity text={getSleepText()} route="/sleep" />
+                  <LatestActivity
+                    text={getSleepText()}
+                    route="/sleep"
+                    type={latestSleep.type}
+                  />
                 ) : null}
                 {latestLeisure ? (
-                  <LatestActivity text={getLeisureText()} route="/leisure" />
+                  <LatestActivity
+                    text={getLeisureText()}
+                    route="/leisure"
+                    type={latestLeisure.type}
+                  />
                 ) : null}
                 {latestDiaper ? (
-                  <LatestActivity text={getDiaperText()} route="/diapers" />
+                  <LatestActivity
+                    text={getDiaperText()}
+                    route="/diapers"
+                    type={latestDiaper.type}
+                  />
                 ) : null}
                 {latestHealth ? (
-                  <LatestActivity text={getHealthText()} route="/health" />
+                  <LatestActivity
+                    text={getHealthText()}
+                    route="/health"
+                    type={latestHealth.type}
+                  />
                 ) : null}
                 {latestGrowth ? (
-                  <LatestActivity text={getGrowthText()} route="/growth" />
+                  <LatestActivity
+                    text={getGrowthText()}
+                    route="/growth"
+                    type={latestGrowth.type}
+                  />
                 ) : null}
               </>
             )}
@@ -490,6 +514,7 @@ export const HomeTab = () => {
                     text="Feedings"
                     totalTimes={sumFeedings.length}
                     totalDuration={totalFeedDuration}
+                    type="bottle"
                   />
                 ) : null}
 
@@ -498,6 +523,7 @@ export const HomeTab = () => {
                     text="Sleeps"
                     totalTimes={sumSleeps.length}
                     totalDuration={totalSleepDuration}
+                    type="Sleep"
                   />
                 ) : null}
                 {sumLeisures.length ? (
@@ -505,6 +531,7 @@ export const HomeTab = () => {
                     text="Leisures"
                     totalTimes={sumLeisures.length}
                     totalDuration={totalLeisureDuration}
+                    type="play time"
                   />
                 ) : null}
                 {sumDiapers.length ? (
@@ -512,6 +539,7 @@ export const HomeTab = () => {
                     text="Diapers"
                     totalTimes={sumDiapers.length}
                     totalDuration={totalDiapers}
+                    type="pee & poo"
                   />
                 ) : null}
               </>

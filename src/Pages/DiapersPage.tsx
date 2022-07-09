@@ -1,8 +1,4 @@
-import {
-  DeleteRounded,
-  ForkLeftRounded,
-  MoreVertRounded,
-} from "@mui/icons-material";
+import { DeleteRounded, MoreVertRounded } from "@mui/icons-material";
 import { MobileDateTimePicker } from "@mui/lab";
 import {
   Avatar,
@@ -25,15 +21,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { type } from "@testing-library/user-event/dist/type";
 import { format, isSameDay, isToday, isYesterday, set } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
-import { start } from "repl";
-import { text } from "stream/consumers";
 import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
+import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import {
@@ -74,7 +68,6 @@ export const DiapersPage = () => {
   const [type, setType] = useState("");
   const [details, setDetails] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  // const [diapers, setDiapers] = useState<Diaper[]>([]);
   const [isEdit, setIsEdit] = useState<Diaper | undefined>(undefined);
 
   //functions//
@@ -161,8 +154,6 @@ export const DiapersPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => createDiaper("pee")}
           >
             Pee
@@ -170,8 +161,6 @@ export const DiapersPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => createDiaper("poo")}
           >
             Poo
@@ -181,8 +170,6 @@ export const DiapersPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => createDiaper("pee & poo")}
           >
             Both
@@ -202,7 +189,6 @@ export const DiapersPage = () => {
           {isEdit ? (
             <IconButton
               aria-label="close"
-              // onClick={onClose}
               sx={{
                 position: "absolute",
                 right: 8,
@@ -221,7 +207,6 @@ export const DiapersPage = () => {
             <MobileDateTimePicker
               showToolbar
               label="Date"
-              // openTo="hours"
               value={date}
               onChange={(newValue) => {
                 setDate(newValue ?? "");
@@ -279,7 +264,6 @@ export const DiapersPage = () => {
                 slicedList[i].start,
                 slicedList[i - 1]?.start ?? Date()
               );
-              // console.log("hahahha", diff);
               const dates = () => {
                 if (isToday(new Date(slicedList[i].start))) {
                   return "Today";
@@ -304,7 +288,6 @@ export const DiapersPage = () => {
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
-                        // secondary={diff}
                       />
                     </ListItem>
                   )}
@@ -319,7 +302,6 @@ export const DiapersPage = () => {
                     </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      // primary={text}
                       secondary={diff}
                     />
                   </ListItem>
@@ -335,8 +317,8 @@ export const DiapersPage = () => {
                     }
                   >
                     <ListItemAvatar>
-                      <Avatar>
-                        <MoreVertRounded />
+                      <Avatar style={{ backgroundColor: "#151e33" }}>
+                        <IconType type={diaper.type} />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText

@@ -1,4 +1,4 @@
-import { ForkLeftRounded, MoreVertRounded } from "@mui/icons-material";
+import { MoreVertRounded } from "@mui/icons-material";
 import {
   Container,
   Box,
@@ -11,7 +11,6 @@ import {
   ListItemText,
 } from "@mui/material";
 
-import { time } from "console";
 import { format, isSameDay, isToday, isYesterday } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -19,6 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { getLabel, getUnit, GrowthDialog } from "../Components/GrowthDialog";
 import { Header } from "../Components/Header";
+import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { addGrowth, deleteGrowth, editGrowth } from "../Store/growthSlice";
@@ -49,8 +49,6 @@ export const GrowthPage = () => {
   const dispatch = useDispatch();
 
   //usestate//
-  // const [growths, setGrowths] = useState<Growth[]>([]);
-  // const [type, setType] = useState<GrowthType | undefined>(undefined);
   const [growth, setGrowth] = useState<Growth | undefined>(undefined);
 
   //functions//
@@ -111,8 +109,6 @@ export const GrowthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => createNewGrowth("weight")}
           >
             Weight
@@ -120,8 +116,6 @@ export const GrowthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => createNewGrowth("height")}
           >
             Height
@@ -131,8 +125,6 @@ export const GrowthPage = () => {
           <Button
             fullWidth
             variant="contained"
-            // color="secondary"
-            startIcon={<ForkLeftRounded />}
             onClick={() => createNewGrowth("head")}
           >
             Head
@@ -190,7 +182,6 @@ export const GrowthPage = () => {
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
-                        // secondary={diff}
                       />
                     </ListItem>
                   )}
@@ -205,7 +196,6 @@ export const GrowthPage = () => {
                     </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      // primary={text}
                       secondary={diff}
                     />
                   </ListItem>
@@ -221,8 +211,8 @@ export const GrowthPage = () => {
                     }
                   >
                     <ListItemAvatar>
-                      <Avatar>
-                        <MoreVertRounded />
+                      <Avatar style={{ backgroundColor: "#151e33" }}>
+                        <IconType type={growth.type} />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText

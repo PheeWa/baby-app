@@ -1,4 +1,4 @@
-import { ForkLeftRounded, MoreVertRounded } from "@mui/icons-material";
+import { MoreVertRounded } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -10,21 +10,13 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
-import {
-  addHours,
-  addSeconds,
-  differenceInSeconds,
-  format,
-  isSameDay,
-  isToday,
-  isYesterday,
-  subMinutes,
-} from "date-fns";
+import { format, isSameDay, isToday, isYesterday, subMinutes } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
+import { IconType } from "../Components/IconType";
 import { LeisureDialog } from "../Components/LeisureDialog";
 import { LeisureStopWatch } from "../Components/LeisureStopWatch";
 import { ScrollLoader } from "../Components/ScrollLoader";
@@ -49,9 +41,6 @@ export const LeisurePage = () => {
   const [selectedLeisure, setSelectedLeisure] = useState<Leisure | undefined>(
     undefined
   );
-  // const [isStopwatch, setIsStopwatch] = useState<LeisureType | undefined>(
-  //   undefined
-  // );
 
   // functions are here//
 
@@ -106,7 +95,6 @@ export const LeisurePage = () => {
   const onDelete = (id: number) => {
     onClose();
     dispatch(deleteLeisure(id));
-    // setfeedings(feedings.filter((feeding) => feeding.id !== id));
   };
 
   return (
@@ -120,8 +108,6 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
               onClick={() => dispatch(startStopwatch("tummy time"))}
             >
               Tummy time
@@ -129,9 +115,6 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
-              // onClick={() => setIsStopwatch("play time")}
               onClick={() => dispatch(startStopwatch("play time"))}
             >
               Play time
@@ -141,9 +124,6 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
-              // onClick={() => setIsStopwatch("outdoors")}
               onClick={() => dispatch(startStopwatch("outdoors"))}
             >
               Outdoors
@@ -151,9 +131,6 @@ export const LeisurePage = () => {
             <Button
               fullWidth
               variant="contained"
-              // color="secondary"
-              startIcon={<ForkLeftRounded />}
-              // onClick={() => setIsStopwatch("bath time")}
               onClick={() => dispatch(startStopwatch("bath time"))}
             >
               Bath time
@@ -208,7 +185,6 @@ export const LeisurePage = () => {
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
-                        // secondary={diff}
                       />
                     </ListItem>
                   )}
@@ -223,7 +199,6 @@ export const LeisurePage = () => {
                     </ListItemAvatar>
                     <ListItemText
                       style={{ marginTop: 0, marginBottom: 0 }}
-                      // primary={text}
                       secondary={diff}
                     />
                   </ListItem>
@@ -240,15 +215,11 @@ export const LeisurePage = () => {
                     }
                   >
                     <ListItemAvatar>
-                      <Avatar>
-                        <MoreVertRounded />
+                      <Avatar style={{ backgroundColor: "#151e33" }}>
+                        <IconType type={leisure.type} />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText primary={text} secondary={leisure.details} />
-                    {/* <ListItemText
-                    primary={leisure.id}
-                    secondary={leisure.details}
-                  /> */}
                   </ListItem>
                 </>
               );

@@ -15,6 +15,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FeedingType } from "../Pages/FeedPage";
 import { LeisureType } from "../Pages/LeisurePage";
+import { IconType } from "./IconType";
 import { getLeisureText } from "./LeisureStopWatch";
 import { getFeedText, formatTime } from "./StopWatch";
 
@@ -52,8 +53,8 @@ export const InProgress = (props: Props) => {
       }
     >
       <ListItemAvatar>
-        <Avatar>
-          <ArrowForwardRounded />
+        <Avatar style={{ backgroundColor: "#151e33" }}>
+          <IconType type={props.type} />
         </Avatar>
       </ListItemAvatar>
       <ListItemText primary={primaryText()} secondary="In progress" />

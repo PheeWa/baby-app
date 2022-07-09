@@ -16,6 +16,7 @@ import { text } from "stream/consumers";
 import { EndMessage } from "../Components/EndMessage";
 import { getLabel, getUnit } from "../Components/GrowthDialog";
 import { Header } from "../Components/Header";
+import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { RootState } from "../Store/store";
@@ -90,8 +91,8 @@ export const AllLogsPage = () => {
                 // key={feeding.id}
                 >
                   <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
+                    <Avatar style={{ backgroundColor: "#151e33" }}>
+                      <IconType type={log.type} />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={textFSL} />
@@ -109,8 +110,8 @@ export const AllLogsPage = () => {
               return (
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
+                    <Avatar style={{ backgroundColor: "#151e33" }}>
+                      <IconType type={log.type} />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={textDiaper} />
@@ -130,8 +131,8 @@ export const AllLogsPage = () => {
               return (
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
+                    <Avatar style={{ backgroundColor: "#151e33" }}>
+                      <IconType type={log.type} />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={textGrowth} />
@@ -155,8 +156,8 @@ export const AllLogsPage = () => {
               return (
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
-                      <MoreVertRounded />
+                    <Avatar style={{ backgroundColor: "#151e33" }}>
+                      <IconType type={log.type} />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText

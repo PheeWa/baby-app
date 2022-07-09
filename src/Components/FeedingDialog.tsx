@@ -117,7 +117,7 @@ export const FeedingDialog = (props: Props) => {
               <MenuItem value={"left breast"}>Left Breast</MenuItem>
               <MenuItem value={"right breast"}>Right Breast</MenuItem>
               <MenuItem value={"bottle"}>Bottle</MenuItem>
-              {/* <MenuItem value={"meal"}>Meal</MenuItem> */}
+              <MenuItem value={"meal"}>Meal</MenuItem>
             </Select>
           </FormControl>
         </Box>
