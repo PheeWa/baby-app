@@ -115,8 +115,6 @@ export const PhotoPage = () => {
                 reader.addEventListener(
                   "load",
                   function () {
-                    // convert image file to base64 string
-                    // console.log(reader.result);
                     getPhoto(reader.result);
                   },
                   false

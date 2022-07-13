@@ -34,6 +34,7 @@ import { RootState } from "../Store/store";
 import { Feeding } from "./FeedPage";
 import { getLineChartData } from "./StatsSleep";
 import { getBarData } from "./StatsTab";
+import { capitalize } from "lodash";
 
 export const formatSeconds = (seconds: number) => {
   const date = addSeconds(new Date(0), seconds);
@@ -149,7 +150,7 @@ export const StatsFeeding = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
               {avgFeeding(weeklyFeedings).avgFeedTimes}
             </Typography>
@@ -159,7 +160,7 @@ export const StatsFeeding = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
               {avgFeeding(weeklyFeedings).avgFeedDuration}
             </Typography>
@@ -186,7 +187,12 @@ export const StatsFeeding = () => {
                 fontSize="12px"
               />
               <YAxis fontSize="12px" tickFormatter={formatSeconds} />
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Legend
+                wrapperStyle={{ fontSize: "12px" }}
+                formatter={(value) => {
+                  return capitalize(value);
+                }}
+              />
               <Tooltip
                 cursor={{ fill: "#1b2641" }}
                 contentStyle={{
@@ -197,8 +203,8 @@ export const StatsFeeding = () => {
                 labelFormatter={(value: any) => {
                   return format(value, "LLL d yyyy");
                 }}
-                formatter={(value: any) => {
-                  return formatSeconds(value);
+                formatter={(value: any, name: any) => {
+                  return [formatSeconds(value), capitalize(name)];
                 }}
               />
               <Bar dataKey="left" stackId="a" fill="#82ca9d"></Bar>
@@ -230,10 +236,6 @@ export const StatsFeeding = () => {
                 type="category"
                 allowDuplicatedCategory={false}
                 tickFormatter={(value) => {
-                  // console.log(value);
-                  // if (value === 0) {
-                  //   return "";
-                  // }
                   return format(new Date(value), "EEE");
                 }}
               />
@@ -250,6 +252,9 @@ export const StatsFeeding = () => {
                 domain={[0, 86400]}
               />
               <Legend
+                formatter={(value) => {
+                  return capitalize(value);
+                }}
                 wrapperStyle={{ fontSize: "12px" }}
                 payload={[
                   { value: "left", type: "rect", id: "ID01", color: "#82ca9d" },

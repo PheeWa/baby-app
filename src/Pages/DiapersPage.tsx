@@ -209,11 +209,12 @@ export const DiapersPage = () => {
               label="Date"
               value={date}
               onChange={(newValue) => {
-                setDate(newValue ?? "");
+                setDate(newValue?.toString() ?? "");
               }}
               renderInput={(params) => (
                 <TextField {...params} fullWidth variant="standard" />
               )}
+              maxDateTime={new Date()}
             />
           </Box>
 
@@ -256,7 +257,7 @@ export const DiapersPage = () => {
             next={fetchData}
             hasMore={hasMore}
             loader={<ScrollLoader />}
-            endMessage={<EndMessage />}
+            endMessage={<EndMessage dataLength={dataLength} />}
           >
             {slicedList.map((diaper, i: number) => {
               const text = `${format(new Date(diaper.start), "p")}`;
@@ -279,22 +280,16 @@ export const DiapersPage = () => {
               );
 
               return (
-                <>
+                <React.Fragment key={diaper.id}>
                   {!isSameDate && (
-                    <ListItem
-                      key={diaper.id + "showdates"}
-                      style={{ paddingTop: 0, paddingBottom: 0 }}
-                    >
+                    <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
                       />
                     </ListItem>
                   )}
-                  <ListItem
-                    key={diaper.id + "-showDiff"}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
-                  >
+                  <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                     <ListItemAvatar style={{ opacity: 0, height: 0 }}>
                       <Avatar>
                         <MoreVertRounded />
@@ -326,7 +321,7 @@ export const DiapersPage = () => {
                       secondary={diaper.details}
                     />
                   </ListItem>
-                </>
+                </React.Fragment>
               );
             })}
           </InfiniteScroll>

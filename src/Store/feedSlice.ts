@@ -11,6 +11,8 @@ type FeedingStopwatch = {
   startDate: string;
   type: FeedingType;
   isRunning: boolean;
+  contents: string;
+  amount: number;
 };
 
 export interface FeedState {
@@ -19,7 +21,7 @@ export interface FeedState {
 }
 
 const initialState: FeedState = {
-  feedings: feedingData,
+  feedings: [],
   stopwatch: {
     time: 0,
     isEdit: false,
@@ -27,6 +29,8 @@ const initialState: FeedState = {
     startDate: Date(),
     type: "left breast",
     isRunning: false,
+    contents: "",
+    amount: 0,
   },
 };
 
@@ -63,6 +67,8 @@ export const feedSlice = createSlice({
         startDate: Date(),
         type: action.payload,
         isRunning: true,
+        contents: "formula",
+        amount: 0,
       };
     },
     stopStopwatch: (state, action: PayloadAction) => {

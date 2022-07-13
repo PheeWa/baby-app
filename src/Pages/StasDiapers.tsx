@@ -20,6 +20,7 @@ import {
   subDays,
 } from "date-fns";
 import { endOfDay, startOfDay } from "date-fns/esm";
+import { capitalize } from "lodash";
 import React from "react";
 import { useSelector } from "react-redux";
 import {
@@ -46,7 +47,6 @@ export const StasDiapers = () => {
       return differenceInDays(endOfToday(), new Date(diaper.start)) < 7;
     });
   });
-  //   console.log("hahahahah", weeklyDiapers);
 
   const avgDiapers = () => {
     let sumPee = 0;
@@ -135,7 +135,6 @@ export const StasDiapers = () => {
       }
     });
     const peex = pee.sort((a, b) => (a.date < b.date ? 1 : -1));
-    console.log("hahahha", peex);
     return {
       pee: pee.sort((a, b) => (a.date < b.date ? 1 : -1)),
       poo: poo.sort((a, b) => (a.date < b.date ? 1 : -1)),
@@ -162,10 +161,8 @@ export const StasDiapers = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
-              {/* {avgSleep().avgSleeps} */}
-              {/* {avgEvent(xxx).avgEvents} */}
               {avgDiapers().avgPee}
             </Typography>
           </ListItem>
@@ -174,10 +171,8 @@ export const StasDiapers = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
-              {/* {avgSleep().avgSleeps} */}
-              {/* {avgEvent(xxx).avgEvents} */}
               {avgDiapers().avgPoo}
             </Typography>
           </ListItem>
@@ -198,23 +193,22 @@ export const StasDiapers = () => {
               data={getComposedChartData()}
               margin={{
                 top: 15,
-                // right: 10,
-                // left: 10,
               }}
             >
-              {/* <CartesianGrid stroke="#f5f5f5" /> */}
               <XAxis
                 reversed
                 fontSize="12px"
                 dataKey="date"
-                // scale="band"
                 tickFormatter={(value) => {
                   return format(new Date(value), "EEE");
                 }}
               />
-              {/* <YAxis /> */}
-              {/* <Tooltip /> */}
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Legend
+                wrapperStyle={{ fontSize: "12px" }}
+                formatter={(value) => {
+                  return capitalize(value);
+                }}
+              />
               <Bar dataKey="pee" barSize={20} fill="#8884d8">
                 <LabelList
                   style={{ fill: "#8884d8", fontSize: "12px" }}
@@ -228,7 +222,6 @@ export const StasDiapers = () => {
                 type="monotone"
                 dataKey="poo"
                 stroke="#82ca9d"
-                // dot={{ stroke: "#ff7300", strokeWidth: 10 }}
                 activeDot={{ r: 8 }}
               >
                 <LabelList
@@ -257,12 +250,9 @@ export const StasDiapers = () => {
             <ScatterChart
               margin={{
                 top: 15,
-                // right: 20,
-                // bottom: 20,
                 left: -15,
               }}
             >
-              {/* <CartesianGrid /> */}
               <XAxis
                 interval={0}
                 reversed
@@ -291,7 +281,12 @@ export const StasDiapers = () => {
                 allowDataOverflow={false}
                 domain={[0, 86400]}
               />
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Legend
+                wrapperStyle={{ fontSize: "12px" }}
+                formatter={(value) => {
+                  return capitalize(value);
+                }}
+              />
 
               <Scatter
                 name="pee"

@@ -362,6 +362,7 @@ export const HomeTab = () => {
           marginBottom: "16px",
           padding: "16px",
           gap: "16px",
+          // justifyContent: "center",
         }}
       >
         <Link to="/feed">
@@ -442,7 +443,7 @@ export const HomeTab = () => {
           >
             {noLatestActivity() ? (
               <ListItem>
-                <ListItemText primary="No any latest activity" />
+                <ListItemText primary="No latest activities" />
               </ListItem>
             ) : (
               <>
@@ -505,7 +506,7 @@ export const HomeTab = () => {
           >
             {noRecordToday() ? (
               <ListItem>
-                <ListItemText primary="No record for Today" />
+                <ListItemText primary="No records for Today" />
               </ListItem>
             ) : (
               <>
@@ -548,8 +549,13 @@ export const HomeTab = () => {
         </Paper>
 
         <Button
-          style={{ marginTop: "16px", marginBottom: "16px" }}
-          fullWidth
+          style={{
+            marginTop: "16px",
+            marginBottom: "16px",
+            width: "50%",
+            display: "flex",
+            alignSelf: "center",
+          }}
           variant="contained"
           // color="secondary"
           onClick={() => {

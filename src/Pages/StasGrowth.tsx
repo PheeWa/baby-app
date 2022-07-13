@@ -12,6 +12,7 @@ import {
   format,
   formatDistanceStrict,
 } from "date-fns/esm";
+import { capitalize } from "lodash";
 import React from "react";
 import { useSelector } from "react-redux";
 import {
@@ -134,7 +135,7 @@ export const StasGrowth = () => {
 
   return (
     <Container>
-      <Paper style={{ marginTop: "16px", marginBottom: "16px" }}>
+      <Paper style={{ marginTop: "16px" }}>
         <ListSubheader
           disableSticky={true}
           style={{
@@ -151,6 +152,7 @@ export const StasGrowth = () => {
               margin={{
                 right: 10,
                 left: 0,
+                top: 15,
               }}
             >
               {/* <CartesianGrid strokeDasharray="3 3" /> */}
@@ -186,7 +188,12 @@ export const StasGrowth = () => {
                   return format(day, "LLL d yyyy");
                 }}
               />
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Legend
+                wrapperStyle={{ fontSize: "12px" }}
+                formatter={(value) => {
+                  return capitalize(value);
+                }}
+              />
               <Line
                 tooltipType="none"
                 connectNulls
@@ -231,6 +238,7 @@ export const StasGrowth = () => {
               margin={{
                 // right: 5,
                 left: -10,
+                top: 15,
               }}
             >
               <XAxis
@@ -265,7 +273,12 @@ export const StasGrowth = () => {
                   return format(day, "LLL d yyyy");
                 }}
               />
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Legend
+                wrapperStyle={{ fontSize: "12px" }}
+                formatter={(value) => {
+                  return capitalize(value);
+                }}
+              />
               <Line
                 tooltipType="none"
                 connectNulls
@@ -310,6 +323,7 @@ export const StasGrowth = () => {
               margin={{
                 // right: 5,
                 left: -10,
+                top: 15,
               }}
             >
               <XAxis
@@ -344,7 +358,12 @@ export const StasGrowth = () => {
                   return format(day, "LLL d yyyy");
                 }}
               />
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
+              <Legend
+                wrapperStyle={{ fontSize: "12px" }}
+                formatter={(value) => {
+                  return capitalize(value);
+                }}
+              />
               <Line
                 tooltipType="none"
                 connectNulls

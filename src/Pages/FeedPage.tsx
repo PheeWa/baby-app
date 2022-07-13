@@ -24,7 +24,7 @@ import {
   subMinutes,
 } from "date-fns";
 import { differenceInMinutes } from "date-fns/esm";
-import { useState } from "react";
+import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
@@ -73,7 +73,7 @@ export const formatDuration = (start: string, finish: string) => {
 export const FeedPage = () => {
   const feedingsList = useSelector((state: RootState) => {
     return [...state.feed.feedings].sort((a, b) => {
-      if (+new Date(a.finish) < +new Date(b.finish)) {
+      if (+new Date(a.finish ?? a.start) < +new Date(b.finish ?? a.start)) {
         return 1;
       } else return -1;
     });
@@ -182,7 +182,7 @@ export const FeedPage = () => {
             next={fetchData}
             hasMore={hasMore}
             loader={<ScrollLoader />}
-            endMessage={<EndMessage />}
+            endMessage={<EndMessage dataLength={dataLength} />}
           >
             {slicedList.map((feeding: Feeding, i: number) => {
               const text = `${format(
@@ -191,6 +191,15 @@ export const FeedPage = () => {
               )}, ${formatDuration(feeding.start, feeding.finish)}, ${
                 feeding.type
               }`;
+
+              const secondaryText = () => {
+                if (feeding.type === "bottle") {
+                  return `${feeding.amount}ml, ${feeding.contents}${
+                    feeding.details ? ", " : ""
+                  }${feeding.details}`;
+                } else return feeding.details;
+              };
+
               const diff = formatDuration(
                 slicedList[i].finish,
                 slicedList[i - 1]?.start ?? Date()
@@ -212,14 +221,11 @@ export const FeedPage = () => {
                 new Date(slicedList[i - 1]?.finish ?? Date()),
                 new Date(slicedList[i].finish)
               );
-
+              console.log("hey", feeding.contents);
               return (
-                <>
+                <React.Fragment key={feeding.id}>
                   {!isSameDate && (
-                    <ListItem
-                      key={feeding.id + "showdates"}
-                      style={{ paddingTop: 30, paddingBottom: 10 }}
-                    >
+                    <ListItem style={{ paddingTop: 30, paddingBottom: 10 }}>
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
@@ -227,10 +233,7 @@ export const FeedPage = () => {
                     </ListItem>
                   )}
                   {showDiff > 3600 && (
-                    <ListItem
-                      key={feeding.id + "-showDiff"}
-                      style={{ paddingTop: 0, paddingBottom: 0 }}
-                    >
+                    <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                       <ListItemAvatar style={{ opacity: 0, height: 0 }}>
                         <Avatar>
                           <MoreVertRounded />
@@ -259,9 +262,9 @@ export const FeedPage = () => {
                         <IconType type={feeding.type} />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={text} secondary={feeding.details} />
+                    <ListItemText primary={text} secondary={secondaryText()} />
                   </ListItem>
-                </>
+                </React.Fragment>
               );
             })}
           </InfiniteScroll>

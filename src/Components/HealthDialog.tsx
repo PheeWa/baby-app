@@ -81,11 +81,12 @@ export const HealthDialog = (props: Props) => {
             // openTo="hours"
             value={date}
             onChange={(newValue) => {
-              setDate(newValue ?? "");
+              setDate(newValue?.toString() ?? "");
             }}
             renderInput={(params) => (
               <TextField {...params} variant="standard" fullWidth />
             )}
+            maxDateTime={new Date()}
           />
         </Box>
 

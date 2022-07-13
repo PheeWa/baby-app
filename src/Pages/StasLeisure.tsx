@@ -18,6 +18,7 @@ import {
   startOfToday,
   subDays,
 } from "date-fns";
+import { capitalize } from "lodash";
 import React from "react";
 import { useSelector } from "react-redux";
 import {
@@ -103,7 +104,7 @@ export const StasLeisure = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
               {/* {avgSleep().avgSleeps} */}
               {avgEvent(weeklyTummyTime).avgEvents}
@@ -114,7 +115,7 @@ export const StasLeisure = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
               {/* {avgSleep().avgSleepTimes} */}
               {avgEvent(weeklyPlayTime).avgEvents}
@@ -125,7 +126,7 @@ export const StasLeisure = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
               {/* {avgSleep().avgSleepTimes} */}
               {avgEvent(weeklyOutdoors).avgEvents}
@@ -154,10 +155,6 @@ export const StasLeisure = () => {
                 padding={{ left: 20, right: 20 }}
                 allowDuplicatedCategory={false}
                 tickFormatter={(value) => {
-                  // console.log(value);
-                  // if (value === 0) {
-                  //   return "";
-                  // }
                   return format(new Date(value), "EEE");
                 }}
               />
@@ -249,7 +246,7 @@ export const StasLeisure = () => {
                   return format(value, "LLL d yyyy");
                 }}
                 formatter={(value: any) => {
-                  return formatSeconds(value);
+                  return [formatSeconds(value), "Duration"];
                 }}
               />
               <Bar dataKey="time" stackId="a" fill="#82ca9d">
@@ -301,7 +298,7 @@ export const StasLeisure = () => {
                   return format(value, "LLL d yyyy");
                 }}
                 formatter={(value: any) => {
-                  return formatSeconds(value);
+                  return [formatSeconds(value), "Duration"];
                 }}
               />
               <Bar dataKey="time" stackId="a" fill="#f27a0d">
@@ -353,7 +350,7 @@ export const StasLeisure = () => {
                   return format(value, "LLL d yyyy");
                 }}
                 formatter={(value: any) => {
-                  return formatSeconds(value);
+                  return [formatSeconds(value), "Duration"];
                 }}
               />
               <Bar dataKey="time" stackId="a" fill="#8884d8">
@@ -405,7 +402,7 @@ export const StasLeisure = () => {
                   return format(value, "LLL d yyyy");
                 }}
                 formatter={(value: any) => {
-                  return formatSeconds(value);
+                  return [formatSeconds(value), "Duration"];
                 }}
               />
               <Bar dataKey="time" stackId="a" fill="#0280f5">

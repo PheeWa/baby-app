@@ -82,11 +82,12 @@ export const LeisureDialog = (props: Props) => {
             // openTo="hours"
             value={start}
             onChange={(newValue) => {
-              setStart(newValue ?? "");
+              setStart(newValue?.toString() ?? "");
             }}
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
             )}
+            maxDateTime={new Date(finish)}
           />
         </Box>
         <Box style={{ display: "flex", marginBottom: "16px" }}>
@@ -96,11 +97,13 @@ export const LeisureDialog = (props: Props) => {
             // openTo="hours"
             value={finish}
             onChange={(newValue) => {
-              setFinish(newValue ?? "");
+              setFinish(newValue?.toString() ?? "");
             }}
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
             )}
+            maxDateTime={new Date()}
+            minDateTime={new Date(start)}
           />
         </Box>
 

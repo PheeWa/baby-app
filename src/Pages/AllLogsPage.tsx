@@ -64,7 +64,7 @@ export const AllLogsPage = () => {
           next={fetchData}
           hasMore={hasMore}
           loader={<ScrollLoader />}
-          endMessage={<EndMessage />}
+          endMessage={<EndMessage dataLength={dataLength} />}
         >
           {slicedList.map((log) => {
             if (

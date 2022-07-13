@@ -149,7 +149,7 @@ export const GrowthPage = () => {
             next={fetchData}
             hasMore={hasMore}
             loader={<ScrollLoader />}
-            endMessage={<EndMessage />}
+            endMessage={<EndMessage dataLength={dataLength} />}
           >
             {slicedList.map((growth, i: number) => {
               const text = `${format(new Date(growth.start), "p")}`;
@@ -173,22 +173,16 @@ export const GrowthPage = () => {
               );
 
               return (
-                <>
+                <React.Fragment key={growth.id}>
                   {!isSameDate && (
-                    <ListItem
-                      key={growth.id + "showdates"}
-                      style={{ paddingTop: 0, paddingBottom: 0 }}
-                    >
+                    <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
                       />
                     </ListItem>
                   )}
-                  <ListItem
-                    key={growth.id + "-showDiff"}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
-                  >
+                  <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                     <ListItemAvatar style={{ opacity: 0, height: 0 }}>
                       <Avatar>
                         <MoreVertRounded />
@@ -221,7 +215,7 @@ export const GrowthPage = () => {
                       }${getUnit(growth.type)}`}
                     />
                   </ListItem>
-                </>
+                </React.Fragment>
               );
             })}
           </InfiniteScroll>

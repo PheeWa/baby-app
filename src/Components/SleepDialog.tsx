@@ -71,11 +71,12 @@ export const SleepDialog = (props: Props) => {
             value={start}
             showToolbar
             onChange={(newValue) => {
-              setStart(newValue ?? "");
+              setStart(newValue?.toString() ?? "");
             }}
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
             )}
+            maxDateTime={new Date(finish)}
           />
         </Box>
         <Box style={{ display: "flex", marginBottom: "16px" }}>
@@ -85,11 +86,13 @@ export const SleepDialog = (props: Props) => {
             value={finish}
             showToolbar
             onChange={(newValue) => {
-              setFinish(newValue ?? "");
+              setFinish(newValue?.toString() ?? "");
             }}
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
             )}
+            maxDateTime={new Date()}
+            minDateTime={new Date(start)}
           />
         </Box>
 

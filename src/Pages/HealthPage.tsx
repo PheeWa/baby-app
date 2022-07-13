@@ -153,7 +153,7 @@ export const HealthPage = () => {
             next={fetchData}
             hasMore={hasMore}
             loader={<ScrollLoader />}
-            endMessage={<EndMessage />}
+            endMessage={<EndMessage dataLength={dataLength} />}
           >
             {slicedList.map((health, i: number) => {
               const text = `${format(new Date(health.start), "p")}`;
@@ -185,22 +185,16 @@ export const HealthPage = () => {
               );
 
               return (
-                <>
+                <React.Fragment key={health.id}>
                   {!isSameDate && (
-                    <ListItem
-                      key={health.id + "showdates"}
-                      style={{ paddingTop: 0, paddingBottom: 0 }}
-                    >
+                    <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
                       />
                     </ListItem>
                   )}
-                  <ListItem
-                    key={health.id + "-showDiff"}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
-                  >
+                  <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                     <ListItemAvatar style={{ opacity: 0, height: 0 }}>
                       <Avatar>
                         <MoreVertRounded />
@@ -232,7 +226,7 @@ export const HealthPage = () => {
                       secondary={health.details}
                     />
                   </ListItem>
-                </>
+                </React.Fragment>
               );
             })}
           </InfiniteScroll>

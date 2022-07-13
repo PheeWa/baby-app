@@ -46,7 +46,7 @@ export const LeisurePage = () => {
 
   const leisuresList = useSelector((state: RootState) => {
     return [...state.leisure.leisures].sort((a, b) => {
-      if (+new Date(a.start) < +new Date(b.start)) {
+      if (+new Date(a.finish ?? a.start) < +new Date(b.finish ?? b.start)) {
         return 1;
       } else return -1;
     });
@@ -146,7 +146,7 @@ export const LeisurePage = () => {
             next={fetchData}
             hasMore={hasMore}
             loader={<ScrollLoader />}
-            endMessage={<EndMessage />}
+            endMessage={<EndMessage dataLength={dataLength} />}
           >
             {slicedList.map((leisure: any, i: number) => {
               const text = `${format(
@@ -176,22 +176,16 @@ export const LeisurePage = () => {
               );
 
               return (
-                <>
+                <React.Fragment key={leisure.id}>
                   {!isSameDate && (
-                    <ListItem
-                      key={leisure.id + "showdates"}
-                      style={{ paddingTop: 0, paddingBottom: 0 }}
-                    >
+                    <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                       <ListItemText
                         style={{ marginTop: 0, marginBottom: 0 }}
                         primary={dates()}
                       />
                     </ListItem>
                   )}
-                  <ListItem
-                    key={leisure.id + "-showDiff"}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
-                  >
+                  <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
                     <ListItemAvatar style={{ opacity: 0, height: 0 }}>
                       <Avatar>
                         <MoreVertRounded />
@@ -221,7 +215,7 @@ export const LeisurePage = () => {
                     </ListItemAvatar>
                     <ListItemText primary={text} secondary={leisure.details} />
                   </ListItem>
-                </>
+                </React.Fragment>
               );
             })}
           </InfiniteScroll>

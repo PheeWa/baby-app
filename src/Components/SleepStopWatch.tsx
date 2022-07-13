@@ -8,7 +8,6 @@ import {
   TextField,
 } from "@mui/material";
 import { addSeconds, format, subSeconds } from "date-fns";
-import { differenceInSeconds } from "date-fns/esm";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Sleep } from "../Pages/SleepPage";
@@ -24,32 +23,6 @@ export const SleepStopWatch = (props: Props) => {
     (state: RootState) => state.sleep.sleepStopwatch
   );
   const dispatch = useDispatch();
-
-  // const [time, setTime] = useState(0);
-  // const [isEdit, setIsEdit] = useState(false);
-  // const [details, setDetails] = useState("");
-  // const [startDate, setStartDate] = useState(Date());
-
-  // useEffect(() => {
-  //   if (!sleepStopwatch) {
-  //     return;
-  //   }
-  //   const diff = differenceInSeconds(
-  //     new Date(),
-  //     new Date(sleepStopwatch.startDate)
-  //   );
-  //   dispatch(updateSleepStopwatch({ ...sleepStopwatch, time: diff }));
-  //   const interval = setInterval(() => {
-  //     // setTime((time) => time + 1);
-  //     const diff = differenceInSeconds(
-  //       new Date(),
-  //       new Date(sleepStopwatch.startDate)
-  //     );
-  //     dispatch(updateSleepStopwatch({ ...sleepStopwatch, time: diff }));
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
 
   const formatTime = (seconds: number) => {
     const date = addSeconds(new Date(0), seconds);
@@ -67,11 +40,7 @@ export const SleepStopWatch = (props: Props) => {
           alignItems: "center",
         }}
       >
-        <Button
-          variant="contained"
-          // color="secondary"
-          startIcon={<ForkLeftRounded />}
-        >
+        <Button variant="contained" startIcon={<ForkLeftRounded />}>
           Sleep
         </Button>
 
@@ -103,6 +72,7 @@ export const SleepStopWatch = (props: Props) => {
 
       {sleepStopwatch.isEdit === true ? (
         <TextField
+          autoFocus={true}
           label="Optional details"
           id="standard-basic"
           variant="standard"
@@ -123,7 +93,6 @@ export const SleepStopWatch = (props: Props) => {
         style={{ marginTop: "16px" }}
         fullWidth
         variant="contained"
-        // color="secondary"
         onClick={() => {
           props.onSave({
             start: subSeconds(new Date(), sleepStopwatch.time).toString(),

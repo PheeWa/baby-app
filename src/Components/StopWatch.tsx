@@ -11,6 +11,10 @@ import {
   Typography,
   IconButton,
   TextField,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { type } from "@testing-library/user-event/dist/type";
 import { time } from "console";
@@ -25,6 +29,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Feeding, FeedingType } from "../Pages/FeedPage";
 import { updateStopwatch } from "../Store/feedSlice";
+import { feedingData } from "../Store/initData";
 import { RootState } from "../Store/store";
 
 type Props = {
@@ -47,46 +52,14 @@ export const getFeedText = (feedingType: FeedingType) => {
 
 export const formatTime = (seconds: number) => {
   const date = addSeconds(new Date(0), seconds);
-  // const x = addHours(date, 12);
 
   return format(date, "m:ss");
 };
 
 export const StopWatch = (props: Props) => {
-  // const [time, setTime] = useState(0);
-
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
 
   const dispatch = useDispatch();
-  // const [isEdit, setIsEdit] = useState(false);
-  // const [details, setDetails] = useState("");
-  // const [startDate, setStartDate] = useState(Date());
-
-  // useEffect(() => {
-  //   // if (!stopwatch) {
-  //   //   return;
-  //   // }
-  //   const diff = differenceInSeconds(
-  //     new Date(),
-  //     new Date(stopwatch?.startDate)
-  //   );
-  //   dispatch(updateStopwatch({ ...stopwatch, time: diff }));
-  //   const interval = setInterval(() => {
-  //     // if (!stopwatch) {
-  //     //   return;
-  //     // }
-  //     const diff = differenceInSeconds(
-  //       new Date(),
-  //       new Date(stopwatch?.startDate)
-  //     );
-  //     dispatch(updateStopwatch({ ...stopwatch, time: diff }));
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
-  // if (!stopwatch) {
-  //   return null;
-  // }
 
   return (
     <Container style={{ marginTop: "16px" }}>
@@ -130,20 +103,71 @@ export const StopWatch = (props: Props) => {
           <EditRounded />
         </IconButton>
       </Box>
-
       {stopwatch.isEdit === true ? (
-        <TextField
-          label="Optional details"
-          id="standard-basic"
-          variant="standard"
-          fullWidth
-          value={stopwatch.details}
-          onChange={(e) =>
-            dispatch(updateStopwatch({ ...stopwatch, details: e.target.value }))
-          }
-        />
-      ) : null}
+        <>
+          {props.feedingType === "bottle" ? (
+            <Box style={{ display: "flex", flexDirection: "column" }}>
+              <Box style={{ display: "flex" }}>
+                <TextField
+                  autoFocus={true}
+                  label="Amount"
+                  id="standard-basic"
+                  variant="standard"
+                  fullWidth
+                  value={stopwatch.amount}
+                  // onChange={(e) => setAmount(e.target.value as any)}
+                  onChange={(e) => {
+                    dispatch(
+                      updateStopwatch({
+                        ...stopwatch,
+                        amount: e.target.value as any,
+                      })
+                    );
+                  }}
+                  type="number"
+                />
+              </Box>
 
+              <Box style={{ display: "flex", marginBottom: "16px" }}>
+                <FormControl variant="standard" fullWidth>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    Contents
+                  </InputLabel>
+                  <Select
+                    value={stopwatch.contents}
+                    // onChange={(e) => setContents(e.target.value)}
+                    onChange={(e) => {
+                      dispatch(
+                        updateStopwatch({
+                          ...stopwatch,
+                          contents: e.target.value as any,
+                        })
+                      );
+                    }}
+                  >
+                    <MenuItem value={"formula"}>Formula</MenuItem>
+                    <MenuItem value={"breast milk"}>Breast milk</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Box>
+          ) : (
+            <TextField
+              autoFocus={true}
+              label="Optional details"
+              id="standard-basic"
+              variant="standard"
+              fullWidth
+              value={stopwatch.details}
+              onChange={(e) =>
+                dispatch(
+                  updateStopwatch({ ...stopwatch, details: e.target.value })
+                )
+              }
+            />
+          )}
+        </>
+      ) : null}{" "}
       <Button
         fullWidth
         variant="contained"
@@ -157,7 +181,8 @@ export const StopWatch = (props: Props) => {
             details: stopwatch.details,
             id: 0,
             type: props.feedingType,
-            contents: "",
+            contents: stopwatch.contents,
+            amount: stopwatch.amount,
           });
         }}
       >

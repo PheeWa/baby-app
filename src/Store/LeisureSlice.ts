@@ -17,7 +17,7 @@ export interface LeisureState {
 }
 
 const initialState: LeisureState = {
-  leisures: leisureData,
+  leisures: [],
   stopwatch: {
     time: 0,
     isEdit: false,

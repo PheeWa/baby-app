@@ -15,7 +15,7 @@ export interface SleepState {
 }
 
 const initialState: SleepState = {
-  sleeps: sleepData,
+  sleeps: [],
   sleepStopwatch: {
     time: 0,
     isEdit: false,

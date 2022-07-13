@@ -94,21 +94,13 @@ export const GrowthDialog = (props: Props) => {
               label="For mobile"
               value="{value}"
               onChange={(newValue) => {
-                setTime(newValue ?? Date());
+                setTime(newValue?.toString() ?? Date());
               }}
-              // renderInput={(params) => <TextField {...params} />}
-              // renderInput={(p) => <p>X</p>}
+              maxDate={new Date()}
               renderInput={({ inputRef, inputProps, InputProps }) => {
-                console.log(inputProps, InputProps);
                 return (
                   <IconButton
                     aria-label="close"
-                    // onClick={onClose}
-                    // sx={{
-                    //   position: "absolute",
-                    //   right: 8,
-                    //   top: 8,
-                    // }}
                     onClick={(e) => {
                       inputProps?.onClick?.(inputRef as any);
                     }}

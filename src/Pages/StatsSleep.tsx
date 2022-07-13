@@ -172,7 +172,6 @@ export const StatsSleep = () => {
       return differenceInDays(endOfToday(), new Date(sleep.start)) < 7;
     });
   });
-  console.log(weeklySleeps);
 
   //Statistics functions//
 
@@ -197,7 +196,7 @@ export const StatsSleep = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
               {avgEvent(weeklySleeps).avgEvents}
             </Typography>
@@ -207,7 +206,7 @@ export const StatsSleep = () => {
             <Typography
               variant="body1"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "end" }}
             >
               {avgEvent(weeklySleeps).avgEventsTimes}
             </Typography>
@@ -247,7 +246,7 @@ export const StatsSleep = () => {
                   return format(value, "LLL d yyyy");
                 }}
                 formatter={(value: any) => {
-                  return formatSeconds(value);
+                  return [formatSeconds(value), "Duration"];
                 }}
               />
               <Bar dataKey="time" stackId="a" fill="#82ca9d">

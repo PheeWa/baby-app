@@ -42,44 +42,18 @@ export const getLeisureText = (leisureType: LeisureType) => {
 
 type Props = {
   onSave: (newLeisure: Leisure) => void;
-  // leisureType: LeisureType;
 };
 
 export const LeisureStopWatch = (props: Props) => {
   const stopwatch = useSelector((state: RootState) => state.leisure.stopwatch);
   const dispatch = useDispatch();
 
-  // const [time, setTime] = useState(0);
-  // const [isEdit, setIsEdit] = useState(false);
-  // const [details, setDetails] = useState("");
-
-  useEffect(() => {
-    // if (!stopwatch) {
-    //   return;
-    // }
-    const interval = setInterval(() => {
-      // setTime((time) => time + 1);
-      const diff = differenceInSeconds(
-        new Date(),
-        new Date(stopwatch.startDate)
-      );
-      dispatch(updateStopwatch({ ...stopwatch, time: diff }));
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
   const formatTime = (seconds: number) => {
     const date = addSeconds(new Date(0), seconds);
-    // const x = addHours(date, 12);
 
     return format(date, "m:ss");
   };
 
-  // if (!stopwatch) {
-  //   return null;
-  // }
   return (
     <Container style={{ marginTop: "16px" }}>
       <Box
@@ -91,7 +65,6 @@ export const LeisureStopWatch = (props: Props) => {
         }}
       >
         <Button
-          //   fullWidth
           variant="contained"
           // color="secondary"
           startIcon={<ForkLeftRounded />}
@@ -125,6 +98,8 @@ export const LeisureStopWatch = (props: Props) => {
 
       {stopwatch.isEdit === true ? (
         <TextField
+          autoFocus={true}
+          label="Details"
           id="standard-basic"
           variant="standard"
           fullWidth
@@ -141,8 +116,6 @@ export const LeisureStopWatch = (props: Props) => {
         fullWidth
         style={{ marginTop: "16px" }}
         variant="contained"
-        // color="secondary"
-        // startIcon={<ForkLeftRounded />}
         onClick={() => {
           props.onSave({
             start: subSeconds(new Date(), stopwatch.time).toString(),

@@ -14,9 +14,8 @@ export const TakePhotoPage = () => {
   const navigate = useNavigate();
   const capture = () => {
     const imageSrc = webcamRef.current?.getScreenshot?.();
-    console.log(imageSrc);
     dispatch(updatePhoto({ id: +id, image: imageSrc, month: 0 }));
-    navigate("/photo");
+    navigate(`/photo/view-photo/${id}`);
     //   const newPhotos = photos.map((photo) => {
     //     if (selectedId === photo.id) {
     //       return {
@@ -39,7 +38,7 @@ export const TakePhotoPage = () => {
       <Webcam
         style={{ flex: "1", objectFit: "cover" }}
         ref={webcamRef}
-        videoConstraints={{ facingMode: "user" }}
+        videoConstraints={{ facingMode: { ideal: "environment" } }}
       ></Webcam>
       <Box style={{ display: "flex", justifyContent: "space-around" }}>
         <IconButton size="large" onClick={goBack}>

@@ -87,6 +87,7 @@ export const FeedingDialog = (props: Props) => {
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
             )}
+            maxDateTime={new Date(finish)}
           />
         </Box>
         <Box style={{ display: "flex", marginBottom: "16px" }}>
@@ -101,6 +102,8 @@ export const FeedingDialog = (props: Props) => {
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
             )}
+            maxDateTime={new Date()}
+            minDateTime={new Date(start)}
           />
         </Box>
 
