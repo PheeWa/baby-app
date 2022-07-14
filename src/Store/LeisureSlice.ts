@@ -3,7 +3,6 @@ import { Leisure, LeisureType } from "../Pages/LeisurePage";
 import { leisureData } from "./initData";
 
 type Stopwatch = {
-  time: number;
   isEdit: boolean;
   details: string;
   startDate: string;
@@ -19,7 +18,6 @@ export interface LeisureState {
 const initialState: LeisureState = {
   leisures: [],
   stopwatch: {
-    time: 0,
     isEdit: false,
     details: "",
     startDate: Date(),
@@ -56,7 +54,6 @@ export const leisureSlice = createSlice({
     },
     startStopwatch: (state, action: PayloadAction<LeisureType>) => {
       state.stopwatch = {
-        time: 0,
         isEdit: false,
         details: "",
         startDate: Date(),

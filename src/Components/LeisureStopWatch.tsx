@@ -26,6 +26,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Leisure, LeisureType } from "../Pages/LeisurePage";
 import { updateStopwatch } from "../Store/LeisureSlice";
 import { RootState } from "../Store/store";
+import { Counter } from "./Counter";
 
 export const getLeisureText = (leisureType: LeisureType) => {
   switch (leisureType) {
@@ -67,18 +68,11 @@ export const LeisureStopWatch = (props: Props) => {
         <Button
           variant="contained"
           // color="secondary"
-          startIcon={<ForkLeftRounded />}
         >
           {getLeisureText(stopwatch.type)}
         </Button>
 
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, textAlign: "center" }}
-        >
-          {formatTime(stopwatch.time)}
-        </Typography>
+        <Counter startDate={stopwatch.startDate} />
 
         <IconButton
           size="large"
@@ -118,7 +112,7 @@ export const LeisureStopWatch = (props: Props) => {
         variant="contained"
         onClick={() => {
           props.onSave({
-            start: subSeconds(new Date(), stopwatch.time).toString(),
+            start: stopwatch.startDate,
             finish: Date(),
             details: stopwatch.details,
             id: 0,

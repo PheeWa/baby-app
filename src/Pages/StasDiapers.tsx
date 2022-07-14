@@ -108,15 +108,15 @@ export const StasDiapers = () => {
   const getScatterChartDate = () => {
     let pee = [...Array(7)].map((_, i) => {
       return {
-        time: -1000,
+        // time: -1000,
         date: +startOfDay(subDays(new Date(), i)),
-      };
+      } as any;
     });
     let poo = [...Array(7)].map((_, i) => {
       return {
-        time: 0,
+        // time: 0,
         date: +startOfDay(subDays(new Date(), i)),
-      };
+      } as any;
     });
     weeklyDiapers.forEach((diaper) => {
       const time = differenceInSeconds(
@@ -134,7 +134,6 @@ export const StasDiapers = () => {
         poo = [{ time: time, date: date }, ...poo];
       }
     });
-    const peex = pee.sort((a, b) => (a.date < b.date ? 1 : -1));
     return {
       pee: pee.sort((a, b) => (a.date < b.date ? 1 : -1)),
       poo: poo.sort((a, b) => (a.date < b.date ? 1 : -1)),

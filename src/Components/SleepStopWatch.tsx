@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Sleep } from "../Pages/SleepPage";
 import { updateSleepStopwatch } from "../Store/SleepSlice";
 import { RootState } from "../Store/store";
+import { Counter } from "./Counter";
 
 type Props = {
   onSave: (newSleep: Sleep) => void;
@@ -40,17 +41,9 @@ export const SleepStopWatch = (props: Props) => {
           alignItems: "center",
         }}
       >
-        <Button variant="contained" startIcon={<ForkLeftRounded />}>
-          Sleep
-        </Button>
+        <Button variant="contained">Sleep</Button>
 
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, textAlign: "center" }}
-        >
-          {formatTime(sleepStopwatch.time)}
-        </Typography>
+        <Counter startDate={sleepStopwatch.startDate} />
 
         <IconButton
           size="large"
@@ -95,7 +88,7 @@ export const SleepStopWatch = (props: Props) => {
         variant="contained"
         onClick={() => {
           props.onSave({
-            start: subSeconds(new Date(), sleepStopwatch.time).toString(),
+            start: sleepStopwatch.startDate,
             finish: Date(),
             details: sleepStopwatch.details,
             id: 0,

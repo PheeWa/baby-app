@@ -409,21 +409,21 @@ export const HomeTab = () => {
                 <InProgress
                   route="/feed"
                   type={stopwatch.type}
-                  time={stopwatch.time}
+                  startDate={stopwatch.startDate}
                 />
               ) : null}
               {sleepStopwatch.isRunning ? (
                 <InProgress
                   route="/sleep"
                   type="Sleep"
-                  time={sleepStopwatch.time}
+                  startDate={sleepStopwatch.startDate}
                 />
               ) : null}
               {leisureStopwatch.isRunning ? (
                 <InProgress
                   route="/leisure"
                   type={leisureStopwatch.type}
-                  time={leisureStopwatch.time}
+                  startDate={leisureStopwatch.startDate}
                 />
               ) : null}
             </List>
@@ -549,11 +549,12 @@ export const HomeTab = () => {
         </Paper>
 
         <Button
+          fullWidth
           style={{
             marginTop: "16px",
             marginBottom: "16px",
-            width: "50%",
             display: "flex",
+
             alignSelf: "center",
           }}
           variant="contained"

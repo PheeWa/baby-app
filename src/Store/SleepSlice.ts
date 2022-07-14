@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Sleep } from "../Pages/SleepPage";
 import { sleepData } from "./initData";
 type SleepStopwatch = {
-  time: number;
   isEdit: boolean;
   details: string;
   startDate: string;
@@ -17,7 +16,6 @@ export interface SleepState {
 const initialState: SleepState = {
   sleeps: [],
   sleepStopwatch: {
-    time: 0,
     isEdit: false,
     details: "",
     startDate: Date(),
@@ -51,7 +49,6 @@ export const sleepSlice = createSlice({
     },
     startSleepWatch: (state, action: PayloadAction) => {
       state.sleepStopwatch = {
-        time: 0,
         isEdit: false,
         details: "",
         startDate: Date(),

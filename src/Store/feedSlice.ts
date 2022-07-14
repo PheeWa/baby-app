@@ -5,7 +5,6 @@ import { Feeding, FeedingType } from "../Pages/FeedPage";
 import { feedingData } from "./initData";
 import { store } from "./store";
 type FeedingStopwatch = {
-  time: number;
   isEdit: boolean;
   details: string;
   startDate: string;
@@ -23,7 +22,6 @@ export interface FeedState {
 const initialState: FeedState = {
   feedings: [],
   stopwatch: {
-    time: 0,
     isEdit: false,
     details: "",
     startDate: Date(),
@@ -61,7 +59,6 @@ export const feedSlice = createSlice({
 
     startStopwatch: (state, action: PayloadAction<FeedingType>) => {
       state.stopwatch = {
-        time: 0,
         isEdit: false,
         details: "",
         startDate: Date(),

@@ -31,6 +31,7 @@ import { Feeding, FeedingType } from "../Pages/FeedPage";
 import { updateStopwatch } from "../Store/feedSlice";
 import { feedingData } from "../Store/initData";
 import { RootState } from "../Store/store";
+import { Counter } from "./Counter";
 
 type Props = {
   onSave: (newFeeding: Feeding) => void;
@@ -75,19 +76,11 @@ export const StopWatch = (props: Props) => {
           //   fullWidth
           variant="contained"
           // color="secondary"
-          startIcon={<ForkLeftRounded />}
         >
           {getFeedText(props.feedingType)}
         </Button>
 
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, textAlign: "center" }}
-        >
-          {formatTime(stopwatch.time)}
-        </Typography>
-
+        <Counter startDate={stopwatch.startDate} />
         <IconButton
           size="large"
           edge="start"
@@ -167,7 +160,7 @@ export const StopWatch = (props: Props) => {
             />
           )}
         </>
-      ) : null}{" "}
+      ) : null}
       <Button
         fullWidth
         variant="contained"
@@ -176,7 +169,7 @@ export const StopWatch = (props: Props) => {
         // startIcon={<ForkLeftRounded />}
         onClick={() => {
           props.onSave({
-            start: subSeconds(new Date(), stopwatch.time).toString(),
+            start: stopwatch.startDate,
             finish: Date(),
             details: stopwatch.details,
             id: 0,

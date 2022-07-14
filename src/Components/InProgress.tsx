@@ -15,6 +15,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FeedingType } from "../Pages/FeedPage";
 import { LeisureType } from "../Pages/LeisurePage";
+import { Counter } from "./Counter";
 import { IconType } from "./IconType";
 import { getLeisureText } from "./LeisureStopWatch";
 import { getFeedText, formatTime } from "./StopWatch";
@@ -22,7 +23,7 @@ import { getFeedText, formatTime } from "./StopWatch";
 type Props = {
   route: string;
   type: FeedingType | LeisureType | "Sleep";
-  time: number;
+  startDate: string;
 };
 
 export const InProgress = (props: Props) => {
@@ -58,13 +59,7 @@ export const InProgress = (props: Props) => {
         </Avatar>
       </ListItemAvatar>
       <ListItemText primary={primaryText()} secondary="In progress" />
-      <Typography
-        variant="h6"
-        component="div"
-        sx={{ flexGrow: 1, textAlign: "center" }}
-      >
-        {formatTime(props.time)}
-      </Typography>
+      <Counter startDate={props.startDate} />
     </ListItem>
   );
 };
