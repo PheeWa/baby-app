@@ -8,7 +8,7 @@ export interface GrowthState {
 }
 
 const initialState: GrowthState = {
-  growths: [],
+  growths: growthData,
 };
 
 export const growthSlice = createSlice({

@@ -20,7 +20,7 @@ export interface FeedState {
 }
 
 const initialState: FeedState = {
-  feedings: [],
+  feedings: feedingData,
   stopwatch: {
     isEdit: false,
     details: "",

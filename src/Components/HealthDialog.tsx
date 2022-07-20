@@ -113,7 +113,7 @@ export const HealthDialog = (props: Props) => {
             {/* <Typography variant="body1" component="p">
               Value
             </Typography> */}
-            <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
+            <FormControl variant="standard" fullWidth>
               <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 Value
               </InputLabel>

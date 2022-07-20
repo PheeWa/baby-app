@@ -47,9 +47,9 @@ export const AllLogsPage = () => {
     const bStart = +new Date(b.start);
 
     if (aStart < bStart) {
-      return -1;
-    } else {
       return 1;
+    } else {
+      return -1;
     }
   });
   const { limit, fetchData, slicedList, dataLength, hasMore } =
@@ -82,9 +82,7 @@ export const AllLogsPage = () => {
               const textFSL = `${format(
                 new Date(log.start),
                 "p"
-              )}, ${formatDuration(logx.start, logx.finish)}, ${logx.type}, ${
-                logx.details
-              }`;
+              )}, ${formatDuration(logx.start, logx.finish)}, ${logx.type}`;
 
               return (
                 <ListItem
@@ -106,7 +104,7 @@ export const AllLogsPage = () => {
               const logy = log as Diaper;
               const textDiaper = `${format(new Date(logy.start), "p")},${
                 logy.type
-              },${logy.details}`;
+              }`;
               return (
                 <ListItem>
                   <ListItemAvatar>
@@ -161,9 +159,7 @@ export const AllLogsPage = () => {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={`${textHealth}, ${logH.type} ${showValue()},${
-                      logH.details
-                    }`}
+                    primary={`${textHealth}, ${logH.type} ${showValue()}`}
                   />
                 </ListItem>
               );

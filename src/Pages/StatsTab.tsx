@@ -104,27 +104,29 @@ export const StatsTab = () => {
 
   return (
     <Box>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        variant="scrollable"
-        // scrollButtons
-        allowScrollButtonsMobile
-        aria-label="scrollable force tabs example"
-        sx={{
-          ".MuiTabs-scrollButtons.Mui-disabled": {
-            opacity: 0.3,
-          },
-        }}
-      >
-        <Tab label="Sleep" />
-        <Tab label="Feeding" />
-        <Tab label="Diapers" />
-        <Tab label="Leisure" />
-        <Tab label="Growth" />
-      </Tabs>
-      {value === 0 && <StatsSleep />}
-      {value === 1 && <StatsFeeding />}
+      <Box style={{ display: "flex", justifyContent: "center" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          variant="scrollable"
+          // scrollButtons
+          allowScrollButtonsMobile
+          aria-label="scrollable force tabs example"
+          sx={{
+            ".MuiTabs-scrollButtons.Mui-disabled": {
+              opacity: 0.3,
+            },
+          }}
+        >
+          <Tab label="Feeding" />
+          <Tab label="Sleep" />
+          <Tab label="Diapers" />
+          <Tab label="Leisure" />
+          <Tab label="Growth" />
+        </Tabs>
+      </Box>
+      {value === 0 && <StatsFeeding />}
+      {value === 1 && <StatsSleep />}
       {value === 2 && <StasDiapers />}
       {value === 3 && <StasLeisure />}
       {value === 4 && <StasGrowth />}

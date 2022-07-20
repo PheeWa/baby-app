@@ -355,51 +355,52 @@ export const HomeTab = () => {
 
   return (
     <Box>
-      <Box
-        style={{
-          display: "flex",
-          overflow: "auto",
-          marginBottom: "16px",
-          padding: "16px",
-          gap: "16px",
-          // justifyContent: "center",
-        }}
-      >
-        <Link to="/feed">
-          <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={milkBottle}></img>
-          </Button>
-        </Link>
-        <Link to="/sleep">
-          <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={sleep}></img>
-          </Button>
-        </Link>
-        <Link to="/diapers">
-          <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={nappy}></img>
-          </Button>
-        </Link>
-        <Link to="/leisure">
-          <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={leisureIcon}></img>
-          </Button>
-        </Link>
-        <Link to="/growth">
-          <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={growthIcon}></img>
-          </Button>
-        </Link>
-        <Link to="/health">
-          <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={healthIcon}></img>
-          </Button>
-        </Link>
-        <Link to="/photo">
-          <Button style={{ backgroundColor: "#151e33" }}>
-            <img width="50px" src={cameraIcon}></img>
-          </Button>
-        </Link>
+      <Box style={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          style={{
+            display: "flex",
+            overflow: "auto",
+            marginBottom: "16px",
+            padding: "16px",
+            gap: "16px",
+          }}
+        >
+          <Link to="/feed">
+            <Button style={{ backgroundColor: "#151e33" }}>
+              <img width="50px" src={milkBottle}></img>
+            </Button>
+          </Link>
+          <Link to="/sleep">
+            <Button style={{ backgroundColor: "#151e33" }}>
+              <img width="50px" src={sleep}></img>
+            </Button>
+          </Link>
+          <Link to="/diapers">
+            <Button style={{ backgroundColor: "#151e33" }}>
+              <img width="50px" src={nappy}></img>
+            </Button>
+          </Link>
+          <Link to="/leisure">
+            <Button style={{ backgroundColor: "#151e33" }}>
+              <img width="50px" src={leisureIcon}></img>
+            </Button>
+          </Link>
+          <Link to="/growth">
+            <Button style={{ backgroundColor: "#151e33" }}>
+              <img width="50px" src={growthIcon}></img>
+            </Button>
+          </Link>
+          <Link to="/health">
+            <Button style={{ backgroundColor: "#151e33" }}>
+              <img width="50px" src={healthIcon}></img>
+            </Button>
+          </Link>
+          <Link to="/photo">
+            <Button style={{ backgroundColor: "#151e33" }}>
+              <img width="50px" src={cameraIcon}></img>
+            </Button>
+          </Link>
+        </Box>
       </Box>
       <Container>
         {!stopwatchNotRun() ? (

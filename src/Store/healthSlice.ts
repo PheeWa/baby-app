@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Health } from "../Pages/HealthPage";
+import { healthhData } from "./initData";
 
 export interface HealthState {
   healths: Health[];
 }
 
 const initialState: HealthState = {
-  healths: [],
+  healths: healthhData,
 };
 
 export const healthSlice = createSlice({

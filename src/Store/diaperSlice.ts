@@ -8,7 +8,7 @@ export interface DiaperState {
 }
 
 const initialState: DiaperState = {
-  diapers: [],
+  diapers: diaperData,
 };
 
 export const diaperSlice = createSlice({
