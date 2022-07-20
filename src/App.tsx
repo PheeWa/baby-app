@@ -81,33 +81,43 @@ function App() {
   const app = initializeApp(firebaseConfig);
 
   return (
-    <Provider store={store}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <CssBaseline />
+    <div
+      style={{ backgroundColor: "black", maxWidth: "600px", margin: "0 auto" }}
+    >
+      <Provider store={store}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <ThemeProvider theme={theme}>
+            <BrowserRouter>
+              <CssBaseline />
 
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="feed" element={<FeedPage />} />
-              <Route path="diapers" element={<DiapersPage />} />
-              <Route path="leisure" element={<LeisurePage />} />
-              <Route path="growth" element={<GrowthPage />} />
-              <Route path="health" element={<HealthPage />} />
-              <Route path="photo" element={<PhotoPage />} />
-              <Route path="photo/take-photo/:id" element={<TakePhotoPage />} />
-              <Route path="photo/view-photo/:id" element={<ViewPhotoPage />} />
-              <Route path="sleep" element={<SleepPage />} />
-              <Route path="all-log" element={<AllLogsPage />} />
-              <Route path="stats" element={<StatsTab />} />
-              {/* <Route path="register" element={<RegisterPage />} />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="feed" element={<FeedPage />} />
+                <Route path="diapers" element={<DiapersPage />} />
+                <Route path="leisure" element={<LeisurePage />} />
+                <Route path="growth" element={<GrowthPage />} />
+                <Route path="health" element={<HealthPage />} />
+                <Route path="photo" element={<PhotoPage />} />
+                <Route
+                  path="photo/take-photo/:id"
+                  element={<TakePhotoPage />}
+                />
+                <Route
+                  path="photo/view-photo/:id"
+                  element={<ViewPhotoPage />}
+                />
+                <Route path="sleep" element={<SleepPage />} />
+                <Route path="all-log" element={<AllLogsPage />} />
+                <Route path="stats" element={<StatsTab />} />
+                {/* <Route path="register" element={<RegisterPage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="setting" element={<SettingPage />} /> */}
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </LocalizationProvider>
-    </Provider>
+              </Routes>
+            </BrowserRouter>
+          </ThemeProvider>
+        </LocalizationProvider>
+      </Provider>
+    </div>
   );
 }
 

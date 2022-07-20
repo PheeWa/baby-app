@@ -139,7 +139,7 @@ export const FeedPage = () => {
       {stopwatch.isRunning ? (
         <StopWatch onSave={onSave} feedingType={stopwatch.type} />
       ) : (
-        <Container style={{ marginTop: "16px" }}>
+        <Container style={{  marginTop: "16px" }}>
           <Box style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
             <Button
               fullWidth
@@ -175,7 +175,7 @@ export const FeedPage = () => {
         </Container>
       )}
 
-      <Box>
+      <Container >
         <List dense={true}>
           <InfiniteScroll
             dataLength={dataLength}
@@ -269,7 +269,7 @@ export const FeedPage = () => {
             })}
           </InfiniteScroll>
         </List>
-      </Box>
+      </Container>
       <FeedingDialog
         onClose={handleClose}
         onSave={onSave}
