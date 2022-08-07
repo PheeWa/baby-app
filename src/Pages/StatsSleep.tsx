@@ -47,17 +47,6 @@ import { getBarData } from "./StatsTab";
 export const getLineChartData = (
   events: { start: string; finish: string; type: string }[]
 ) => {
-  // const thisWeekEvents = events.filter((event) => {
-  //   const thisWeek = isWithinInterval(new Date(event.finish), {
-  //     start: subDays(new Date(), 7),
-  //     end: new Date(),
-  //   });
-
-  //   if (thisWeek) {
-  //     return true;
-  //   }
-  // });
-
   const placeholders = [...Array(7)].map((_, i) => {
     return {
       name: `}${i}`,
@@ -185,7 +174,6 @@ export const StatsSleep = () => {
               style={{
                 background: "transparent",
               }}
-              // component="div" id="nested-list-subheader"
             >
               Statistics
             </ListSubheader>

@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { differenceInSeconds } from "date-fns";
+import { addDays, differenceInDays, differenceInSeconds } from "date-fns";
 import diaperSlice from "./diaperSlice";
 import feedSlice, { updateStopwatch } from "./feedSlice";
 import growthSlice from "./growthSlice";

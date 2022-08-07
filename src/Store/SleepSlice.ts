@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Sleep } from "../Pages/SleepPage";
+import { checkDate } from "../utils";
 import { sleepData } from "./initData";
 type SleepStopwatch = {
   isEdit: boolean;
@@ -14,7 +15,7 @@ export interface SleepState {
 }
 
 const initialState: SleepState = {
-  sleeps: sleepData,
+  sleeps: checkDate(sleepData),
   sleepStopwatch: {
     isEdit: false,
     details: "",

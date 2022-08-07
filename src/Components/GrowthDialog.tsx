@@ -71,7 +71,7 @@ export const GrowthDialog = (props: Props) => {
 
   return (
     <Dialog
-      fullWidth
+    fullWidth maxWidth="xs"
       open={!!props.growth}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"

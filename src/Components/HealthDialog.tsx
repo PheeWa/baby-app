@@ -48,6 +48,7 @@ export const HealthDialog = (props: Props) => {
   return (
     <Dialog
       fullWidth
+      maxWidth="xs"
       open={!!props.health}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"

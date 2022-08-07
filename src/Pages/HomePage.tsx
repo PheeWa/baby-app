@@ -2,6 +2,7 @@ import {
   CalendarMonthRounded,
   FavoriteRounded,
   HomeRounded,
+  InfoRounded,
   PersonRounded,
   PhoneRounded,
   SettingsRounded,
@@ -16,12 +17,20 @@ import {
   Typography,
   createTheme,
   ScopedCssBaseline,
+  IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeTab } from "./HomeTab";
 import { StatsTab } from "./StatsTab";
 import darkScrollbar from "@mui/material/darkScrollbar";
+import lukaImg from "../Assets/luka.jpg";
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -30,27 +39,35 @@ export const HomePage = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Box>
-      {/* <Box
+      <Box
         style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           padding: 16,
           paddingBottom: 0,
         }}
       >
         <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Avatar alt="Remy Sharp" src="" />
+          <Avatar alt="Remy Sharp" src={lukaImg} />
           <Typography>Luka</Typography>
         </Box>
-        <SettingsRounded
-          onClick={() => {
-            navigate("/setting");
-          }}
-        />
-      </Box> */}
+        <IconButton onClick={handleClickOpen}>
+          <InfoRounded color="secondary"></InfoRounded>
+        </IconButton>
+      </Box>
 
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -66,7 +83,36 @@ export const HomePage = () => {
       </Box>
       {value === 0 && <HomeTab />}
       {value === 1 && <StatsTab />}
-      {/* {value === 2 && <Box>Item Three</Box>} */}
+
+      <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
+        <DialogTitle style={{ display: "flex", alignItems: "center" }}>
+          <InfoRounded
+            color="secondary"
+            style={{ marginRight: 12 }}
+          ></InfoRounded>
+          {"Demo app"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {
+              "This is a Demo app without a backend or any form of state persistence."
+            }
+          </DialogContentText>
+          <br />
+          <DialogContentText>
+            {
+              "The app's state is stored in memory, so refreshing the page will reset the data and any changes made will be lost."
+            }
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
+
+// Demo account

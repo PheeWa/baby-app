@@ -48,6 +48,7 @@ export const LeisureDialog = (props: Props) => {
   return (
     <Dialog
       fullWidth
+      maxWidth="xs"
       open={!!props.selectedLeisure}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"

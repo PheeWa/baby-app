@@ -49,6 +49,7 @@ export const FeedingDialog = (props: Props) => {
   return (
     <Dialog
       fullWidth
+      maxWidth="xs"
       open={!!props.selectedFeeding}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"

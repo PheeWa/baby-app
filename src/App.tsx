@@ -82,7 +82,12 @@ function App() {
 
   return (
     <div
-      style={{ backgroundColor: "black", maxWidth: "600px", margin: "0 auto" }}
+      style={{
+        backgroundColor: "black",
+        minHeight: "100vh",
+        maxWidth: "600px",
+        margin: "0 auto",
+      }}
     >
       <Provider store={store}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>

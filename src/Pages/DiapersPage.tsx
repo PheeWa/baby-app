@@ -178,7 +178,7 @@ export const DiapersPage = () => {
       </Container>
 
       <Dialog
-        fullWidth
+        fullWidth maxWidth="xs"
         open={dialogOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"

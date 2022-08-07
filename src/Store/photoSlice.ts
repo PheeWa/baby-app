@@ -1,17 +1,14 @@
 import { ActionTypes } from "@mui/base";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Photo } from "../Pages/PhotoPage";
-
-const initPhotos = [...Array(13)].map((x, i) => {
-  return { id: i, month: i, image: "" };
-});
+import { photosData } from "./initData";
 
 export interface PhotoState {
   photos: Photo[];
 }
 
 const initialState: PhotoState = {
-  photos: initPhotos,
+  photos: photosData,
 };
 
 export const photoSlice = createSlice({
@@ -27,17 +24,7 @@ export const photoSlice = createSlice({
         }
       });
     },
-    // editDiaper: (state, action: PayloadAction<Diaper>) => {
-    //   state.diapers = state.diapers.map((diaper, index) => {
-    //     if (diaper.id === action.payload.id) {
-    //       return action.payload;
-    //     }
-    //     return diaper;
-    //   });
-    // },
-    // recordDiaper: (state, action: PayloadAction<Diaper>) => {
-    //   state.diapers.push(action.payload);
-    // },
+
     deletePhoto: (state, action: PayloadAction<number>) => {
       state.photos = state.photos.map((photo: Photo) => {
         if (photo.id === action.payload) {
@@ -46,14 +33,10 @@ export const photoSlice = createSlice({
           return photo;
         }
       });
-      //   state.photos = state.photos.filter((photo: Photo) => {
-      //     return photo.id !== action.payload;
-      //   });
     },
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { updatePhoto, deletePhoto } = photoSlice.actions;
 
 export default photoSlice.reducer;

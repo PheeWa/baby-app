@@ -38,6 +38,7 @@ export const SleepDialog = (props: Props) => {
   return (
     <Dialog
       fullWidth
+      maxWidth="xs"
       open={!!props.selectedSleep}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"

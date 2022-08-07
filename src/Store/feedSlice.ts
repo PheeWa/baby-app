@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { differenceInSeconds } from "date-fns";
 
 import { Feeding, FeedingType } from "../Pages/FeedPage";
+import { checkDate } from "../utils";
 import { feedingData } from "./initData";
 import { store } from "./store";
 type FeedingStopwatch = {
@@ -20,7 +21,7 @@ export interface FeedState {
 }
 
 const initialState: FeedState = {
-  feedings: feedingData,
+  feedings: checkDate(feedingData),
   stopwatch: {
     isEdit: false,
     details: "",
