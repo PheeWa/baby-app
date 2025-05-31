@@ -19,7 +19,6 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
 } from "@mui/material";
 import { format, isSameDay, isToday, isYesterday, set } from "date-fns";
 import React, { useState } from "react";
@@ -59,7 +58,7 @@ export const DiapersPage = () => {
 
   //Hooks//
   const dispatch = useDispatch();
-  const { limit, fetchData, slicedList, dataLength, hasMore } =
+  const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(diapersList);
 
   //usetates//
@@ -178,7 +177,8 @@ export const DiapersPage = () => {
       </Container>
 
       <Dialog
-        fullWidth maxWidth="xs"
+        fullWidth
+        maxWidth="xs"
         open={dialogOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"

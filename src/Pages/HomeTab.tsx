@@ -1,29 +1,11 @@
 import {
-  ArrowForwardIosRounded,
-  ArrowForwardRounded,
-  BabyChangingStationRounded,
-  CribRounded,
-  Image,
-  LastPageSharp,
-  LocalCafeRounded,
-  LocalHospitalRounded,
-  MonitorWeightRounded,
-  MoreVertRounded,
-  PhotoCameraRounded,
-  SportsBasketballRounded,
-} from "@mui/icons-material";
-import {
-  Avatar,
   Box,
   Button,
-  IconButton,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
   ListSubheader,
   Paper,
-  Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import {
@@ -34,26 +16,14 @@ import {
   isToday,
 } from "date-fns";
 import { startOfToday } from "date-fns/esm";
-import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { text } from "stream/consumers";
-import { updateNonNullChain } from "typescript";
-import { getText } from "../Components/BabyPhoto";
 import { getLabel, getUnit } from "../Components/GrowthDialog";
 import { InProgress } from "../Components/InProgress";
 import { LatestActivity } from "../Components/LatestActivity";
-import { getLeisureText } from "../Components/LeisureStopWatch";
-import { SleepStopWatch } from "../Components/SleepStopWatch";
-import { formatTime, getFeedText } from "../Components/StopWatch";
 import { SummaryToday } from "../Components/SummaryToday";
 import { RootState } from "../Store/store";
-import { Diaper } from "./DiapersPage";
-import { Feeding, formatDuration } from "./FeedPage";
-import { Growth } from "./GrowthPage";
-import { Health } from "./HealthPage";
-import { Leisure } from "./LeisurePage";
-import { Sleep } from "./SleepPage";
+import { formatDuration } from "./FeedPage";
 import milkBottle from "../Assets/milkBottle.png";
 import sleep from "../Assets/sleep.png";
 import nappy from "../Assets/nappy.png";
@@ -78,9 +48,6 @@ export const HomeTab = () => {
   const healths = useSelector((state: RootState) => state.health.healths);
   const growths = useSelector((state: RootState) => state.growth.growths);
 
-  const dispatch = useDispatch();
-
-  // const latestFeeding = feedings[feedings.length - 1] as Feeding | undefined;
   const latestFeeding = [...feedings].sort((a, b) => {
     if (+new Date(a.finish) < +new Date(b.finish)) {
       return 1;
@@ -96,7 +63,6 @@ export const HomeTab = () => {
       return -1;
     }
   })[0];
-  // const latestLeisure = leisures[leisures.length - 1] as Leisure | undefined;
   const latestLeisure = [...leisures].sort((a, b) => {
     if (+new Date(a.finish) < +new Date(b.finish)) {
       return 1;
@@ -105,7 +71,6 @@ export const HomeTab = () => {
     }
   })[0];
 
-  // const latestDiaper = diapers[diapers.length - 1] as Diaper | undefined;
   const latestDiaper = [...diapers].sort((a, b) => {
     if (+new Date(a.start) < +new Date(b.start)) {
       return 1;
@@ -113,7 +78,7 @@ export const HomeTab = () => {
       return -1;
     }
   })[0];
-  // const latestHealth = healths[healths.length - 1] as Health | undefined;
+
   const latestHealth = [...healths].sort((a, b) => {
     if (+new Date(a.start) < +new Date(b.start)) {
       return 1;
@@ -121,7 +86,7 @@ export const HomeTab = () => {
       return -1;
     }
   })[0];
-  // const latestGrowth = growths[growths.length - 1] as Growth | undefined;
+
   const latestGrowth = [...growths].sort((a, b) => {
     if (+new Date(a.start) < +new Date(b.start)) {
       return 1;

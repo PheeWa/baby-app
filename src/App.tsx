@@ -5,7 +5,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom"; // <-- this is the error
+import { BrowserRouter, Route, Routes } from "react-router-dom"; // <-- this is the error
 import { HomePage } from "./Pages/HomePage";
 import { FeedPage } from "./Pages/FeedPage";
 import { CssBaseline, ThemeOptions } from "@mui/material";
@@ -24,10 +24,6 @@ import { ViewPhotoPage } from "./Pages/ViewPhotoPage";
 import { SleepPage } from "./Pages/SleepPage";
 import { AllLogsPage } from "./Pages/AllLogsPage";
 import { StatsTab } from "./Pages/StatsTab";
-import { StatsFeeding } from "./Pages/StatsFeeding";
-import { StatsSleep } from "./Pages/StatsSleep";
-
-import { initializeApp } from "firebase/app";
 import { RegisterPage } from "./Pages/RegisterPage";
 import { LoginPage } from "./Pages/LoginPage";
 import { SettingPage } from "./Pages/SettingPage";
@@ -62,23 +58,6 @@ function App() {
   };
 
   const theme = createTheme(themeOptions);
-  // Import the functions you need from the SDKs you need
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAsIiVmXknLIpaQeDZANZzbOe8GK2wlCkk",
-    authDomain: "baby-app-react.firebaseapp.com",
-    projectId: "baby-app-react",
-    storageBucket: "baby-app-react.appspot.com",
-    messagingSenderId: "370335286755",
-    appId: "1:370335286755:web:cd42bb31d35bf3f28b0cd6",
-    measurementId: "G-5SQV41RYMV",
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
 
   return (
     <div
@@ -114,9 +93,9 @@ function App() {
                 <Route path="sleep" element={<SleepPage />} />
                 <Route path="all-log" element={<AllLogsPage />} />
                 <Route path="stats" element={<StatsTab />} />
-                {/* <Route path="register" element={<RegisterPage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="setting" element={<SettingPage />} /> */}
+                <Route path="register" element={<RegisterPage />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="setting" element={<SettingPage />} />
               </Routes>
             </BrowserRouter>
           </ThemeProvider>

@@ -44,7 +44,7 @@ export const GrowthPage = () => {
   });
   //Hooks//
 
-  const { limit, fetchData, slicedList, dataLength, hasMore } =
+  const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(growthsList);
   const dispatch = useDispatch();
 

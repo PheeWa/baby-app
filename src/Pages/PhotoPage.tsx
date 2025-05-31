@@ -1,15 +1,9 @@
-import {
-  PhotoCamera,
-  PhotoCameraRounded,
-  PhotoRounded,
-} from "@mui/icons-material";
-import { Button, Drawer, IconButton, Input, Typography } from "@mui/material";
+import { PhotoCameraRounded, PhotoRounded } from "@mui/icons-material";
+import { Drawer, IconButton, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import { id } from "date-fns/locale";
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import Webcam from "react-webcam";
+import { useNavigate } from "react-router-dom";
 import { BabyPhoto } from "../Components/BabyPhoto";
 import { Header } from "../Components/Header";
 import { updatePhoto } from "../Store/photoSlice";
@@ -24,9 +18,7 @@ export type Photo = {
 export const PhotoPage = () => {
   //usestates//
 
-  //   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
-  const [x, setX] = useState("");
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -76,15 +68,6 @@ export const PhotoPage = () => {
             <BabyPhoto photo={photo} open={() => handlePhotoClick(photo)} />
           );
         })}
-        {/* <img src={x}></img> */}
-        {/* <Button
-          onClick={() => {
-            setIsDrawerOpen(true);
-          }}
-        >
-          click
-        </Button>
-        <BabyPhoto text="2 months" /> */}
       </Container>
 
       <Drawer
@@ -136,16 +119,7 @@ export const PhotoPage = () => {
                 <Typography>Gallery</Typography>
               </IconButton>
             </label>
-            {/* <label htmlFor="icon-button-file">
-              <Input accept="image/*" id="icon-button-file" type="file" />
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="span"
-              >
-                <PhotoCamera />
-              </IconButton>
-            </label> */}
+
             <IconButton
               aria-label="delete"
               size="large"

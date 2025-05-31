@@ -1,22 +1,10 @@
-import {
-  CalendarMonthRounded,
-  FavoriteRounded,
-  HomeRounded,
-  InfoRounded,
-  PersonRounded,
-  PhoneRounded,
-  SettingsRounded,
-  TimelineRounded,
-} from "@mui/icons-material";
+import { HomeRounded, InfoRounded, TimelineRounded } from "@mui/icons-material";
 import {
   Box,
   Tabs,
   Tab,
-  Container,
   Avatar,
   Typography,
-  createTheme,
-  ScopedCssBaseline,
   IconButton,
   Button,
   Dialog,
@@ -26,14 +14,11 @@ import {
   DialogTitle,
 } from "@mui/material";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { HomeTab } from "./HomeTab";
 import { StatsTab } from "./StatsTab";
-import darkScrollbar from "@mui/material/darkScrollbar";
 import lukaImg from "../Assets/luka.jpg";
 
 export const HomePage = () => {
-  const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -78,7 +63,6 @@ export const HomePage = () => {
         >
           <Tab icon={<HomeRounded />} aria-label="phone" />
           <Tab icon={<TimelineRounded />} aria-label="favorite" />
-          {/* <Tab icon={<CalendarMonthRounded />} aria-label="person" /> */}
         </Tabs>
       </Box>
       {value === 0 && <HomeTab />}
@@ -114,5 +98,3 @@ export const HomePage = () => {
     </Box>
   );
 };
-
-// Demo account

@@ -47,7 +47,7 @@ export const SleepPage = () => {
     });
   });
 
-  const { limit, fetchData, slicedList, dataLength, hasMore } =
+  const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(sleepsList);
 
   const sleepStopwatch = useSelector(

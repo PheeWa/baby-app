@@ -1,4 +1,4 @@
-import { ForkLeftRounded, MoreVertRounded } from "@mui/icons-material";
+import { MoreVertRounded } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -9,21 +9,17 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Typography,
 } from "@mui/material";
 import {
-  addHours,
   addSeconds,
   differenceInSeconds,
   format,
-  getDate,
   isSameDay,
   isToday,
   isYesterday,
   startOfYear,
   subMinutes,
 } from "date-fns";
-import { differenceInMinutes } from "date-fns/esm";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
@@ -79,7 +75,7 @@ export const FeedPage = () => {
     });
   });
 
-  const { limit, fetchData, slicedList, dataLength, hasMore } =
+  const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(feedingsList);
 
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
@@ -139,7 +135,7 @@ export const FeedPage = () => {
       {stopwatch.isRunning ? (
         <StopWatch onSave={onSave} feedingType={stopwatch.type} />
       ) : (
-        <Container style={{  marginTop: "16px" }}>
+        <Container style={{ marginTop: "16px" }}>
           <Box style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
             <Button
               fullWidth
@@ -175,7 +171,7 @@ export const FeedPage = () => {
         </Container>
       )}
 
-      <Container >
+      <Container>
         <List dense={true}>
           <InfiniteScroll
             dataLength={dataLength}
