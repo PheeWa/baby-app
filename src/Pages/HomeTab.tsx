@@ -16,7 +16,7 @@ import {
   isToday,
 } from "date-fns";
 import { startOfToday } from "date-fns/esm";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getLabel, getUnit } from "../Components/GrowthDialog";
 import { InProgress } from "../Components/InProgress";

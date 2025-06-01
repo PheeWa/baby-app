@@ -1,4 +1,9 @@
-import { HomeRounded, InfoRounded, TimelineRounded } from "@mui/icons-material";
+import {
+  HomeRounded,
+  InfoRounded,
+  TimelineRounded,
+  LogoutRounded,
+} from "@mui/icons-material";
 import {
   Box,
   Tabs,
@@ -17,9 +22,16 @@ import React from "react";
 import { HomeTab } from "./HomeTab";
 import { StatsTab } from "./StatsTab";
 import lukaImg from "../Assets/luka.jpg";
+import { AppDispatch, RootState } from "../Store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutThunk } from "../Store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
+  const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, user } = useSelector((state: RootState) => state.auth);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -34,6 +46,16 @@ export const HomePage = () => {
     setOpen(false);
   };
 
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutThunk());
+      setOpen(false);
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <Box>
       <Box
@@ -46,11 +68,12 @@ export const HomePage = () => {
         }}
       >
         <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {/* TODO: need to update the hard coded value of baby photo and name */}
           <Avatar alt="Remy Sharp" src={lukaImg} />
           <Typography>Luka</Typography>
         </Box>
         <IconButton onClick={handleClickOpen}>
-          <InfoRounded color="secondary"></InfoRounded>
+          <LogoutRounded />
         </IconButton>
       </Box>
 
@@ -74,24 +97,20 @@ export const HomePage = () => {
             color="secondary"
             style={{ marginRight: 12 }}
           ></InfoRounded>
-          {"Demo app"}
+          {"Log out"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {
-              "This is a Demo app without a backend or any form of state persistence."
-            }
-          </DialogContentText>
+          <DialogContentText>{user?.email}</DialogContentText>
           <br />
           <DialogContentText>
             {
-              "The app's state is stored in memory, so refreshing the page will reset the data and any changes made will be lost."
+              "Are you sure you want to sign out? You'll need to sign in again to access your account."
             }
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} autoFocus>
-            OK
+          <Button onClick={handleLogout} autoFocus>
+            {loading ? "Signing out..." : "Sign Out"}
           </Button>
         </DialogActions>
       </Dialog>

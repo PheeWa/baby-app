@@ -9,30 +9,36 @@ import {
   InputAdornment,
   IconButton,
   Button,
+  Alert,
 } from "@mui/material";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginThunk } from "../Store/authSlice";
+import { AppDispatch, RootState } from "../Store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const { loading, error } = useSelector((state: RootState) => state.auth);
 
-  const login = () => {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
+  const dispatch = useDispatch<AppDispatch>();
+
+  const login = async () => {
+    if (email == null || password == null) {
+      alert("Please fill in all fields");
+      return;
+    }
+    try {
+      const result = await dispatch(loginThunk({ email, password }));
+      if (loginThunk.fulfilled.match(result)) {
         navigate("/");
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+      }
+    } catch (error) {
+      alert(`Login error: ${error}`);
+    }
   };
 
   return (
@@ -50,6 +56,11 @@ export const LoginPage = () => {
         LOGIN
       </Typography>
       <Box>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
         <FormControl sx={{ mt: 1 }} fullWidth variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
           <OutlinedInput
@@ -59,6 +70,7 @@ export const LoginPage = () => {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
+            disabled={loading}
             label="Email"
           />
         </FormControl>
@@ -74,12 +86,12 @@ export const LoginPage = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            disabled={loading}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={() => setShowPassword(!showPassword)}
-                  //   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -98,13 +110,14 @@ export const LoginPage = () => {
             login();
           }}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </Button>
         <Button
           fullWidth
           onClick={() => {
             navigate("/register");
           }}
+          disabled={loading}
         >
           REGISTER{" "}
         </Button>

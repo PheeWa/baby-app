@@ -1,17 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { addDays, differenceInDays, differenceInSeconds } from "date-fns";
 import diaperSlice from "./diaperSlice";
-import feedSlice, { updateStopwatch } from "./feedSlice";
+import feedSlice from "./feedSlice";
 import growthSlice from "./growthSlice";
 import healthSlice from "./healthSlice";
-import leisureSlice, {
-  updateStopwatch as updateLeisureStopwatch,
-} from "./LeisureSlice";
+import leisureSlice from "./LeisureSlice";
 import photoSlice from "./photoSlice";
-import sleepSlice, { updateSleepStopwatch } from "./SleepSlice";
+import sleepSlice from "./SleepSlice";
+import authSlice from "./authSlice";
 
 export const store = configureStore({
   reducer: {
+    auth: authSlice,
     feed: feedSlice,
     diaper: diaperSlice,
     leisure: leisureSlice,
