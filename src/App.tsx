@@ -5,11 +5,11 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom"; // <-- this is the error
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePage } from "./Pages/HomePage";
 import { FeedPage } from "./Pages/FeedPage";
 import { CssBaseline, ThemeOptions } from "@mui/material";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/lab";
 import { DiapersPage } from "./Pages/DiapersPage";
@@ -27,6 +27,8 @@ import { StatsTab } from "./Pages/StatsTab";
 import { RegisterPage } from "./Pages/RegisterPage";
 import { LoginPage } from "./Pages/LoginPage";
 import { SettingPage } from "./Pages/SettingPage";
+import AuthGuard from "./Components/AuthGuard";
+import Layout from "./Components/Layout";
 
 function App() {
   const themeOptions: ThemeOptions = {
@@ -75,27 +77,36 @@ function App() {
               <CssBaseline />
 
               <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="feed" element={<FeedPage />} />
-                <Route path="diapers" element={<DiapersPage />} />
-                <Route path="leisure" element={<LeisurePage />} />
-                <Route path="growth" element={<GrowthPage />} />
-                <Route path="health" element={<HealthPage />} />
-                <Route path="photo" element={<PhotoPage />} />
-                <Route
-                  path="photo/take-photo/:id"
-                  element={<TakePhotoPage />}
-                />
-                <Route
-                  path="photo/view-photo/:id"
-                  element={<ViewPhotoPage />}
-                />
-                <Route path="sleep" element={<SleepPage />} />
-                <Route path="all-log" element={<AllLogsPage />} />
-                <Route path="stats" element={<StatsTab />} />
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
-                <Route path="setting" element={<SettingPage />} />
+
+                <Route
+                  element={
+                    <AuthGuard>
+                      <Layout />
+                    </AuthGuard>
+                  }
+                >
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="feed" element={<FeedPage />} />
+                  <Route path="diapers" element={<DiapersPage />} />
+                  <Route path="leisure" element={<LeisurePage />} />
+                  <Route path="growth" element={<GrowthPage />} />
+                  <Route path="health" element={<HealthPage />} />
+                  <Route path="photo" element={<PhotoPage />} />
+                  <Route
+                    path="photo/take-photo/:id"
+                    element={<TakePhotoPage />}
+                  />
+                  <Route
+                    path="photo/view-photo/:id"
+                    element={<ViewPhotoPage />}
+                  />
+                  <Route path="sleep" element={<SleepPage />} />
+                  <Route path="all-log" element={<AllLogsPage />} />
+                  <Route path="stats" element={<StatsTab />} />
+                  <Route path="setting" element={<SettingPage />} />
+                </Route>
               </Routes>
             </BrowserRouter>
           </ThemeProvider>

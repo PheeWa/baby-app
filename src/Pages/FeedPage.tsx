@@ -81,7 +81,6 @@ export const FeedPage = () => {
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
   const dispatch = useDispatch();
 
-  // ........useStates.....
   const [selectedFeeding, setSelectedFeeding] = useState<Feeding | undefined>(
     undefined
   );
