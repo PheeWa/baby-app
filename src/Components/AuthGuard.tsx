@@ -9,7 +9,6 @@ type AuthGuardProps = {
 
 const AuthGuard = ({ children }: AuthGuardProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
-
   if (!user) {
     return <Navigate to="/login" replace />;
   }

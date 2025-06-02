@@ -15,7 +15,7 @@ import { LocalizationProvider } from "@mui/lab";
 import { DiapersPage } from "./Pages/DiapersPage";
 import { LeisurePage } from "./Pages/LeisurePage";
 import { Provider } from "react-redux";
-import { store } from "./Store/store";
+import { persistor, store } from "./Store/store";
 import { GrowthPage } from "./Pages/GrowthPage";
 import { HealthPage } from "./Pages/HealthPage";
 import { PhotoPage } from "./Pages/PhotoPage";
@@ -29,6 +29,7 @@ import { LoginPage } from "./Pages/LoginPage";
 import { SettingPage } from "./Pages/SettingPage";
 import AuthGuard from "./Components/AuthGuard";
 import Layout from "./Components/Layout";
+import { PersistGate } from "redux-persist/integration/react";
 
 function App() {
   const themeOptions: ThemeOptions = {
@@ -71,46 +72,47 @@ function App() {
       }}
     >
       <Provider store={store}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <ThemeProvider theme={theme}>
-            <BrowserRouter>
-              <CssBaseline />
+        <PersistGate loading={null} persistor={persistor}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <ThemeProvider theme={theme}>
+              <BrowserRouter>
+                <CssBaseline />
 
-              <Routes>
-                <Route path="register" element={<RegisterPage />} />
-                <Route path="login" element={<LoginPage />} />
-
-                <Route
-                  element={
-                    <AuthGuard>
-                      <Layout />
-                    </AuthGuard>
-                  }
-                >
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="feed" element={<FeedPage />} />
-                  <Route path="diapers" element={<DiapersPage />} />
-                  <Route path="leisure" element={<LeisurePage />} />
-                  <Route path="growth" element={<GrowthPage />} />
-                  <Route path="health" element={<HealthPage />} />
-                  <Route path="photo" element={<PhotoPage />} />
+                <Routes>
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/login" element={<LoginPage />} />
                   <Route
-                    path="photo/take-photo/:id"
-                    element={<TakePhotoPage />}
-                  />
-                  <Route
-                    path="photo/view-photo/:id"
-                    element={<ViewPhotoPage />}
-                  />
-                  <Route path="sleep" element={<SleepPage />} />
-                  <Route path="all-log" element={<AllLogsPage />} />
-                  <Route path="stats" element={<StatsTab />} />
-                  <Route path="setting" element={<SettingPage />} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
-          </ThemeProvider>
-        </LocalizationProvider>
+                    element={
+                      <AuthGuard>
+                        <Layout />
+                      </AuthGuard>
+                    }
+                  >
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/feed" element={<FeedPage />} />
+                    <Route path="/diapers" element={<DiapersPage />} />
+                    <Route path="/leisure" element={<LeisurePage />} />
+                    <Route path="/growth" element={<GrowthPage />} />
+                    <Route path="/health" element={<HealthPage />} />
+                    <Route path="/photo" element={<PhotoPage />} />
+                    <Route
+                      path="/photo/take-photo/:id"
+                      element={<TakePhotoPage />}
+                    />
+                    <Route
+                      path="/photo/view-photo/:id"
+                      element={<ViewPhotoPage />}
+                    />
+                    <Route path="/sleep" element={<SleepPage />} />
+                    <Route path="/all-log" element={<AllLogsPage />} />
+                    <Route path="/stats" element={<StatsTab />} />
+                    <Route path="/setting" element={<SettingPage />} />
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+            </ThemeProvider>
+          </LocalizationProvider>
+        </PersistGate>
       </Provider>
     </div>
   );

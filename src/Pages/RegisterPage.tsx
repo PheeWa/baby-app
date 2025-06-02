@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../Store/store";
 import { clearError, registerThunk } from "../Store/authSlice";
+import CustomizedSnackbar from "../Components/CustomizedSnackbar";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
@@ -35,7 +36,8 @@ export const RegisterPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [validationError, setValidationError] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [openSuccessDialog, setOpenSuccessDialog] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const { loading, error: authError } = useSelector(
     (state: RootState) => state.auth
   );
@@ -60,7 +62,7 @@ export const RegisterPage = () => {
       const result = await dispatch(registerThunk({ email, password }));
 
       if (registerThunk.fulfilled.match(result)) {
-        setOpen(true);
+        setOpenSuccessDialog(true);
       }
     } catch (error) {
       console.error(`Registration error: ${error}`);
@@ -69,14 +71,18 @@ export const RegisterPage = () => {
 
   React.useEffect(() => {
     if (authError) {
-      alert(`Registration error: ${authError}`);
-      dispatch(clearError());
+      setOpenSnackbar(true);
     }
   }, [authError, dispatch]);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseSuccessDialog = () => {
+    setOpenSuccessDialog(false);
     navigate("/login");
+  };
+
+  const onCloseSnackbar = () => {
+    dispatch(clearError());
+    setOpenSnackbar(false);
   };
 
   return (
@@ -277,7 +283,12 @@ export const RegisterPage = () => {
       </Paper>
 
       {/* Success Dialog */}
-      <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
+      <Dialog
+        fullWidth
+        maxWidth="xs"
+        open={openSuccessDialog}
+        onClose={handleCloseSuccessDialog}
+      >
         <DialogTitle style={{ display: "flex", alignItems: "center" }}>
           <CheckCircleRounded color="secondary" style={{ marginRight: 12 }} />
           {"Congratulations"}
@@ -292,11 +303,17 @@ export const RegisterPage = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleCloseSuccessDialog} autoFocus>
             {"Go to Login"}
           </Button>
         </DialogActions>
       </Dialog>
+      {/* error Snackbar */}
+      <CustomizedSnackbar
+        message={`Registration error: ${authError}`}
+        open={openSnackbar}
+        onCloseClick={onCloseSnackbar}
+      />
     </Container>
   );
 };

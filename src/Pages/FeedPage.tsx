@@ -216,7 +216,7 @@ export const FeedPage = () => {
                 new Date(slicedList[i - 1]?.finish ?? Date()),
                 new Date(slicedList[i].finish)
               );
-              console.log("hey", feeding.contents);
+
               return (
                 <React.Fragment key={feeding.id}>
                   {!isSameDate && (

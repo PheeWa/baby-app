@@ -96,13 +96,6 @@ export const StasDiapers = () => {
       }
     });
     return x;
-    // return x.map((item, i) => {
-    //   return {
-    //     date: subDays(endOfToday(), i),
-    //     pee: item.pee,
-    //     poo: item.poo,
-    //   };
-    // });
   };
 
   const getScatterChartDate = () => {

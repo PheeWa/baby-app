@@ -18,16 +18,18 @@ import { clearError, loginThunk } from "../Store/authSlice";
 import { AppDispatch, RootState } from "../Store/store";
 import { useDispatch, useSelector } from "react-redux";
 import * as React from "react";
+import CustomizedSnackbar from "../Components/CustomizedSnackbar";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [validationError, setValidationError] = useState("");
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const { loading, error: authError } = useSelector(
     (state: RootState) => state.auth
   );
-  const [validationError, setValidationError] = useState("");
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -47,13 +49,17 @@ export const LoginPage = () => {
       console.error(`Login error: ${error}`);
     }
   };
-
+  console.log("authError", authError);
   React.useEffect(() => {
     if (authError) {
-      alert(`Login error: ${authError}`);
-      dispatch(clearError());
+      setOpenSnackbar(true);
     }
   }, [authError, dispatch]);
+
+  const onCloseSnackbar = () => {
+    dispatch(clearError());
+    setOpenSnackbar(false);
+  };
 
   return (
     <Container
@@ -211,6 +217,11 @@ export const LoginPage = () => {
           </Button>
         </Box>
       </Paper>
+      <CustomizedSnackbar
+        message={`Login error: ${authError}`}
+        open={openSnackbar}
+        onCloseClick={onCloseSnackbar}
+      />
     </Container>
   );
 };

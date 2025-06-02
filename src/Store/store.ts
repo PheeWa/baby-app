@@ -1,4 +1,6 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import { persistReducer, persistStore } from "redux-persist";
 import diaperSlice from "./diaperSlice";
 import feedSlice from "./feedSlice";
 import growthSlice from "./growthSlice";
@@ -8,20 +10,33 @@ import photoSlice from "./photoSlice";
 import sleepSlice from "./SleepSlice";
 import authSlice from "./authSlice";
 
-export const store = configureStore({
-  reducer: {
-    auth: authSlice,
-    feed: feedSlice,
-    diaper: diaperSlice,
-    leisure: leisureSlice,
-    growth: growthSlice,
-    health: healthSlice,
-    photo: photoSlice,
-    sleep: sleepSlice,
-  },
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"],
+};
+
+const rootReducer = combineReducers({
+  auth: authSlice,
+  feed: feedSlice,
+  diaper: diaperSlice,
+  leisure: leisureSlice,
+  growth: growthSlice,
+  health: healthSlice,
+  photo: photoSlice,
+  sleep: sleepSlice,
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+
+export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
