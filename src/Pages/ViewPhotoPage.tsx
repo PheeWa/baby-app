@@ -1,7 +1,5 @@
-import { ForkLeftRounded } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getText } from "../Components/BabyPhoto";
@@ -48,8 +46,6 @@ export const ViewPhotoPage = () => {
         <Button
           fullWidth
           variant="contained"
-          // color="secondary"
-          //   startIcon={<ForkLeftRounded />}
           onClick={() => onDelete(photo.id)}
         >
           Delete
@@ -57,8 +53,6 @@ export const ViewPhotoPage = () => {
         <Button
           fullWidth
           variant="contained"
-          // color="secondary"
-          //   startIcon={<ForkLeftRounded />}
           onClick={() => navigate("../photo")}
         >
           Done

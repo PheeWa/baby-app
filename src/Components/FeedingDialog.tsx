@@ -6,7 +6,6 @@ import {
   IconButton,
   DialogContent,
   Box,
-  Typography,
   TextField,
   FormControl,
   Select,
@@ -15,8 +14,7 @@ import {
   Button,
   InputLabel,
 } from "@mui/material";
-import { subMinutes } from "date-fns";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Feeding } from "../Pages/FeedPage";
 
 type Props = {
@@ -27,12 +25,10 @@ type Props = {
 };
 
 export const FeedingDialog = (props: Props) => {
-  //   const [open, setOpen] = React.useState(false);
   const [start, setStart] = useState("");
   const [finish, setFinish] = useState("");
   const [type, setType] = useState("");
   const [details, setDetails] = useState("");
-  //   const [feedings, setfeedings] = useState<any>([]);
   const [contents, setContents] = useState("");
   const [amount, setAmount] = useState<number | undefined>(undefined);
   useEffect(() => {
@@ -77,8 +73,6 @@ export const FeedingDialog = (props: Props) => {
       <DialogContent>
         <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
-            // openTo="hours"
-
             label="Start"
             value={start}
             showToolbar
@@ -94,7 +88,6 @@ export const FeedingDialog = (props: Props) => {
         <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             label="Finish"
-            // openTo="hours"
             value={finish}
             showToolbar
             onChange={(newValue) => {
@@ -113,11 +106,7 @@ export const FeedingDialog = (props: Props) => {
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
               Type
             </InputLabel>
-            <Select
-              // label="Type"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
+            <Select value={type} onChange={(e) => setType(e.target.value)}>
               <MenuItem value={"left breast"}>Left Breast</MenuItem>
               <MenuItem value={"right breast"}>Right Breast</MenuItem>
               <MenuItem value={"bottle"}>Bottle</MenuItem>

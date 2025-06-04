@@ -1,4 +1,3 @@
-import { ActionTypes } from "@mui/base";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Growth } from "../Pages/GrowthPage";
 import { growthData } from "./initData";

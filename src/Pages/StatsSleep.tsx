@@ -6,24 +6,19 @@ import {
   ListItemText,
   Typography,
   Paper,
-  Chip,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import {
   format,
   addSeconds,
-  addHours,
   differenceInDays,
   differenceInSeconds,
   endOfToday,
-  isWithinInterval,
   startOfToday,
   subDays,
   startOfDay,
   endOfDay,
-  addDays,
 } from "date-fns";
-import { syncBuiltinESMExports } from "module";
 import React from "react";
 import { useSelector } from "react-redux";
 import {
@@ -32,7 +27,6 @@ import {
   Tooltip,
   Bar,
   LabelList,
-  Legend,
   Line,
   LineChart,
   YAxis,

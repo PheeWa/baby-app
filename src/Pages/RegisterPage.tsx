@@ -37,7 +37,6 @@ export const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [validationError, setValidationError] = useState("");
   const [openSuccessDialog, setOpenSuccessDialog] = React.useState(false);
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const { loading, error: authError } = useSelector(
     (state: RootState) => state.auth
   );
@@ -69,12 +68,6 @@ export const RegisterPage = () => {
     }
   };
 
-  React.useEffect(() => {
-    if (authError) {
-      setOpenSnackbar(true);
-    }
-  }, [authError, dispatch]);
-
   const handleCloseSuccessDialog = () => {
     setOpenSuccessDialog(false);
     navigate("/login");
@@ -82,7 +75,6 @@ export const RegisterPage = () => {
 
   const onCloseSnackbar = () => {
     dispatch(clearError());
-    setOpenSnackbar(false);
   };
 
   return (
@@ -128,7 +120,8 @@ export const RegisterPage = () => {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                if (validationError) setValidationError("");
+                setValidationError("");
+                dispatch(clearError());
               }}
               label="Email"
               disabled={loading}
@@ -149,7 +142,8 @@ export const RegisterPage = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                if (validationError) setValidationError("");
+                setValidationError("");
+                dispatch(clearError());
               }}
               disabled={loading}
               endAdornment={
@@ -187,7 +181,8 @@ export const RegisterPage = () => {
               value={confirmPassword}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
-                if (validationError) setValidationError("");
+                setValidationError("");
+                dispatch(clearError());
               }}
               disabled={loading}
               endAdornment={
@@ -311,7 +306,7 @@ export const RegisterPage = () => {
       {/* error Snackbar */}
       <CustomizedSnackbar
         message={`Registration error: ${authError}`}
-        open={openSnackbar}
+        open={Boolean(authError)}
         onCloseClick={onCloseSnackbar}
       />
     </Container>

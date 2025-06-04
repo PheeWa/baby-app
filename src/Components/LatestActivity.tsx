@@ -1,11 +1,4 @@
-import { MoreVertRounded } from "@mui/icons-material";
-import {
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
-  Paper,
-} from "@mui/material";
+import { ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { IconType } from "./IconType";
 

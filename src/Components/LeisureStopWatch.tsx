@@ -1,28 +1,7 @@
-import {
-  ArrowBackRounded,
-  EditRoad,
-  EditRounded,
-  ForkLeftRounded,
-} from "@mui/icons-material";
-import {
-  Container,
-  Box,
-  Button,
-  Typography,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import { type } from "@testing-library/user-event/dist/type";
-import {
-  addSeconds,
-  addHours,
-  format,
-  subSeconds,
-  differenceInSeconds,
-} from "date-fns";
-import React, { useEffect, useState } from "react";
+import { EditRounded } from "@mui/icons-material";
+import { Container, Box, Button, IconButton, TextField } from "@mui/material";
+import { addSeconds, format } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
-
 import { Leisure, LeisureType } from "../Pages/LeisurePage";
 import { updateStopwatch } from "../Store/LeisureSlice";
 import { RootState } from "../Store/store";
@@ -49,12 +28,6 @@ export const LeisureStopWatch = (props: Props) => {
   const stopwatch = useSelector((state: RootState) => state.leisure.stopwatch);
   const dispatch = useDispatch();
 
-  const formatTime = (seconds: number) => {
-    const date = addSeconds(new Date(0), seconds);
-
-    return format(date, "m:ss");
-  };
-
   return (
     <Container style={{ marginTop: "16px" }}>
       <Box
@@ -65,12 +38,7 @@ export const LeisureStopWatch = (props: Props) => {
           alignItems: "center",
         }}
       >
-        <Button
-          variant="contained"
-          // color="secondary"
-        >
-          {getLeisureText(stopwatch.type)}
-        </Button>
+        <Button variant="contained">{getLeisureText(stopwatch.type)}</Button>
 
         <Counter startDate={stopwatch.startDate} />
 
@@ -79,7 +47,6 @@ export const LeisureStopWatch = (props: Props) => {
           edge="start"
           color={stopwatch.isEdit ? "primary" : "inherit"}
           aria-label="menu"
-          //   sx={{ mr: 2 }}
           onClick={() =>
             dispatch(
               updateStopwatch({ ...stopwatch, isEdit: !stopwatch.isEdit })

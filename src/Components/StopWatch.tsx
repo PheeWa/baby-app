@@ -1,14 +1,8 @@
-import {
-  ArrowBackRounded,
-  EditRoad,
-  EditRounded,
-  ForkLeftRounded,
-} from "@mui/icons-material";
+import { EditRounded } from "@mui/icons-material";
 import {
   Container,
   Box,
   Button,
-  Typography,
   IconButton,
   TextField,
   FormControl,
@@ -16,20 +10,10 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { type } from "@testing-library/user-event/dist/type";
-import { time } from "console";
-import {
-  addSeconds,
-  addHours,
-  format,
-  subSeconds,
-  differenceInSeconds,
-} from "date-fns";
-import React, { useEffect, useState } from "react";
+import { addSeconds, format } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
 import { Feeding, FeedingType } from "../Pages/FeedPage";
 import { updateStopwatch } from "../Store/feedSlice";
-import { feedingData } from "../Store/initData";
 import { RootState } from "../Store/store";
 import { Counter } from "./Counter";
 
@@ -72,13 +56,7 @@ export const StopWatch = (props: Props) => {
           alignItems: "center",
         }}
       >
-        <Button
-          //   fullWidth
-          variant="contained"
-          // color="secondary"
-        >
-          {getFeedText(props.feedingType)}
-        </Button>
+        <Button variant="contained">{getFeedText(props.feedingType)}</Button>
 
         <Counter startDate={stopwatch.startDate} />
         <IconButton
@@ -86,7 +64,6 @@ export const StopWatch = (props: Props) => {
           edge="start"
           color={stopwatch.isEdit ? "primary" : "inherit"}
           aria-label="menu"
-          //   sx={{ mr: 2 }}
           onClick={() =>
             dispatch(
               updateStopwatch({ ...stopwatch, isEdit: !stopwatch.isEdit })
@@ -108,7 +85,6 @@ export const StopWatch = (props: Props) => {
                   variant="standard"
                   fullWidth
                   value={stopwatch.amount}
-                  // onChange={(e) => setAmount(e.target.value as any)}
                   onChange={(e) => {
                     dispatch(
                       updateStopwatch({
@@ -128,7 +104,6 @@ export const StopWatch = (props: Props) => {
                   </InputLabel>
                   <Select
                     value={stopwatch.contents}
-                    // onChange={(e) => setContents(e.target.value)}
                     onChange={(e) => {
                       dispatch(
                         updateStopwatch({
@@ -165,8 +140,6 @@ export const StopWatch = (props: Props) => {
         fullWidth
         variant="contained"
         style={{ marginTop: "16px" }}
-        // color="secondary"
-        // startIcon={<ForkLeftRounded />}
         onClick={() => {
           props.onSave({
             start: stopwatch.startDate,

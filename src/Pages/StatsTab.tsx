@@ -1,45 +1,7 @@
-import {
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListSubheader,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
-import { Container } from "@mui/system";
-import {
-  addHours,
-  addSeconds,
-  endOfToday,
-  format,
-  isToday,
-  isWithinInterval,
-  startOfDay,
-  startOfToday,
-  subDays,
-} from "date-fns";
+import { Box, Tab, Tabs } from "@mui/material";
+import { endOfToday, startOfToday, subDays } from "date-fns";
 import { differenceInDays, differenceInSeconds } from "date-fns/esm";
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import {
-  LineChart,
-  Line,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  Label,
-  LabelList,
-} from "recharts";
-import { RootState } from "../Store/store";
 import { Feeding } from "./FeedPage";
 import { Leisure } from "./LeisurePage";
 import { Sleep } from "./SleepPage";
@@ -109,7 +71,6 @@ export const StatsTab = () => {
           value={value}
           onChange={handleChange}
           variant="scrollable"
-          // scrollButtons
           allowScrollButtonsMobile
           aria-label="scrollable force tabs example"
           sx={{

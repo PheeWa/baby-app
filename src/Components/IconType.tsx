@@ -65,6 +65,3 @@ export const IconType = ({ type }: Props) => {
 
   return <img width="35px" src={getImgeSrc()}></img>;
 };
-
-// "tummy time" | "play time" | "outdoors" | "bath time";
-// "medication" | "temperature" | "vaccination";

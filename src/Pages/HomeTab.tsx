@@ -114,7 +114,7 @@ export const HomeTab = () => {
     if (!latestSleep) {
       return "";
     }
-    // return latestSleep.id + "";
+
     const text = `${formatDuration(
       latestSleep.finish,
       Date()
@@ -524,7 +524,6 @@ export const HomeTab = () => {
             alignSelf: "center",
           }}
           variant="contained"
-          // color="secondary"
           onClick={() => {
             navigate("/all-log");
           }}

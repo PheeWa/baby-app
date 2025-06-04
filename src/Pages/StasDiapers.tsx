@@ -5,7 +5,6 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
@@ -15,17 +14,14 @@ import {
   differenceInSeconds,
   endOfToday,
   format,
-  isWithinInterval,
   startOfToday,
   subDays,
 } from "date-fns";
 import { endOfDay, startOfDay } from "date-fns/esm";
 import { capitalize } from "lodash";
-import React from "react";
 import { useSelector } from "react-redux";
 import {
   ComposedChart,
-  CartesianGrid,
   XAxis,
   YAxis,
   Legend,
@@ -34,12 +30,9 @@ import {
   LabelList,
   Scatter,
   ScatterChart,
-  ZAxis,
   ResponsiveContainer,
 } from "recharts";
 import { RootState } from "../Store/store";
-import { formatSeconds } from "./StatsFeeding";
-import { avgEvent, getLineChartData } from "./StatsSleep";
 
 export const StasDiapers = () => {
   const weeklyDiapers = useSelector((state: RootState) => {
@@ -101,13 +94,11 @@ export const StasDiapers = () => {
   const getScatterChartDate = () => {
     let pee = [...Array(7)].map((_, i) => {
       return {
-        // time: -1000,
         date: +startOfDay(subDays(new Date(), i)),
       } as any;
     });
     let poo = [...Array(7)].map((_, i) => {
       return {
-        // time: 0,
         date: +startOfDay(subDays(new Date(), i)),
       } as any;
     });

@@ -17,7 +17,6 @@ import {
   format,
   startOfToday,
 } from "date-fns";
-import React from "react";
 import { useSelector } from "react-redux";
 import {
   BarChart,
@@ -48,8 +47,6 @@ export const formatSeconds = (seconds: number) => {
   return format(x, "H'h'mm'm'");
 };
 export const StatsFeeding = () => {
-  // From Redux//
-  // const feedings = useSelector((state: RootState) => state.feed.feedings);
   const weeklyFeedings = useSelector((state: RootState) => {
     return state.feed.feedings.filter((feeding) => {
       const thisWeek = isWithinInterval(new Date(feeding.finish), {
@@ -64,17 +61,10 @@ export const StatsFeeding = () => {
   });
 
   //Statistics functions//
-
   const avgFeeding = (feedings: Feeding[]) => {
     let sumFeeding = 0;
     let numFeeding = 0;
     feedings.forEach((feeding) => {
-      // const thisWeek = isWithinInterval(new Date(feeding.finish), {
-      //   start: subDays(new Date(), 6),
-      //   end: new Date(),
-      // });
-
-      // if (thisWeek) {
       const diff = differenceInSeconds(
         new Date(feeding.finish),
         new Date(feeding.start)
@@ -82,7 +72,7 @@ export const StatsFeeding = () => {
       sumFeeding = sumFeeding + diff;
       numFeeding = numFeeding + 1;
     });
-    // });
+
     const avgFeedingInSec = sumFeeding / (numFeeding || 1);
     const date = addSeconds(new Date(0), avgFeedingInSec);
     const x = addHours(date, 12);

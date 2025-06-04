@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { clearError, loginThunk } from "../Store/authSlice";
 import { AppDispatch, RootState } from "../Store/store";
 import { useDispatch, useSelector } from "react-redux";
-import * as React from "react";
 import CustomizedSnackbar from "../Components/CustomizedSnackbar";
 
 export const LoginPage = () => {
@@ -26,7 +25,6 @@ export const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [validationError, setValidationError] = useState("");
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const { loading, error: authError } = useSelector(
     (state: RootState) => state.auth
   );
@@ -35,6 +33,7 @@ export const LoginPage = () => {
 
   const login = async () => {
     setValidationError("");
+
     if (!email || !password) {
       setValidationError("Please fill in all fields");
       return;
@@ -49,16 +48,9 @@ export const LoginPage = () => {
       console.error(`Login error: ${error}`);
     }
   };
-  console.log("authError", authError);
-  React.useEffect(() => {
-    if (authError) {
-      setOpenSnackbar(true);
-    }
-  }, [authError, dispatch]);
 
   const onCloseSnackbar = () => {
     dispatch(clearError());
-    setOpenSnackbar(false);
   };
 
   return (
@@ -104,7 +96,8 @@ export const LoginPage = () => {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                if (validationError) setValidationError("");
+                setValidationError("");
+                dispatch(clearError());
               }}
               disabled={loading}
               label="Email"
@@ -125,7 +118,8 @@ export const LoginPage = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                if (validationError) setValidationError("");
+                setValidationError("");
+                dispatch(clearError());
               }}
               disabled={loading}
               endAdornment={
@@ -219,7 +213,7 @@ export const LoginPage = () => {
       </Paper>
       <CustomizedSnackbar
         message={`Login error: ${authError}`}
-        open={openSnackbar}
+        open={Boolean(authError)}
         onCloseClick={onCloseSnackbar}
       />
     </Container>

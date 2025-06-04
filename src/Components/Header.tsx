@@ -1,6 +1,5 @@
 import { ArrowBackRounded, AddRounded } from "@mui/icons-material";
 import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 type Props = {

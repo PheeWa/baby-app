@@ -1,15 +1,10 @@
+import { ArrowForwardIosRounded } from "@mui/icons-material";
 import {
-  ArrowForwardIosRounded,
-  ArrowForwardRounded,
-} from "@mui/icons-material";
-import {
-  Box,
   ListItem,
   IconButton,
   ListItemAvatar,
   Avatar,
   ListItemText,
-  Typography,
 } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +13,7 @@ import { LeisureType } from "../Pages/LeisurePage";
 import { Counter } from "./Counter";
 import { IconType } from "./IconType";
 import { getLeisureText } from "./LeisureStopWatch";
-import { getFeedText, formatTime } from "./StopWatch";
+import { getFeedText } from "./StopWatch";
 
 type Props = {
   route: string;

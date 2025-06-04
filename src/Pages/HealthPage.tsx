@@ -43,7 +43,7 @@ export const HealthPage = () => {
     });
   });
   //Hooks//
-  const { limit, fetchData, slicedList, dataLength, hasMore } =
+  const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(healthsList);
   const dispatch = useDispatch();
   //usestates//

@@ -5,26 +5,20 @@ import {
   DialogTitle,
   IconButton,
   DialogContent,
-  TextField,
   Box,
   Typography,
-  FilledInput,
   InputAdornment,
   FormControl,
   Input,
   Button,
   DialogActions,
 } from "@mui/material";
-import { type } from "@testing-library/user-event/dist/type";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
-import { start } from "repl";
-import { createNonNullExpression, PropertyAssignment } from "typescript";
+import { useEffect, useState } from "react";
 import { Growth, GrowthType } from "../Pages/GrowthPage";
 
 type Props = {
   onSave: (newGrowth: Growth) => void;
-  // type?: GrowthType;
   onClose: () => void;
   growth?: Growth;
   onDelete: (id: number) => void;
@@ -54,11 +48,8 @@ export const getLabel = (type?: GrowthType) => {
 };
 
 export const GrowthDialog = (props: Props) => {
-  //usestates//
-  // const [showDate, setShowDate] = useState(Date());
   const [time, setTime] = useState(Date());
   const [value, setValue] = useState("");
-  // const [isEdit, setIsEdit] = useState<Growth | undefined>(undefined);
 
   useEffect(() => {
     if (props.growth) {
@@ -67,11 +58,10 @@ export const GrowthDialog = (props: Props) => {
     }
   }, [props.growth]);
 
-  //functions//
-
   return (
     <Dialog
-    fullWidth maxWidth="xs"
+      fullWidth
+      maxWidth="xs"
       open={!!props.growth}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"
@@ -86,10 +76,7 @@ export const GrowthDialog = (props: Props) => {
             top: 8,
           }}
         >
-          <IconButton
-            aria-label="close"
-            // onClick={onClose}
-          >
+          <IconButton aria-label="close">
             <MobileDatePicker
               label="For mobile"
               value="{value}"

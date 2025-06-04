@@ -1,14 +1,6 @@
-import { EditRounded, ForkLeftRounded } from "@mui/icons-material";
-import {
-  Container,
-  Box,
-  Button,
-  Typography,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import { addSeconds, format, subSeconds } from "date-fns";
-import React, { useEffect, useState } from "react";
+import { EditRounded } from "@mui/icons-material";
+import { Container, Box, Button, IconButton, TextField } from "@mui/material";
+import { addSeconds, format } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
 import { Sleep } from "../Pages/SleepPage";
 import { updateSleepStopwatch } from "../Store/SleepSlice";
@@ -24,12 +16,6 @@ export const SleepStopWatch = (props: Props) => {
     (state: RootState) => state.sleep.sleepStopwatch
   );
   const dispatch = useDispatch();
-
-  const formatTime = (seconds: number) => {
-    const date = addSeconds(new Date(0), seconds);
-
-    return format(date, "m:ss");
-  };
 
   return (
     <Container style={{ marginTop: "16px" }}>

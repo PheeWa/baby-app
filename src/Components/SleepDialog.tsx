@@ -6,12 +6,11 @@ import {
   IconButton,
   DialogContent,
   Box,
-  Typography,
   TextField,
   DialogActions,
   Button,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Sleep } from "../Pages/SleepPage";
 
 type Props = {
@@ -83,7 +82,6 @@ export const SleepDialog = (props: Props) => {
         <Box style={{ display: "flex", marginBottom: "16px" }}>
           <MobileDateTimePicker
             label="Finish"
-            // openTo="hours"
             value={finish}
             showToolbar
             onChange={(newValue) => {

@@ -7,7 +7,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import { format } from "date-fns";
-import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
@@ -49,7 +48,7 @@ export const AllLogsPage = () => {
       return -1;
     }
   });
-  const { limit, fetchData, slicedList, dataLength, hasMore } =
+  const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(allLogs);
 
   return (
@@ -82,9 +81,7 @@ export const AllLogsPage = () => {
               )}, ${formatDuration(logx.start, logx.finish)}, ${logx.type}`;
 
               return (
-                <ListItem
-                // key={feeding.id}
-                >
+                <ListItem>
                   <ListItemAvatar>
                     <Avatar style={{ backgroundColor: "#151e33" }}>
                       <IconType type={log.type} />

@@ -6,7 +6,6 @@ import {
   IconButton,
   DialogContent,
   Box,
-  Typography,
   TextField,
   FormControl,
   Select,
@@ -15,9 +14,7 @@ import {
   Button,
   InputLabel,
 } from "@mui/material";
-import { type } from "@testing-library/user-event/dist/type";
-import React, { useEffect, useState } from "react";
-import { start } from "repl";
+import { useEffect, useState } from "react";
 import { Leisure, LeisureType } from "../Pages/LeisurePage";
 
 type Props = {
@@ -28,14 +25,11 @@ type Props = {
 };
 
 export const LeisureDialog = (props: Props) => {
-  //usestates are here//
-
   const [start, setStart] = useState("");
   const [finish, setFinish] = useState("");
   const [type, setType] = useState<LeisureType>("tummy time");
   const [details, setDetails] = useState("");
 
-  //functions//
   useEffect(() => {
     if (props.selectedLeisure) {
       setType(props.selectedLeisure?.type);
@@ -59,7 +53,6 @@ export const LeisureDialog = (props: Props) => {
         {props.selectedLeisure?.id ? (
           <IconButton
             aria-label="close"
-            // onClick={props.onClose}
             sx={{
               position: "absolute",
               right: 8,
@@ -80,7 +73,6 @@ export const LeisureDialog = (props: Props) => {
           <MobileDateTimePicker
             label="Start"
             showToolbar
-            // openTo="hours"
             value={start}
             onChange={(newValue) => {
               setStart(newValue?.toString() ?? "");
@@ -95,7 +87,6 @@ export const LeisureDialog = (props: Props) => {
           <MobileDateTimePicker
             label="Finish"
             showToolbar
-            // openTo="hours"
             value={finish}
             onChange={(newValue) => {
               setFinish(newValue?.toString() ?? "");

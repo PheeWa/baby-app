@@ -1,5 +1,4 @@
 import { DeleteRounded } from "@mui/icons-material";
-// import { MobileDateTimePicker } from "@mui/lab";
 import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
 import {
   Dialog,
@@ -7,7 +6,6 @@ import {
   IconButton,
   DialogContent,
   Box,
-  Typography,
   TextField,
   FormControl,
   Select,
@@ -35,7 +33,7 @@ export const HealthDialog = (props: Props) => {
   const [type, setType] = useState<HealthType>("medication");
   const [value, setValue] = useState("");
   const [details, setDetails] = useState("");
-  //functions//
+
   useEffect(() => {
     if (props.health) {
       setDate(props.health.start);
@@ -79,7 +77,6 @@ export const HealthDialog = (props: Props) => {
           <MobileDateTimePicker
             label="Date"
             showToolbar
-            // openTo="hours"
             value={date}
             onChange={(newValue) => {
               setDate(newValue?.toString() ?? "");

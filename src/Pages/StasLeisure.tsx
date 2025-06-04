@@ -11,15 +11,10 @@ import {
 import {
   addSeconds,
   differenceInDays,
-  differenceInSeconds,
   endOfToday,
   format,
-  isWithinInterval,
   startOfToday,
-  subDays,
 } from "date-fns";
-import { capitalize } from "lodash";
-import React from "react";
 import { useSelector } from "react-redux";
 import {
   LineChart,
@@ -47,7 +42,6 @@ export const StasLeisure = () => {
   });
 
   //for statistics//
-
   const weeklyTummyTime = weeklyLeisures.filter((leisure) => {
     if (leisure.type === "tummy time") {
       return true;
@@ -255,7 +249,6 @@ export const StasLeisure = () => {
                   position={"top"}
                   formatter={(value: any) => {
                     return formatSeconds(value);
-                    // return "hahahha";
                   }}
                 />
               </Bar>
@@ -307,7 +300,6 @@ export const StasLeisure = () => {
                   position={"top"}
                   formatter={(value: any) => {
                     return formatSeconds(value);
-                    // return "hahahha";
                   }}
                 />
               </Bar>
@@ -359,7 +351,6 @@ export const StasLeisure = () => {
                   position={"top"}
                   formatter={(value: any) => {
                     return formatSeconds(value);
-                    // return "hahahha";
                   }}
                 />
               </Bar>

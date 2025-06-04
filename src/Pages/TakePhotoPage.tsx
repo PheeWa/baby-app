@@ -1,5 +1,5 @@
 import { ArrowBackRounded, PhotoCameraRounded } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,17 +16,6 @@ export const TakePhotoPage = () => {
     const imageSrc = webcamRef.current?.getScreenshot?.();
     dispatch(updatePhoto({ id: +id, image: imageSrc, month: 0 }));
     navigate(`/photo/view-photo/${id}`);
-    //   const newPhotos = photos.map((photo) => {
-    //     if (selectedId === photo.id) {
-    //       return {
-    //         ...photo,
-    //         image: imageSrc,
-    //       };
-    //     } else {
-    //       return photo;
-    //     }
-    //   });
-    //   setPhotos(newPhotos);
   };
 
   const goBack = () => {

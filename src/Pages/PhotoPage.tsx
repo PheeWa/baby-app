@@ -1,7 +1,7 @@
 import { PhotoCameraRounded, PhotoRounded } from "@mui/icons-material";
 import { Drawer, IconButton, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { BabyPhoto } from "../Components/BabyPhoto";
@@ -59,7 +59,6 @@ export const PhotoPage = () => {
           gap: "16px",
           marginTop: "16px",
           marginBottom: "16px",
-          //   flexDirection: "column",
           flexWrap: "wrap",
         }}
       >

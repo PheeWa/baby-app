@@ -1,6 +1,4 @@
-import { MoreVertRounded } from "@mui/icons-material";
 import { ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
-import React from "react";
 import { IconType } from "./IconType";
 
 type Props = {

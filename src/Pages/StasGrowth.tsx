@@ -1,11 +1,4 @@
-import {
-  Box,
-  Container,
-  List,
-  ListSubheader,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Container, ListSubheader, Paper } from "@mui/material";
 import {
   addDays,
   differenceInDays,
@@ -17,7 +10,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import {
   LineChart,
-  CartesianGrid,
   XAxis,
   YAxis,
   Legend,
