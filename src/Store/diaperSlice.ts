@@ -19,7 +19,7 @@ export const diaperSlice = createSlice({
       state.diapers.push(action.payload);
     },
     editDiaper: (state, action: PayloadAction<Diaper>) => {
-      state.diapers = state.diapers.map((diaper, index) => {
+      state.diapers = state.diapers.map((diaper) => {
         if (diaper.id === action.payload.id) {
           return action.payload;
         }

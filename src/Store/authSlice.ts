@@ -102,7 +102,7 @@ export const authSlice = createSlice({
 
     builder.addCase(registerThunk.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload || "Login failed";
+      state.error = action.payload || "Register failed";
     });
     // login
     builder.addCase(loginThunk.pending, (state) => {
