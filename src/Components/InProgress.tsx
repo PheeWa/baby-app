@@ -1,3 +1,4 @@
+import React from "react";
 import { ArrowForwardIosRounded } from "@mui/icons-material";
 import {
   ListItem,
@@ -6,9 +7,8 @@ import {
   Avatar,
   ListItemText,
 } from "@mui/material";
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FeedingType } from "../Pages/FeedPage";
+import { FeedingType } from "../types/feeding";
 import { LeisureType } from "../Pages/LeisurePage";
 import { Counter } from "./Counter";
 import { IconType } from "./IconType";

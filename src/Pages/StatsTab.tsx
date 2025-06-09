@@ -2,7 +2,7 @@ import { Box, Tab, Tabs } from "@mui/material";
 import { endOfToday, startOfToday, subDays } from "date-fns";
 import { differenceInDays, differenceInSeconds } from "date-fns/esm";
 import React from "react";
-import { Feeding } from "./FeedPage";
+import { Feeding } from "../types/feeding";
 import { Leisure } from "./LeisurePage";
 import { Sleep } from "./SleepPage";
 import { StasDiapers } from "./StasDiapers";

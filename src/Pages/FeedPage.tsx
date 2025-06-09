@@ -2,23 +2,20 @@ import { MoreVertRounded } from "@mui/icons-material";
 import {
   Avatar,
   Box,
-  Button,
   Container,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  CircularProgress,
+  Typography
 } from "@mui/material";
 import {
   addSeconds,
   differenceInSeconds,
   format,
-  isSameDay,
-  isToday,
-  isYesterday,
   startOfYear,
-  subMinutes,
 } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -28,28 +25,11 @@ import { FeedingDialog } from "../Components/FeedingDialog";
 import { Header } from "../Components/Header";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
-import { StopWatch } from "../Components/StopWatch";
-import { useInfiniteScroll } from "../Hooks/infiniteScroll";
-import {
-  addFeed,
-  deleteFeed,
-  editFeed,
-  startStopwatch,
-  stopStopwatch,
-} from "../Store/feedSlice";
+import { StopWatch, getFeedText } from "../Components/StopWatch";
+import { useFeedings, useAddFeeding, useUpdateFeeding, useDeleteFeeding } from "../Hooks/useFeedings";
+import { Feeding, FeedingType, FeedingStopwatch } from "../types/feeding";
 import { RootState } from "../Store/store";
-
-export type Feeding = {
-  id: number;
-  type: string;
-  details: string;
-  start: string;
-  finish: string;
-  amount?: number;
-  contents: string;
-};
-
-export type FeedingType = "left breast" | "right breast" | "bottle" | "meal";
+import { updateStopwatch, startStopwatch, stopStopwatch } from "../Store/feedSlice";
 
 export const formatDuration = (start: string, finish: string) => {
   const diff = differenceInSeconds(new Date(finish), new Date(start));
@@ -67,210 +47,166 @@ export const formatDuration = (start: string, finish: string) => {
 };
 
 export const FeedPage = () => {
-  const feedingsList = useSelector((state: RootState) => {
-    return [...state.feed.feedings].sort((a, b) => {
-      if (+new Date(a.finish ?? a.start) < +new Date(b.finish ?? a.start)) {
-        return 1;
-      } else return -1;
-    });
-  });
-
-  const { fetchData, slicedList, dataLength, hasMore } =
-    useInfiniteScroll(feedingsList);
-
+  const userId = useSelector((state: RootState) => state.auth.user);
+  const { data: feedings = [], isLoading } = useFeedings(userId?.userId || "");
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [selectedFeeding, setSelectedFeeding] = useState<Feeding | null>(null);
 
-  const [selectedFeeding, setSelectedFeeding] = useState<Feeding | undefined>(
-    undefined
-  );
+  const addFeeding = useAddFeeding(userId?.userId || "");
+  const updateFeeding = useUpdateFeeding(userId?.userId || "");
+  const deleteFeeding = useDeleteFeeding(userId?.userId || "");
 
-  const onSave = (newFeeding: Feeding) => {
-    handleClose();
+  const handleStartStopwatch = (type: FeedingType) => {
+    dispatch(startStopwatch(type));
+  };
+
+  const handleStopStopwatch = () => {
     dispatch(stopStopwatch());
-    if (newFeeding.id === 0) {
-      const newFeedingWithId = { ...newFeeding, id: Math.random() };
-      dispatch(addFeed(newFeedingWithId));
+  };
+
+  const handleUpdateStopwatch = (updatedStopwatch: FeedingStopwatch) => {
+    dispatch(updateStopwatch(updatedStopwatch));
+  };
+
+  const handleSaveFeeding = (feeding: Feeding) => {
+    if (feeding.id === "0") {
+      addFeeding.mutate(feeding);
     } else {
-      dispatch(editFeed(newFeeding));
+      updateFeeding.mutate(feeding);
     }
+    setOpen(false);
+    setSelectedFeeding(null);
+    handleStopStopwatch();
   };
 
-  const onDelete = (id: number) => {
-    handleClose();
-    dispatch(deleteFeed(id));
+  const handleDeleteFeeding = (id: string) => {
+    deleteFeeding.mutate(id);
+    setOpen(false);
+    setSelectedFeeding(null);
   };
 
-  const calcStartDate = () => {
-    const defaultDate = subMinutes(new Date(), 15);
-    return defaultDate.toString();
+  const handleClickOpen = (feeding: Feeding | null = null) => {
+    if (feeding === null) {
+      const newFeeding: Feeding = {
+        id: "0",
+        type: "left breast",
+        details: "",
+        start: new Date().toISOString(),
+        finish: new Date().toISOString(),
+        amount: undefined,
+        contents: "",
+
+      };
+      setSelectedFeeding(newFeeding);
+    } else {
+      setSelectedFeeding(feeding);
+    }
+    setOpen(true);
   };
 
-  const handleClickOpen = () => {
-    const newFeeding: Feeding = {
-      id: 0,
-      type: "left breast",
-      details: "",
-      start: calcStartDate(),
-      finish: Date(),
-      amount: undefined,
-      contents: "",
-    };
-    setSelectedFeeding(newFeeding);
-  };
 
-  const handleEdit = (feeding: Feeding) => {
-    setSelectedFeeding(feeding);
-  };
-
-  const handleClose = () => {
-    setSelectedFeeding(undefined);
-  };
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          gap: 2
+        }}
+      >
+        <CircularProgress size={60} />
+        <Typography variant="h6" color="text.secondary">
+          Loading feedings...
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
-    <Box>
-      <Header handleClickOpen={handleClickOpen} title={"Feeding"} />
-
-      {stopwatch.isRunning ? (
-        <StopWatch onSave={onSave} feedingType={stopwatch.type} />
-      ) : (
-        <Container style={{ marginTop: "16px" }}>
-          <Box style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => dispatch(startStopwatch("left breast"))}
-            >
-              Left
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => dispatch(startStopwatch("right breast"))}
-            >
-              Right
-            </Button>
-          </Box>
-          <Box style={{ display: "flex", gap: "16px" }}>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => dispatch(startStopwatch("bottle"))}
-            >
-              Bottle
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => dispatch(startStopwatch("meal"))}
-            >
-              Meal
-            </Button>
-          </Box>
-        </Container>
-      )}
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Header title="Feeding" handleClickOpen={() => handleClickOpen()} />
+      <Box sx={{ p: 2 }}>
+        <StopWatch
+          stopwatch={stopwatch}
+          onStart={handleStartStopwatch}
+          onStop={handleStopStopwatch}
+          onUpdate={handleUpdateStopwatch}
+          onSave={handleSaveFeeding}
+          onOpenDialog={() => handleClickOpen()}
+        />
+      </Box>
 
       <Container>
         <List dense={true}>
           <InfiniteScroll
-            dataLength={dataLength}
-            next={fetchData}
-            hasMore={hasMore}
+            dataLength={feedings.length}
+            next={() => { }}
+            hasMore={false}
             loader={<ScrollLoader />}
-            endMessage={<EndMessage dataLength={dataLength} />}
+            endMessage={<EndMessage dataLength={feedings.length} />}
           >
-            {slicedList.map((feeding: Feeding, i: number) => {
-              const text = `${format(
-                new Date(feeding.start),
-                "p"
-              )}, ${formatDuration(feeding.start, feeding.finish)}, ${
-                feeding.type
-              }`;
-
-              const secondaryText = () => {
-                if (feeding.type === "bottle") {
-                  return `${feeding.amount}ml, ${feeding.contents}${
-                    feeding.details ? ", " : ""
-                  }${feeding.details}`;
-                } else return feeding.details;
-              };
-
-              const diff = formatDuration(
-                slicedList[i].finish,
-                slicedList[i - 1]?.start ?? Date()
-              );
-              const showDiff = differenceInSeconds(
-                new Date(slicedList[i - 1]?.start ?? Date()),
-                new Date(slicedList[i].finish)
-              );
-              const dates = () => {
-                if (isToday(new Date(slicedList[i].finish))) {
-                  return "Today";
-                } else if (isYesterday(new Date(slicedList[i].finish))) {
-                  return "Yesterday";
-                } else {
-                  return format(new Date(slicedList[i].finish), "LLL d EEEE");
-                }
-              };
-              const isSameDate = isSameDay(
-                new Date(slicedList[i - 1]?.finish ?? Date()),
-                new Date(slicedList[i].finish)
-              );
-
-              return (
-                <React.Fragment key={feeding.id}>
-                  {!isSameDate && (
-                    <ListItem style={{ paddingTop: 30, paddingBottom: 10 }}>
-                      <ListItemText
-                        style={{ marginTop: 0, marginBottom: 0 }}
-                        primary={dates()}
-                      />
-                    </ListItem>
-                  )}
-                  {showDiff > 3600 && (
-                    <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
-                      <ListItemAvatar style={{ opacity: 0, height: 0 }}>
-                        <Avatar>
-                          <MoreVertRounded />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        style={{ marginTop: 0, marginBottom: 0 }}
-                        secondary={diff}
-                      />
-                    </ListItem>
-                  )}
-                  <ListItem
-                    key={feeding.id}
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => handleEdit(feeding)}
-                      >
-                        <MoreVertRounded />
-                      </IconButton>
-                    }
+            {feedings.map((feeding) => (
+              <ListItem
+                key={feeding.id}
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleClickOpen(feeding)}
                   >
-                    <ListItemAvatar>
-                      <Avatar style={{ backgroundColor: "#151e33" }}>
-                        <IconType type={feeding.type} />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={text} secondary={secondaryText()} />
-                  </ListItem>
-                </React.Fragment>
-              );
-            })}
+                    <MoreVertRounded />
+                  </IconButton>
+                }
+              >
+                <ListItemAvatar>
+                  <Avatar>
+                    <IconType type={feeding.type} />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={getFeedText(feeding.type)}
+                  secondary={
+                    <>
+                      {format(new Date(feeding.start), "h:mm a")} -{" "}
+                      {format(new Date(feeding.finish), "h:mm a")}
+                      {feeding.details && (
+                        <>
+                          <br />
+                          {feeding.details}
+                        </>
+                      )}
+                      {feeding.amount && (
+                        <>
+                          <br />
+                          {feeding.amount}ml {feeding.contents}
+                        </>
+                      )}
+                    </>
+                  }
+                />
+              </ListItem>
+            ))}
           </InfiniteScroll>
         </List>
       </Container>
-      <FeedingDialog
-        onClose={handleClose}
-        onSave={onSave}
-        selectedFeeding={selectedFeeding}
-        onDelete={onDelete}
-      />
+
+      {selectedFeeding && (
+        <FeedingDialog
+          open={open}
+          feeding={selectedFeeding}
+          onClose={() => {
+            setOpen(false);
+            setSelectedFeeding(null);
+          }}
+          onSave={handleSaveFeeding}
+          onDelete={handleDeleteFeeding}
+        />
+      )}
     </Box>
   );
 };

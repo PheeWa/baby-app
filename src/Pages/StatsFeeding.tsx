@@ -30,10 +30,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { RootState } from "../Store/store";
-import { Feeding } from "./FeedPage";
+import { Feeding } from "../types/feeding";
 import { getLineChartData } from "./StatsSleep";
 import { getBarData } from "./StatsTab";
 import { capitalize } from "lodash";
+import { useFeedings } from "../Hooks/useFeedings";
 
 export const formatSeconds = (seconds: number) => {
   const date = addSeconds(new Date(0), seconds);
@@ -47,17 +48,15 @@ export const formatSeconds = (seconds: number) => {
   return format(x, "H'h'mm'm'");
 };
 export const StatsFeeding = () => {
-  const weeklyFeedings = useSelector((state: RootState) => {
-    return state.feed.feedings.filter((feeding) => {
-      const thisWeek = isWithinInterval(new Date(feeding.finish), {
-        start: subDays(new Date(), 7),
-        end: new Date(),
-      });
+  const userId = useSelector((state: RootState) => state.auth.user);
+  const { data: feedings = [] } = useFeedings(userId?.userId || "");
 
-      if (thisWeek) {
-        return true;
-      }
+  const weeklyFeedings = feedings.filter((feeding: Feeding) => {
+    const thisWeek = isWithinInterval(new Date(feeding.finish), {
+      start: subDays(new Date(), 7),
+      end: new Date(),
     });
+    return thisWeek;
   });
 
   //Statistics functions//
@@ -82,18 +81,17 @@ export const StatsFeeding = () => {
   };
 
   //Feeding duration by days//
-
-  const leftBreast = weeklyFeedings.filter((feeding) => {
+  const leftBreast = weeklyFeedings.filter((feeding: Feeding) => {
     if (feeding.type === "left breast") {
       return true;
     }
   });
-  const rightBreast = weeklyFeedings.filter((feeding) => {
+  const rightBreast = weeklyFeedings.filter((feeding: Feeding) => {
     if (feeding.type === "right breast") {
       return true;
     }
   });
-  const bottle = weeklyFeedings.filter((feeding) => {
+  const bottle = weeklyFeedings.filter((feeding: Feeding) => {
     if (feeding.type === "bottle") {
       return true;
     }

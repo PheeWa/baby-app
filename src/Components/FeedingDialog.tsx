@@ -15,45 +15,47 @@ import {
   InputLabel,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Feeding } from "../Pages/FeedPage";
+import { Feeding, FeedingType } from "../types/feeding";
 
-type Props = {
+type FeedingDialogProps = {
+  open: boolean;
+  feeding: Feeding;
   onClose: () => void;
   onSave: (newFeeding: Feeding) => void;
-  selectedFeeding?: Feeding;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 };
 
-export const FeedingDialog = (props: Props) => {
+export const FeedingDialog = (props: FeedingDialogProps) => {
   const [start, setStart] = useState("");
   const [finish, setFinish] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState<FeedingType>("left breast");
   const [details, setDetails] = useState("");
   const [contents, setContents] = useState("");
   const [amount, setAmount] = useState<number | undefined>(undefined);
+
   useEffect(() => {
-    if (props.selectedFeeding) {
-      setType(props.selectedFeeding?.type);
-      setStart(props.selectedFeeding?.start);
-      setFinish(props.selectedFeeding?.finish);
-      setDetails(props.selectedFeeding?.details);
-      setContents(props.selectedFeeding?.contents);
-      setAmount(props.selectedFeeding?.amount);
+    if (props.feeding) {
+      setType(props.feeding.type);
+      setStart(props.feeding.start);
+      setFinish(props.feeding.finish);
+      setDetails(props.feeding.details);
+      setContents(props.feeding.contents || "");
+      setAmount(props.feeding.amount);
     }
-  }, [props.selectedFeeding]);
+  }, [props.feeding]);
 
   return (
     <Dialog
       fullWidth
       maxWidth="xs"
-      open={!!props.selectedFeeding}
+      open={props.open}
       onClose={props.onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
         Feeding
-        {props.selectedFeeding?.id ? (
+        {props.feeding.id !== '0' ? (
           <IconButton
             sx={{
               position: "absolute",
@@ -61,9 +63,7 @@ export const FeedingDialog = (props: Props) => {
               top: 8,
             }}
             onClick={() => {
-              if (props.selectedFeeding?.id) {
-                props.onDelete(props.selectedFeeding?.id);
-              }
+              props.onDelete(props.feeding.id);
             }}
           >
             <DeleteRounded />
@@ -77,7 +77,7 @@ export const FeedingDialog = (props: Props) => {
             value={start}
             showToolbar
             onChange={(newValue) => {
-              setStart(new Date(newValue ?? Date()).toString());
+              setStart(new Date(newValue ?? Date()).toISOString());
             }}
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
@@ -91,7 +91,7 @@ export const FeedingDialog = (props: Props) => {
             value={finish}
             showToolbar
             onChange={(newValue) => {
-              setFinish(new Date(newValue ?? Date()).toString());
+              setFinish(new Date(newValue ?? Date()).toISOString());
             }}
             renderInput={(params) => (
               <TextField {...params} fullWidth variant="standard" />
@@ -106,7 +106,7 @@ export const FeedingDialog = (props: Props) => {
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
               Type
             </InputLabel>
-            <Select value={type} onChange={(e) => setType(e.target.value)}>
+            <Select value={type} onChange={(e) => setType(e.target.value as FeedingType)}>
               <MenuItem value={"left breast"}>Left Breast</MenuItem>
               <MenuItem value={"right breast"}>Right Breast</MenuItem>
               <MenuItem value={"bottle"}>Bottle</MenuItem>
@@ -124,7 +124,7 @@ export const FeedingDialog = (props: Props) => {
                 variant="standard"
                 fullWidth
                 value={amount}
-                onChange={(e) => setAmount(e.target.value as any)}
+                onChange={(e) => setAmount(Number(e.target.value))}
                 type="number"
               />
             </Box>
@@ -160,15 +160,16 @@ export const FeedingDialog = (props: Props) => {
         <Button onClick={props.onClose}>Cancel</Button>
         <Button
           onClick={() => {
-            props.onSave({
-              id: props.selectedFeeding?.id ?? 0,
+            const feedingToSave = {
+              id: props.feeding.id,
               start,
               finish,
               type,
               details,
               contents,
               amount,
-            });
+            };
+            props.onSave(feedingToSave);
           }}
           autoFocus
         >

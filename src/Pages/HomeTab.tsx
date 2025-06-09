@@ -31,11 +31,13 @@ import leisureIcon from "../Assets/leisureIcon.png";
 import growthIcon from "../Assets/growthIcon.png";
 import healthIcon from "../Assets/healthIcon.png";
 import cameraIcon from "../Assets/cameraIcon.png";
+import { useFeedings } from "../Hooks/useFeedings";
 
 export const HomeTab = () => {
   const navigate = useNavigate();
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
-  const feedings = useSelector((state: RootState) => state.feed.feedings);
+  const userId = useSelector((state: RootState) => state.auth.user);
+  const { data: feedings = [] } = useFeedings(userId?.userId || "");
   const sleepStopwatch = useSelector(
     (state: RootState) => state.sleep.sleepStopwatch
   );
@@ -103,9 +105,8 @@ export const HomeTab = () => {
     const text = `${formatDuration(
       latestFeeding.finish,
       Date()
-    )} ago, ${formatDuration(latestFeeding.start, latestFeeding.finish)}, ${
-      latestFeeding.type
-    } ${latestFeeding.details ? "," : ""} ${latestFeeding.details}`;
+    )} ago, ${formatDuration(latestFeeding.start, latestFeeding.finish)}, ${latestFeeding.type
+      } ${latestFeeding.details ? "," : ""} ${latestFeeding.details}`;
 
     return text;
   };
@@ -118,9 +119,8 @@ export const HomeTab = () => {
     const text = `${formatDuration(
       latestSleep.finish,
       Date()
-    )} ago, ${formatDuration(latestSleep.start, latestSleep.finish)},sleep ${
-      latestSleep.details ? "," : ""
-    } ${latestSleep.details}
+    )} ago, ${formatDuration(latestSleep.start, latestSleep.finish)},sleep ${latestSleep.details ? "," : ""
+      } ${latestSleep.details}
     `;
     return text;
   };
@@ -132,9 +132,8 @@ export const HomeTab = () => {
     const text = `${formatDuration(
       latestLeisure.finish,
       Date()
-    )} ago, ${formatDuration(latestLeisure.start, latestLeisure.finish)}, ${
-      latestLeisure.type
-    } ${latestLeisure.details ? "," : ""} ${latestLeisure.details}`;
+    )} ago, ${formatDuration(latestLeisure.start, latestLeisure.finish)}, ${latestLeisure.type
+      } ${latestLeisure.details ? "," : ""} ${latestLeisure.details}`;
     return text;
   };
 
@@ -142,9 +141,8 @@ export const HomeTab = () => {
     if (!latestDiaper) {
       return "";
     }
-    const text = `${formatDuration(latestDiaper.start, Date())} ago,${
-      latestDiaper.type
-    } ${latestDiaper.details ? "," : ""} ${latestDiaper.details}`;
+    const text = `${formatDuration(latestDiaper.start, Date())} ago,${latestDiaper.type
+      } ${latestDiaper.details ? "," : ""} ${latestDiaper.details}`;
     return text;
   };
 
@@ -159,11 +157,9 @@ export const HomeTab = () => {
         return "";
       }
     };
-    const text = `${formatDuration(latestHealth.start, Date())} ago, ${
-      latestHealth.type
-    } ${showValue()} ${latestHealth.details ? "," : ""} ${
-      latestHealth.details
-    }`;
+    const text = `${formatDuration(latestHealth.start, Date())} ago, ${latestHealth.type
+      } ${showValue()} ${latestHealth.details ? "," : ""} ${latestHealth.details
+      }`;
 
     return text;
   };
@@ -180,9 +176,7 @@ export const HomeTab = () => {
   //For Summary for today//
   const sumFeedings = feedings.filter((feeding) => {
     const finishDate = new Date(feeding.finish);
-    if (isToday(finishDate)) {
-      return feeding;
-    }
+    return isToday(finishDate);
   });
 
   const totalFeedDuration = () => {
@@ -401,7 +395,7 @@ export const HomeTab = () => {
               <ListSubheader
                 disableSticky={true}
                 style={{ background: "transparent" }}
-                // component="div" id="nested-list-subheader"
+              // component="div" id="nested-list-subheader"
               >
                 Latest activity
               </ListSubheader>

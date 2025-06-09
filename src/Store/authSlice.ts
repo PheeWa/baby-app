@@ -6,6 +6,8 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 
+
+
 type AuthUser = {
   userId: string;
   email: string | null;

@@ -15,14 +15,17 @@ import { Header } from "../Components/Header";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
+import { useFeedings } from "../Hooks/useFeedings";
 import { RootState } from "../Store/store";
 import { Diaper } from "./DiapersPage";
-import { Feeding, formatDuration } from "./FeedPage";
+import { formatDuration } from "./FeedPage";
+import { Feeding } from "../types/feeding";
 import { Growth } from "./GrowthPage";
 import { Health } from "./HealthPage";
 
 export const AllLogsPage = () => {
-  const feedings = useSelector((state: RootState) => state.feed.feedings);
+  const userId = useSelector((state: RootState) => state.auth.user);
+  const { data: feedings = [] } = useFeedings(userId?.userId || "");
   const sleeps = useSelector((state: RootState) => state.sleep.sleeps);
   const leisures = useSelector((state: RootState) => state.leisure.leisures);
   const diapers = useSelector((state: RootState) => state.diaper.diapers);

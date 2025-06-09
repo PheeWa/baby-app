@@ -30,6 +30,9 @@ import { SettingPage } from "./Pages/SettingPage";
 import AuthGuard from "./Components/AuthGuard";
 import Layout from "./Components/Layout";
 import { PersistGate } from "redux-persist/integration/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient()
 
 function App() {
   const themeOptions: ThemeOptions = {
@@ -74,6 +77,7 @@ function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <QueryClientProvider client={queryClient}>
             <ThemeProvider theme={theme}>
               <BrowserRouter>
                 <CssBaseline />
@@ -111,6 +115,7 @@ function App() {
                 </Routes>
               </BrowserRouter>
             </ThemeProvider>
+            </QueryClientProvider>
           </LocalizationProvider>
         </PersistGate>
       </Provider>
