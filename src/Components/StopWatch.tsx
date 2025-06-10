@@ -11,7 +11,7 @@ import {
   Select,
 } from "@mui/material";
 import { addSeconds, format } from "date-fns";
-import { Feeding, FeedingType, FeedingStopwatch } from "../types/feeding";
+import { Feeding, FeedingType, FeedingStopwatch } from "../Types/feeding";
 import { Counter } from "./Counter";
 
 type Props = {

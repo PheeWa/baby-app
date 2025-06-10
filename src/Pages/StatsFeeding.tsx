@@ -30,7 +30,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { RootState } from "../Store/store";
-import { Feeding } from "../types/feeding";
+import { Feeding } from "../Types/feeding";
 import { getLineChartData } from "./StatsSleep";
 import { getBarData } from "./StatsTab";
 import { capitalize } from "lodash";

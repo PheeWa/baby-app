@@ -2,12 +2,12 @@ import { Box, Tab, Tabs } from "@mui/material";
 import { endOfToday, startOfToday, subDays } from "date-fns";
 import { differenceInDays, differenceInSeconds } from "date-fns/esm";
 import React from "react";
-import { Feeding } from "../types/feeding";
+import { Feeding } from "../Types/feeding";
 import { Leisure } from "./LeisurePage";
-import { Sleep } from "./SleepPage";
-import { StasDiapers } from "./StasDiapers";
-import { StasGrowth } from "./StasGrowth";
-import { StasLeisure } from "./StasLeisure";
+import { Sleep } from "../Types/sleep";
+import { StatsDiapers } from "./StatsDiapers";
+import { StatsGrowth } from "./StatsGrowth";
+import { StatsLeisure } from "./StatsLeisure";
 import { StatsFeeding } from "./StatsFeeding";
 import { StatsSleep } from "./StatsSleep";
 
@@ -88,9 +88,9 @@ export const StatsTab = () => {
       </Box>
       {value === 0 && <StatsFeeding />}
       {value === 1 && <StatsSleep />}
-      {value === 2 && <StasDiapers />}
-      {value === 3 && <StasLeisure />}
-      {value === 4 && <StasGrowth />}
+      {value === 2 && <StatsDiapers />}
+      {value === 3 && <StatsLeisure />}
+      {value === 4 && <StatsGrowth />}
     </Box>
   );
 };

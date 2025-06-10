@@ -32,6 +32,7 @@ import growthIcon from "../Assets/growthIcon.png";
 import healthIcon from "../Assets/healthIcon.png";
 import cameraIcon from "../Assets/cameraIcon.png";
 import { useFeedings } from "../Hooks/useFeedings";
+import { useSleeps } from "../Hooks/useSleeps";
 
 export const HomeTab = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export const HomeTab = () => {
   const sleepStopwatch = useSelector(
     (state: RootState) => state.sleep.sleepStopwatch
   );
-  const sleeps = useSelector((state: RootState) => state.sleep.sleeps);
+  const { data: sleeps = [] } = useSleeps(userId?.userId || "");
   const leisureStopwatch = useSelector(
     (state: RootState) => state.leisure.stopwatch
   );

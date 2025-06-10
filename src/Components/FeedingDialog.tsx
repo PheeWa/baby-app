@@ -15,7 +15,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Feeding, FeedingType } from "../types/feeding";
+import { Feeding, FeedingType } from "../Types/feeding";
 
 type FeedingDialogProps = {
   open: boolean;

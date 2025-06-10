@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FeedingStopwatch, FeedingType } from "../types/feeding";
+import { FeedingStopwatch, FeedingType } from "../Types/feeding";
 
 export interface FeedState {
   stopwatch: FeedingStopwatch;

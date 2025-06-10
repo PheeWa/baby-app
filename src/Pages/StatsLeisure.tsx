@@ -34,7 +34,7 @@ import { formatSeconds } from "./StatsFeeding";
 import { avgEvent, getLineChartData } from "./StatsSleep";
 import { getBarData } from "./StatsTab";
 
-export const StasLeisure = () => {
+export const StatsLeisure = () => {
   const weeklyLeisures = useSelector((state: RootState) => {
     return state.leisure.leisures.filter((leisure) => {
       return differenceInDays(endOfToday(), new Date(leisure.start)) < 7;

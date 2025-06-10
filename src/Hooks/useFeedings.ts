@@ -12,8 +12,8 @@ import {
     DocumentData
 } from "firebase/firestore";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Feeding, CreateFeedingInput } from "../types/feeding";
-import { db } from "../firebase/firebaseConfig";
+import { Feeding, CreateFeedingInput } from "../Types/feeding";
+import { db } from "../Firebase/firebaseConfig";
 
 
 // Query Keys
@@ -70,29 +70,6 @@ export const useFeedings = (userId: string) => {
         staleTime: FIVE_MINUTES,
         gcTime: THIRTY_MINUTES,
         enabled: !!userId,
-    });
-};
-
-// Hook for fetching a single feeding
-export const useFeeding = (userId: string, feedingId: string) => {
-    return useQuery({
-        queryKey: FEEDING_KEYS.detail(userId, feedingId),
-        queryFn: async () => {
-            try {
-                const feedingRef = doc(db, 'users', userId, 'feedings', feedingId);
-                const feedingDoc = await getDoc(feedingRef);
-
-                if (!feedingDoc.exists()) {
-                    throw new Error('Feeding not found');
-                }
-
-                return convertToFeeding(feedingDoc);
-            } catch (error) {
-
-                throw new Error('Failed to fetch feeding');
-            }
-        },
-        enabled: !!userId && !!feedingId,
     });
 };
 

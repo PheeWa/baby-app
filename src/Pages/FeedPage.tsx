@@ -8,8 +8,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  CircularProgress,
-  Typography
 } from "@mui/material";
 import {
   addSeconds,
@@ -17,7 +15,7 @@ import {
   format,
   startOfYear,
 } from "date-fns";
-import React, { useState } from "react";
+import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector, useDispatch } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
@@ -27,9 +25,10 @@ import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { StopWatch, getFeedText } from "../Components/StopWatch";
 import { useFeedings, useAddFeeding, useUpdateFeeding, useDeleteFeeding } from "../Hooks/useFeedings";
-import { Feeding, FeedingType, FeedingStopwatch } from "../types/feeding";
+import { Feeding, FeedingType, FeedingStopwatch } from "../Types/feeding";
 import { RootState } from "../Store/store";
 import { updateStopwatch, startStopwatch, stopStopwatch } from "../Store/feedSlice";
+import { Loader } from '../Components/Loader';
 
 export const formatDuration = (start: string, finish: string) => {
   const diff = differenceInSeconds(new Date(finish), new Date(start));
@@ -108,23 +107,7 @@ export const FeedPage = () => {
 
 
   if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          gap: 2
-        }}
-      >
-        <CircularProgress size={60} />
-        <Typography variant="h6" color="text.secondary">
-          Loading feedings...
-        </Typography>
-      </Box>
-    );
+    return <Loader message="Loading feedings..." />;
   }
 
   return (

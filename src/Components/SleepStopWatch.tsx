@@ -1,17 +1,16 @@
 import { EditRounded } from "@mui/icons-material";
 import { Container, Box, Button, IconButton, TextField } from "@mui/material";
-import { addSeconds, format } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
-import { Sleep } from "../Pages/SleepPage";
-import { updateSleepStopwatch } from "../Store/SleepSlice";
+import { Sleep } from "../Types/sleep";
+import { updateSleepStopwatch, stopSleepWatch } from "../Store/SleepSlice";
 import { RootState } from "../Store/store";
 import { Counter } from "./Counter";
 
-type Props = {
+type SleepStopWatchProps = {
   onSave: (newSleep: Sleep) => void;
 };
 
-export const SleepStopWatch = (props: Props) => {
+export const SleepStopWatch = (props: SleepStopWatchProps) => {
   const sleepStopwatch = useSelector(
     (state: RootState) => state.sleep.sleepStopwatch
   );
@@ -49,7 +48,7 @@ export const SleepStopWatch = (props: Props) => {
         </IconButton>
       </Box>
 
-      {sleepStopwatch.isEdit === true ? (
+      {sleepStopwatch.isEdit === true && (
         <TextField
           autoFocus={true}
           label="Optional details"
@@ -66,7 +65,7 @@ export const SleepStopWatch = (props: Props) => {
             )
           }
         />
-      ) : null}
+      )}
 
       <Button
         style={{ marginTop: "16px" }}
@@ -77,9 +76,10 @@ export const SleepStopWatch = (props: Props) => {
             start: sleepStopwatch.startDate,
             finish: Date(),
             details: sleepStopwatch.details,
-            id: 0,
+            id: "0",
             type: "Sleep",
           });
+          dispatch(stopSleepWatch());
         }}
       >
         Finish

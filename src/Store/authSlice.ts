@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth } from "../firebase/firebaseConfig";
+import { auth } from "../Firebase/firebaseConfig";
 
 
 

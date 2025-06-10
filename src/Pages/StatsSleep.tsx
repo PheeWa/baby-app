@@ -19,7 +19,6 @@ import {
   startOfDay,
   endOfDay,
 } from "date-fns";
-import React from "react";
 import { useSelector } from "react-redux";
 import {
   BarChart,
@@ -34,9 +33,10 @@ import {
 } from "recharts";
 import { RootState } from "../Store/store";
 import { Leisure } from "./LeisurePage";
-import { Sleep } from "./SleepPage";
 import { formatSeconds } from "./StatsFeeding";
 import { getBarData } from "./StatsTab";
+import { useSleeps } from "../Hooks/useSleeps";
+import { Sleep as SleepType } from "../Types/sleep";
 
 export const getLineChartData = (
   events: { start: string; finish: string; type: string }[]
@@ -126,15 +126,10 @@ export const getLineChartData = (
   return [...placeholders, ...chartData, ...extraChartData];
 };
 
-export const avgEvent = (events: Sleep[] | Leisure[]) => {
+export const avgEvent = (events: SleepType[] | Leisure[]) => {
   let numEvents = 0;
   let sumEvents = 0;
   events.forEach((event) => {
-    // const thisWeek = isWithinInterval(new Date(event.finish), {
-    //   start: subDays(new Date(), 9),
-    //   end: new Date(),
-    // });
-
     const diff = differenceInSeconds(
       new Date(event.finish),
       new Date(event.start)
@@ -149,14 +144,11 @@ export const avgEvent = (events: Sleep[] | Leisure[]) => {
 };
 
 export const StatsSleep = () => {
-  // From Redux//
-  const weeklySleeps = useSelector((state: RootState) => {
-    return state.sleep.sleeps.filter((sleep) => {
-      return differenceInDays(endOfToday(), new Date(sleep.start)) < 7;
-    });
-  });
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: sleeps = [] } = useSleeps(userId);
+  const weeklySleeps = sleeps.filter((sleep) => differenceInDays(endOfToday(), new Date(sleep.start)) < 7);
 
-  //Statistics functions//
+
 
   return (
     <Container>

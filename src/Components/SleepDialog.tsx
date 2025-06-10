@@ -11,17 +11,16 @@ import {
   Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Sleep } from "../Pages/SleepPage";
+import { Sleep } from "../Types/sleep";
 
 type Props = {
   selectedSleep?: Sleep;
   onClose: () => void;
   onSave: (sleep: Sleep) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 };
 
 export const SleepDialog = (props: Props) => {
-  //usestate//
   const [start, setStart] = useState("");
   const [finish, setFinish] = useState("");
   const [details, setDetails] = useState("");
@@ -111,7 +110,7 @@ export const SleepDialog = (props: Props) => {
         <Button
           onClick={() => {
             props.onSave({
-              id: props.selectedSleep?.id ?? 0,
+              id: props.selectedSleep?.id ?? "0",
               type: "Sleep",
               start,
               finish,

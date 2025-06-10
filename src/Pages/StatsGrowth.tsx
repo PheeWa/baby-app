@@ -19,7 +19,7 @@ import {
 } from "recharts";
 import { RootState } from "../Store/store";
 
-export const StasGrowth = () => {
+export const StatsGrowth = () => {
   const babyBirthDate = "23-Feb-2022 11:04 AM";
   const growths = useSelector((state: RootState) => state.growth.growths);
 

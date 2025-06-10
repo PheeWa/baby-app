@@ -4,107 +4,74 @@ import {
   Box,
   Button,
   Container,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
-import { format, isSameDay, isToday, isYesterday, subMinutes } from "date-fns";
-import React, { useState } from "react";
+import { format, isToday, isYesterday } from "date-fns";
+import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { SleepDialog } from "../Components/SleepDialog";
 import { SleepStopWatch } from "../Components/SleepStopWatch";
-import { useInfiniteScroll } from "../Hooks/infiniteScroll";
-import {
-  addSleep,
-  deleteSleep,
-  editSleep,
-  startSleepWatch,
-  stopSleepWatch,
-} from "../Store/SleepSlice";
-import { RootState } from "../Store/store";
+import { useSleeps, useAddSleep, useUpdateSleep, useDeleteSleep } from "../Hooks/useSleeps";
+import { Sleep } from "../Types/sleep";
 import { formatDuration } from "./FeedPage";
+import { startSleepWatch } from "../Store/SleepSlice";
+import { Loader } from '../Components/Loader';
 
-export type Sleep = {
-  id: number;
-  start: string;
-  type: "Sleep";
-  finish: string;
-  details: string;
-};
 export const SleepPage = () => {
-  const sleepsList = useSelector((state: RootState) => {
-    return [...state.sleep.sleeps].sort((a, b) => {
-      if (+new Date(a.finish ?? a.start) < +new Date(b.finish ?? b.start)) {
-        return 1;
-      } else return -1;
-    });
-  });
-
-  const { fetchData, slicedList, dataLength, hasMore } =
-    useInfiniteScroll(sleepsList);
-
-  const sleepStopwatch = useSelector(
-    (state: RootState) => state.sleep.sleepStopwatch
-  );
+  const userId = useSelector((state: any) => state.auth.user?.userId || "");
+  const { data: sleeps = [], isLoading } = useSleeps(userId);
+  const addSleep = useAddSleep(userId);
+  const updateSleep = useUpdateSleep(userId);
+  const deleteSleep = useDeleteSleep(userId);
+  const [selectedSleep, setSelectedSleep] = useState<Sleep | undefined>(undefined);
   const dispatch = useDispatch();
+  const sleepStopwatch = useSelector((state: any) => state.sleep.sleepStopwatch);
 
-  //usestate//
-  const [selectedSleep, setSelectedSleep] = useState<Sleep | undefined>(
-    undefined
-  );
-
-  //function/
-
-  const calcStartDate = () => {
-    const defaultDate = subMinutes(new Date(), 15);
-    return defaultDate.toString();
-  };
-
-  const handleClickOpen = () => {
-    const newSleep: Sleep = {
-      id: 0,
-      type: "Sleep",
-      start: calcStartDate(),
-      finish: Date(),
-      details: "",
-    };
-    setSelectedSleep(newSleep);
-  };
-
-  const onClose = () => {
-    setSelectedSleep(undefined);
-  };
-
-  const onSave = (newSleep: Sleep) => {
-    setSelectedSleep(undefined);
-    dispatch(stopSleepWatch());
-    if (newSleep.id === 0) {
-      const sleepWithId = { ...newSleep, id: Math.random() };
-      dispatch(addSleep(sleepWithId));
+  const handleClickOpen = (sleep?: Sleep) => {
+    if (sleep) {
+      setSelectedSleep(sleep);
     } else {
-      dispatch(editSleep(newSleep));
+      setSelectedSleep({
+        id: "0",
+        type: "Sleep",
+        start: new Date().toISOString(),
+        finish: new Date().toISOString(),
+        details: "",
+      });
     }
   };
 
-  const handleEditOpen = (newSleep: Sleep) => {
-    setSelectedSleep(newSleep);
+  const onClose = () => setSelectedSleep(undefined);
+
+  const onSave = (sleep: Sleep) => {
+    if (sleep.id === "0") {
+      addSleep.mutate(sleep);
+    } else {
+      updateSleep.mutate(sleep);
+    }
+    setSelectedSleep(undefined);
   };
 
-  const onDelete = (id: number) => {
-    dispatch(deleteSleep(id));
-    onClose();
+  const onDelete = (id: string) => {
+    deleteSleep.mutate(id);
+    setSelectedSleep(undefined);
   };
+
+  if (isLoading) {
+    return <Loader message="Loading sleeps..." />;
+  }
 
   return (
     <Box>
-      <Header title="Sleep" handleClickOpen={handleClickOpen} />
+      <Header title="Sleep" handleClickOpen={() => handleClickOpen()} />
       <SleepDialog
         selectedSleep={selectedSleep}
         onClose={onClose}
@@ -128,77 +95,42 @@ export const SleepPage = () => {
       <Box style={{ marginTop: "16px" }}>
         <List dense={true}>
           <InfiniteScroll
-            dataLength={dataLength}
-            next={fetchData}
-            hasMore={hasMore}
+            dataLength={sleeps.length}
+            next={() => { }}
+            hasMore={false}
             loader={<ScrollLoader />}
-            endMessage={<EndMessage dataLength={dataLength} />}
+            endMessage={<EndMessage dataLength={sleeps.length} />}
           >
-            {slicedList.map((sleep: any, i: number) => {
+            {sleeps.map((sleep, i) => {
               const text = `${format(
                 new Date(sleep.start),
                 "p"
-              )}, ${formatDuration(sleep.start, sleep.finish)},${sleep.type}
-            `;
-              const diff = formatDuration(
-                slicedList[i].finish,
-                slicedList[i - 1]?.start ?? Date()
-              );
-
+              )}, ${formatDuration(sleep.start, sleep.finish)}`;
               const dates = () => {
-                if (isToday(new Date(slicedList[i].finish))) {
+                if (isToday(new Date(sleep.finish))) {
                   return "Today";
-                } else if (isYesterday(new Date(slicedList[i].finish))) {
+                } else if (isYesterday(new Date(sleep.finish))) {
                   return "Yesterday";
                 } else {
-                  return format(new Date(slicedList[i].finish), "LLL d EEEE");
+                  return format(new Date(sleep.finish), "LLL d EEEE");
                 }
               };
-              const isSameDate = isSameDay(
-                new Date(slicedList[i - 1]?.finish ?? Date()),
-                new Date(slicedList[i].finish)
-              );
-
               return (
-                <React.Fragment key={sleep.id}>
-                  {!isSameDate && (
-                    <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
-                      <ListItemText
-                        style={{ marginTop: 0, marginBottom: 0 }}
-                        primary={dates()}
-                      />
-                    </ListItem>
-                  )}
-                  <ListItem style={{ paddingTop: 0, paddingBottom: 0 }}>
-                    <ListItemAvatar style={{ opacity: 0, height: 0 }}>
-                      <Avatar>
-                        <MoreVertRounded />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      style={{ marginTop: 0, marginBottom: 0 }}
-                      secondary={diff}
-                    />
-                  </ListItem>
-                  <ListItem
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => handleEditOpen(sleep)}
-                      >
-                        <MoreVertRounded />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemAvatar>
-                      <Avatar style={{ backgroundColor: "#151e33" }}>
-                        <IconType type={sleep.type} />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={text} secondary={sleep.details} />
-                  </ListItem>
-                </React.Fragment>
+                <ListItem
+                  key={sleep.id}
+                  onClick={() => handleClickOpen(sleep)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <IconType type="Sleep" />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={text}
+                    secondary={dates()}
+                  />
+                </ListItem>
               );
             })}
           </InfiniteScroll>

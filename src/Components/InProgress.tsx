@@ -8,7 +8,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { FeedingType } from "../types/feeding";
+import { FeedingType } from "../Types/feeding";
 import { LeisureType } from "../Pages/LeisurePage";
 import { Counter } from "./Counter";
 import { IconType } from "./IconType";

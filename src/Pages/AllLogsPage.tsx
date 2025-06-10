@@ -16,17 +16,18 @@ import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { useFeedings } from "../Hooks/useFeedings";
+import { useSleeps } from "../Hooks/useSleeps";
 import { RootState } from "../Store/store";
 import { Diaper } from "./DiapersPage";
 import { formatDuration } from "./FeedPage";
-import { Feeding } from "../types/feeding";
+import { Feeding } from "../Types/feeding";
 import { Growth } from "./GrowthPage";
 import { Health } from "./HealthPage";
 
 export const AllLogsPage = () => {
   const userId = useSelector((state: RootState) => state.auth.user);
   const { data: feedings = [] } = useFeedings(userId?.userId || "");
-  const sleeps = useSelector((state: RootState) => state.sleep.sleeps);
+  const { data: sleeps = [] } = useSleeps(userId?.userId || "");
   const leisures = useSelector((state: RootState) => state.leisure.leisures);
   const diapers = useSelector((state: RootState) => state.diaper.diapers);
   const healths = useSelector((state: RootState) => state.health.healths);
@@ -99,9 +100,8 @@ export const AllLogsPage = () => {
               log.type === "pee & poo"
             ) {
               const logy = log as Diaper;
-              const textDiaper = `${format(new Date(logy.start), "p")},${
-                logy.type
-              }`;
+              const textDiaper = `${format(new Date(logy.start), "p")},${logy.type
+                }`;
               return (
                 <ListItem>
                   <ListItemAvatar>

@@ -34,7 +34,7 @@ import {
 } from "recharts";
 import { RootState } from "../Store/store";
 
-export const StasDiapers = () => {
+export const StatsDiapers = () => {
   const weeklyDiapers = useSelector((state: RootState) => {
     return state.diaper.diapers.filter((diaper) => {
       return differenceInDays(endOfToday(), new Date(diaper.start)) < 7;
