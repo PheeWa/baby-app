@@ -1,6 +1,5 @@
 import { EditRounded } from "@mui/icons-material";
 import { Container, Box, Button, IconButton, TextField } from "@mui/material";
-import { addSeconds, format } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
 import { Leisure, LeisureType } from "../Pages/LeisurePage";
 import { updateStopwatch } from "../Store/LeisureSlice";
@@ -82,7 +81,7 @@ export const LeisureStopWatch = (props: Props) => {
             start: stopwatch.startDate,
             finish: Date(),
             details: stopwatch.details,
-            id: 0,
+            id: "0",
             type: stopwatch.type,
           });
         }}

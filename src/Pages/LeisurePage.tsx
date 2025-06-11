@@ -20,16 +20,16 @@ import { IconType } from "../Components/IconType";
 import { LeisureDialog } from "../Components/LeisureDialog";
 import { LeisureStopWatch } from "../Components/LeisureStopWatch";
 import { ScrollLoader } from "../Components/ScrollLoader";
+import { Loader } from "../Components/Loader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
-import { startStopwatch } from "../Store/LeisureSlice";
-import { stopStopwatch } from "../Store/LeisureSlice";
-import { addLeisure, deleteLeisure, editLeisure } from "../Store/LeisureSlice";
+import { startStopwatch, stopStopwatch } from "../Store/LeisureSlice";
 import { RootState } from "../Store/store";
 import { formatDuration } from "./FeedPage";
+import { useLeisures, useAddLeisure, useUpdateLeisure, useDeleteLeisure } from "../Hooks/useLeisure";
 
 export type LeisureType = "tummy time" | "play time" | "outdoors" | "bath time";
 export type Leisure = {
-  id: number;
+  id: string;
   type: LeisureType;
   details: string;
   start: string;
@@ -37,25 +37,24 @@ export type Leisure = {
 };
 
 export const LeisurePage = () => {
-  //usestates are here//
   const [selectedLeisure, setSelectedLeisure] = useState<Leisure | undefined>(
     undefined
   );
-
-  // functions are here//
-
-  const leisuresList = useSelector((state: RootState) => {
-    return [...state.leisure.leisures].sort((a, b) => {
-      if (+new Date(a.finish ?? a.start) < +new Date(b.finish ?? b.start)) {
-        return 1;
-      } else return -1;
-    });
-  });
-  const stopwatch = useSelector((state: RootState) => state.leisure.stopwatch);
-  //Hooks//
-  const { limit, fetchData, slicedList, dataLength, hasMore } =
-    useInfiniteScroll(leisuresList);
   const dispatch = useDispatch();
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: leisures = [], isLoading } = useLeisures(userId);
+  const addLeisureMutation = useAddLeisure(userId);
+  const updateLeisureMutation = useUpdateLeisure(userId);
+  const deleteLeisureMutation = useDeleteLeisure(userId);
+
+  const sortedLeisures = [...leisures].sort((a, b) => {
+    if (+new Date(a.finish ?? a.start) < +new Date(b.finish ?? b.start)) {
+      return 1;
+    } else return -1;
+  });
+
+  const stopwatch = useSelector((state: RootState) => state.leisure.stopwatch);
+  const { limit, fetchData, slicedList, dataLength, hasMore } = useInfiniteScroll(sortedLeisures);
 
   const calcStartDate = () => {
     const defaultDate = subMinutes(new Date(), 15);
@@ -64,7 +63,7 @@ export const LeisurePage = () => {
 
   const handleClickOpen = () => {
     const newLeisure: Leisure = {
-      id: 0,
+      id: "0",
       type: "tummy time",
       details: "",
       start: calcStartDate(),
@@ -77,14 +76,18 @@ export const LeisurePage = () => {
     setSelectedLeisure(undefined);
   };
 
-  const onSave = (newLeisure: Leisure) => {
+  const onSave = async (newLeisure: Leisure) => {
     onClose();
     dispatch(stopStopwatch());
-    if (newLeisure.id === 0) {
-      const newLeisureWithId = { ...newLeisure, id: Math.random() };
-      dispatch(addLeisure(newLeisureWithId));
-    } else {
-      dispatch(editLeisure(newLeisure));
+    try {
+      if (newLeisure.id === "0") {
+        const { id, ...leisureWithoutId } = newLeisure;
+        await addLeisureMutation.mutateAsync(leisureWithoutId);
+      } else {
+        await updateLeisureMutation.mutateAsync(newLeisure);
+      }
+    } catch (error) {
+      console.error("Error saving leisure:", error);
     }
   };
 
@@ -92,10 +95,18 @@ export const LeisurePage = () => {
     setSelectedLeisure(leisure);
   };
 
-  const onDelete = (id: number) => {
+  const onDelete = async (id: string) => {
     onClose();
-    dispatch(deleteLeisure(id));
+    try {
+      await deleteLeisureMutation.mutateAsync(id);
+    } catch (error) {
+      console.error("Error deleting leisure:", error);
+    }
   };
+
+  if (isLoading) {
+    return <Loader message="Loading leisure activities..." />;
+  }
 
   return (
     <Box>
@@ -152,9 +163,8 @@ export const LeisurePage = () => {
               const text = `${format(
                 new Date(leisure.start),
                 "p"
-              )}, ${formatDuration(leisure.start, leisure.finish)}, ${
-                leisure.type
-              }`;
+              )}, ${formatDuration(leisure.start, leisure.finish)}, ${leisure.type
+                }`;
 
               const diff = formatDuration(
                 slicedList[i].finish,

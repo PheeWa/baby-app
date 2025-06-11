@@ -34,21 +34,22 @@ import cameraIcon from "../Assets/cameraIcon.png";
 import { useFeedings } from "../Hooks/useFeedings";
 import { useSleeps } from "../Hooks/useSleeps";
 import { useDiapers } from "../Hooks/useDiapers";
+import { useLeisures } from "../Hooks/useLeisure";
 
 export const HomeTab = () => {
   const navigate = useNavigate();
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
-  const userId = useSelector((state: RootState) => state.auth.user);
-  const { data: feedings = [] } = useFeedings(userId?.userId || "");
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: feedings = [] } = useFeedings(userId);
   const sleepStopwatch = useSelector(
     (state: RootState) => state.sleep.sleepStopwatch
   );
-  const { data: sleeps = [] } = useSleeps(userId?.userId || "");
+  const { data: sleeps = [] } = useSleeps(userId);
   const leisureStopwatch = useSelector(
     (state: RootState) => state.leisure.stopwatch
   );
-  const leisures = useSelector((state: RootState) => state.leisure.leisures);
-  const { data: diapers = [] } = useDiapers(userId?.userId || "");
+  const { data: leisures = [] } = useLeisures(userId);
+  const { data: diapers = [] } = useDiapers(userId);
   const healths = useSelector((state: RootState) => state.health.healths);
   const growths = useSelector((state: RootState) => state.growth.growths);
 
@@ -397,7 +398,6 @@ export const HomeTab = () => {
               <ListSubheader
                 disableSticky={true}
                 style={{ background: "transparent" }}
-              // component="div" id="nested-list-subheader"
               >
                 Latest activity
               </ListSubheader>

@@ -17,14 +17,14 @@ import {
 import { useEffect, useState } from "react";
 import { Leisure, LeisureType } from "../Pages/LeisurePage";
 
-type Props = {
+type LeisureDialogProps = {
   onClose: () => void;
   selectedLeisure?: Leisure;
   onSave: (newLeisure: Leisure) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 };
 
-export const LeisureDialog = (props: Props) => {
+export const LeisureDialog = (props: LeisureDialogProps) => {
   const [start, setStart] = useState("");
   const [finish, setFinish] = useState("");
   const [type, setType] = useState<LeisureType>("tummy time");
@@ -134,7 +134,7 @@ export const LeisureDialog = (props: Props) => {
         <Button
           onClick={() => {
             props.onSave({
-              id: props.selectedLeisure?.id ?? 0,
+              id: props.selectedLeisure?.id ?? "0",
               start,
               finish,
               type,

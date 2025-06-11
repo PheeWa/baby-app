@@ -33,15 +33,17 @@ import { LeisureType } from "./LeisurePage";
 import { formatSeconds } from "./StatsFeeding";
 import { avgEvent, getLineChartData } from "./StatsSleep";
 import { getBarData } from "./StatsTab";
+import { useLeisures } from "../Hooks/useLeisure";
 
 export const StatsLeisure = () => {
-  const weeklyLeisures = useSelector((state: RootState) => {
-    return state.leisure.leisures.filter((leisure) => {
-      return differenceInDays(endOfToday(), new Date(leisure.start)) < 7;
-    });
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: leisures = [] } = useLeisures(userId);
+
+  const weeklyLeisures = leisures.filter((leisure) => {
+    return differenceInDays(endOfToday(), new Date(leisure.start)) < 7;
   });
 
-  //for statistics//
+
   const weeklyTummyTime = weeklyLeisures.filter((leisure) => {
     if (leisure.type === "tummy time") {
       return true;

@@ -28,6 +28,7 @@ import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
+import { Loader } from "../Components/Loader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { useDiapers, useAddDiaper, useUpdateDiaper, useDeleteDiaper } from "../Hooks/useDiapers";
 import { RootState } from "../Store/store";
@@ -49,16 +50,11 @@ export const DiapersPage = () => {
   const updateDiaper = useUpdateDiaper(userId);
   const deleteDiaper = useDeleteDiaper(userId);
   const { fetchData, slicedList, dataLength, hasMore } = useInfiniteScroll(diapersList);
-
-  //usetates//
-
   const [date, setDate] = useState("");
   const [type, setType] = useState("");
   const [details, setDetails] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEdit, setIsEdit] = useState<Diaper | undefined>(undefined);
-
-  //functions//
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -115,6 +111,10 @@ export const DiapersPage = () => {
     handleClose();
     deleteDiaper.mutate(id);
   };
+
+  if (isLoading) {
+    return <Loader message="Loading diapers..." />;
+  }
 
   return (
     <Box>

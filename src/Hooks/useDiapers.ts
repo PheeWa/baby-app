@@ -15,7 +15,7 @@ export const DIAPER_KEYS = {
 const FIVE_MINUTES = 1000 * 60 * 5;
 const THIRTY_MINUTES = 1000 * 60 * 30;
 
-// Helper function to convert Firestore data to Diaper type
+
 const convertToDiaper = (doc: DocumentData): Diaper => {
     const data = doc.data();
     return {
@@ -26,7 +26,7 @@ const convertToDiaper = (doc: DocumentData): Diaper => {
     };
 };
 
-// Hook for fetching all diapers for a user
+
 export const useDiapers = (userId: string) => {
     return useQuery({
         queryKey: DIAPER_KEYS.list(userId),
@@ -48,7 +48,6 @@ export const useDiapers = (userId: string) => {
     });
 };
 
-// Hook for adding a new diaper
 export const useAddDiaper = (userId: string) => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -67,7 +66,6 @@ export const useAddDiaper = (userId: string) => {
     });
 };
 
-// Hook for updating a diaper
 export const useUpdateDiaper = (userId: string) => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -86,7 +84,6 @@ export const useUpdateDiaper = (userId: string) => {
     });
 };
 
-// Hook for deleting a diaper
 export const useDeleteDiaper = (userId: string) => {
     const queryClient = useQueryClient();
     return useMutation({
