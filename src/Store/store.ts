@@ -1,7 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
-import diaperSlice from "./diaperSlice";
 import feedSlice from "./feedSlice";
 import growthSlice from "./growthSlice";
 import healthSlice from "./healthSlice";
@@ -19,7 +18,6 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authSlice,
   feed: feedSlice,
-  diaper: diaperSlice,
   leisure: leisureSlice,
   growth: growthSlice,
   health: healthSlice,

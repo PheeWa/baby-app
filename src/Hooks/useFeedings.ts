@@ -2,7 +2,6 @@ import {
     collection,
     doc,
     getDocs,
-    getDoc,
     addDoc,
     updateDoc,
     deleteDoc,
@@ -86,16 +85,13 @@ export const useAddFeeding = (userId: string) => {
                 ...newFeeding,
                 start: Timestamp.fromDate(new Date(newFeeding.start)),
                 finish: Timestamp.fromDate(new Date(newFeeding.finish)),
-                createdAt: now,
-                updatedAt: now,
+
             };
 
             const docRef = await addDoc(feedingsRef, feedingData);
             return {
                 id: docRef.id,
                 ...newFeeding,
-                createdAt: now.toDate().toISOString(),
-                updatedAt: now.toDate().toISOString(),
             };
         },
         onSuccess: () => {
@@ -111,19 +107,17 @@ export const useUpdateFeeding = (userId: string) => {
     return useMutation({
         mutationFn: async ({ id, ...feeding }: Feeding) => {
             const feedingRef = doc(db, 'users', userId, 'feedings', id);
-            const now = Timestamp.now();
+
 
             await updateDoc(feedingRef, {
                 ...feeding,
                 start: Timestamp.fromDate(new Date(feeding.start)),
                 finish: Timestamp.fromDate(new Date(feeding.finish)),
-                updatedAt: now,
             });
 
             return {
                 id,
                 ...feeding,
-                updatedAt: now.toDate().toISOString()
             };
         },
         onSuccess: (updatedFeeding) => {

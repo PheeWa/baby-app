@@ -20,6 +20,7 @@ import {
 import { endOfDay, startOfDay } from "date-fns/esm";
 import { capitalize } from "lodash";
 import { useSelector } from "react-redux";
+import { useDiapers } from "../Hooks/useDiapers";
 import {
   ComposedChart,
   XAxis,
@@ -35,10 +36,10 @@ import {
 import { RootState } from "../Store/store";
 
 export const StatsDiapers = () => {
-  const weeklyDiapers = useSelector((state: RootState) => {
-    return state.diaper.diapers.filter((diaper) => {
-      return differenceInDays(endOfToday(), new Date(diaper.start)) < 7;
-    });
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: allDiapers = [], isLoading } = useDiapers(userId);
+  const weeklyDiapers = allDiapers.filter((diaper) => {
+    return differenceInDays(endOfToday(), new Date(diaper.start)) < 7;
   });
 
   const avgDiapers = () => {

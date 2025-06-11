@@ -33,6 +33,7 @@ import healthIcon from "../Assets/healthIcon.png";
 import cameraIcon from "../Assets/cameraIcon.png";
 import { useFeedings } from "../Hooks/useFeedings";
 import { useSleeps } from "../Hooks/useSleeps";
+import { useDiapers } from "../Hooks/useDiapers";
 
 export const HomeTab = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export const HomeTab = () => {
     (state: RootState) => state.leisure.stopwatch
   );
   const leisures = useSelector((state: RootState) => state.leisure.leisures);
-  const diapers = useSelector((state: RootState) => state.diaper.diapers);
+  const { data: diapers = [] } = useDiapers(userId?.userId || "");
   const healths = useSelector((state: RootState) => state.health.healths);
   const growths = useSelector((state: RootState) => state.growth.growths);
 

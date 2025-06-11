@@ -23,23 +23,18 @@ import {
 import { format, isSameDay, isToday, isYesterday, set } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
-import {
-  addDiaper,
-  deleteDiaper,
-  editDiaper,
-  recordDiaper,
-} from "../Store/diaperSlice";
+import { useDiapers, useAddDiaper, useUpdateDiaper, useDeleteDiaper } from "../Hooks/useDiapers";
 import { RootState } from "../Store/store";
 import { formatDuration } from "./FeedPage";
 
 export type Diaper = {
-  id: number;
+  id: string;
   start: string;
   type: string;
   details: string;
@@ -48,18 +43,12 @@ export type Diaper = {
 type DiaperType = "pee" | "poo" | "pee & poo";
 
 export const DiapersPage = () => {
-  const diapersList = useSelector((state: RootState) => {
-    return [...state.diaper.diapers].sort((a, b) => {
-      if (+new Date(a.start) < +new Date(b.start)) {
-        return 1;
-      } else return -1;
-    });
-  });
-
-  //Hooks//
-  const dispatch = useDispatch();
-  const { fetchData, slicedList, dataLength, hasMore } =
-    useInfiniteScroll(diapersList);
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: diapersList = [], isLoading } = useDiapers(userId);
+  const addDiaper = useAddDiaper(userId);
+  const updateDiaper = useUpdateDiaper(userId);
+  const deleteDiaper = useDeleteDiaper(userId);
+  const { fetchData, slicedList, dataLength, hasMore } = useInfiniteScroll(diapersList);
 
   //usetates//
 
@@ -92,17 +81,15 @@ export const DiapersPage = () => {
         type: type,
         details: details,
       };
-      dispatch(editDiaper(newDiaper));
+      updateDiaper.mutate(newDiaper);
     } else {
-      const newDiaper: Diaper = {
-        id: Math.floor(Math.random() * 100),
+      const newDiaper: Omit<Diaper, 'id'> = {
         start: date,
         type: type,
         details: details,
       };
-      dispatch(addDiaper(newDiaper));
+      addDiaper.mutate(newDiaper);
     }
-
     setDialogOpen(false);
   };
 
@@ -116,18 +103,17 @@ export const DiapersPage = () => {
   };
 
   const createDiaper = (type: DiaperType) => {
-    const newDiaper = {
-      id: Math.floor(Math.random() * 100),
+    const newDiaper: Omit<Diaper, 'id'> = {
       start: Date(),
       type: type,
       details: "",
     };
-    dispatch(recordDiaper(newDiaper));
+    addDiaper.mutate(newDiaper);
   };
 
-  const onDelete = (id: number) => {
+  const onDelete = (id: string) => {
     handleClose();
-    dispatch(deleteDiaper(id));
+    deleteDiaper.mutate(id);
   };
 
   return (

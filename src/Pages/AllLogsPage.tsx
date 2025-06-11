@@ -17,6 +17,7 @@ import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { useFeedings } from "../Hooks/useFeedings";
 import { useSleeps } from "../Hooks/useSleeps";
+import { useDiapers } from "../Hooks/useDiapers";
 import { RootState } from "../Store/store";
 import { Diaper } from "./DiapersPage";
 import { formatDuration } from "./FeedPage";
@@ -28,8 +29,8 @@ export const AllLogsPage = () => {
   const userId = useSelector((state: RootState) => state.auth.user);
   const { data: feedings = [] } = useFeedings(userId?.userId || "");
   const { data: sleeps = [] } = useSleeps(userId?.userId || "");
+  const { data: diapers = [] } = useDiapers(userId?.userId || "");
   const leisures = useSelector((state: RootState) => state.leisure.leisures);
-  const diapers = useSelector((state: RootState) => state.diaper.diapers);
   const healths = useSelector((state: RootState) => state.health.healths);
   const growths = useSelector((state: RootState) => state.growth.growths);
 
