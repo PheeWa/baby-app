@@ -28,7 +28,7 @@ export const FEEDING_KEYS = {
 const FIVE_MINUTES = 1000 * 60 * 5;
 const THIRTY_MINUTES = 1000 * 60 * 30;
 
-// Helper function to convert Firestore data to Feeding type
+
 const convertToFeeding = (doc: DocumentData): Feeding => {
     const data = doc.data();
 
@@ -44,7 +44,7 @@ const convertToFeeding = (doc: DocumentData): Feeding => {
     };
 };
 
-// Main hook for fetching all feedings
+
 export const useFeedings = (userId: string) => {
 
     return useQuery({
@@ -57,12 +57,9 @@ export const useFeedings = (userId: string) => {
                     orderBy('finish', 'desc')
                 );
                 const querySnapshot = await getDocs(q);
-                console.log("querySnapshot", querySnapshot.docs);
                 const feedings = querySnapshot.docs.map(convertToFeeding);
-                console.log("feedingsInUseFeedings", feedings);
                 return feedings;
             } catch (error) {
-                console.log("error", error);
                 throw new Error('Failed to fetch feedings');
             }
         },

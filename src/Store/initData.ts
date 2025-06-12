@@ -1,18 +1,10 @@
 
 
-import { Health } from "../Pages/HealthPage";
+
 import { Photo } from "../Pages/PhotoPage";
 
 
-export const healthhData: Health[] = [
-  {
-    id: 1,
-    type: "vaccination",
-    start: "10-Jun-2022 1:30 PM",
-    value: "",
-    details: "BCG",
-  },
-];
+
 
 export const photosData: Photo[] = [
   {

@@ -21,6 +21,7 @@ import { useSleeps } from "../Hooks/useSleeps";
 import { useDiapers } from "../Hooks/useDiapers";
 import { useLeisures } from "../Hooks/useLeisure";
 import { useGrowths } from "../Hooks/useGrowth";
+import { useHealths } from "../Hooks/useHealth";
 import { RootState } from "../Store/store";
 import { Diaper } from "./DiapersPage";
 import { formatDuration } from "./FeedPage";
@@ -35,11 +36,9 @@ export const AllLogsPage = () => {
   const { data: diapers = [], isLoading: isLoadingDiapers } = useDiapers(userId);
   const { data: leisures = [], isLoading: isLoadingLeisures } = useLeisures(userId);
   const { data: growths = [], isLoading: isLoadingGrowths } = useGrowths(userId);
-  const healths = useSelector((state: RootState) => state.health.healths);
+  const { data: healths = [], isLoading: isLoadingHealths } = useHealths(userId);
 
-  const isLoading = isLoadingFeedings || isLoadingSleeps || isLoadingDiapers || isLoadingLeisures || isLoadingGrowths;
-
-
+  const isLoading = isLoadingFeedings || isLoadingSleeps || isLoadingDiapers || isLoadingLeisures || isLoadingGrowths || isLoadingHealths;
 
   const allLogs = [
     ...feedings,
@@ -63,7 +62,6 @@ export const AllLogsPage = () => {
 
   const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(allLogs);
-
 
   if (isLoading) {
     return <Loader message="Loading logs..." />;
@@ -179,5 +177,4 @@ export const AllLogsPage = () => {
       </List>
     </Box>
   );
-  //
 };

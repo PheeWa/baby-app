@@ -17,18 +17,17 @@ import {
   InputLabel,
 } from "@mui/material";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Health, HealthType } from "../Pages/HealthPage";
 
 type Props = {
   health?: Health;
   onClose: () => void;
   onSave: (newHealth: Health) => void;
-  hanleDelete: (id: number) => void;
+  hanleDelete: (id: string) => void;
 };
 
 export const HealthDialog = (props: Props) => {
-  //usestates//
   const [date, setDate] = useState("");
   const [type, setType] = useState<HealthType>("medication");
   const [value, setValue] = useState("");
@@ -108,9 +107,6 @@ export const HealthDialog = (props: Props) => {
 
         {type === "temperature" ? (
           <Box style={{ display: "flex" }}>
-            {/* <Typography variant="body1" component="p">
-              Value
-            </Typography> */}
             <FormControl variant="standard" fullWidth>
               <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 Value
@@ -151,7 +147,7 @@ export const HealthDialog = (props: Props) => {
         <Button
           onClick={() => {
             props.onSave({
-              id: props.health?.id ?? 0,
+              id: props.health?.id ?? "",
               start: date,
               type,
               value,

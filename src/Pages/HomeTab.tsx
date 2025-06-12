@@ -36,6 +36,7 @@ import { useSleeps } from "../Hooks/useSleeps";
 import { useDiapers } from "../Hooks/useDiapers";
 import { useLeisures } from "../Hooks/useLeisure";
 import { useGrowths } from "../Hooks/useGrowth";
+import { useHealths } from "../Hooks/useHealth";
 import { Loader } from "../Components/Loader";
 
 export const HomeTab = () => {
@@ -53,9 +54,10 @@ export const HomeTab = () => {
   const { data: leisures = [], isLoading: isLoadingLeisures } = useLeisures(userId);
   const { data: diapers = [], isLoading: isLoadingDiapers } = useDiapers(userId);
   const { data: growths = [], isLoading: isLoadingGrowths } = useGrowths(userId);
-  const healths = useSelector((state: RootState) => state.health.healths);
+  const { data: healths = [], isLoading: isLoadingHealths } = useHealths(userId);
+  console.log('healths', healths);
 
-  const isLoading = isLoadingFeedings || isLoadingSleeps || isLoadingLeisures || isLoadingDiapers || isLoadingGrowths;
+  const isLoading = isLoadingFeedings || isLoadingSleeps || isLoadingLeisures || isLoadingDiapers || isLoadingGrowths || isLoadingHealths;
 
   if (isLoading) {
     return <Loader message="Loading activities..." />;

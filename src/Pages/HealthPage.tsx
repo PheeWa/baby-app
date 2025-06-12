@@ -13,19 +13,20 @@ import { Box } from "@mui/system";
 import { format, isSameDay, isToday, isYesterday, subMinutes } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { Header } from "../Components/Header";
 import { HealthDialog } from "../Components/HealthDialog";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
-import { addHealth, deleteHealth, editHealth } from "../Store/healthSlice";
 import { RootState } from "../Store/store";
 import { formatDuration } from "./FeedPage";
+import { useHealths, useAddHealth, useUpdateHealth, useDeleteHealth } from "../Hooks/useHealth";
+import { Loader } from "../Components/Loader";
 
 export type Health = {
-  id: number;
+  id: string;
   start: string;
   type: HealthType;
   value: string;
@@ -35,21 +36,22 @@ export type Health = {
 export type HealthType = "medication" | "temperature" | "vaccination";
 
 export const HealthPage = () => {
-  const healthsList = useSelector((state: RootState) => {
-    return [...state.health.healths].sort((a, b) => {
-      if (+new Date(a.start) < +new Date(b.start)) {
-        return 1;
-      } else return -1;
-    });
-  });
-  //Hooks//
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: healthsList = [], isLoading } = useHealths(userId);
+  const addHealthMutation = useAddHealth(userId);
+  const updateHealthMutation = useUpdateHealth(userId);
+  const deleteHealthMutation = useDeleteHealth(userId);
+
+
   const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(healthsList);
-  const dispatch = useDispatch();
-  //usestates//
   const [health, setHealth] = useState<Health | undefined>(undefined);
 
-  //functions//
+  if (isLoading) {
+    return <Loader message="Loading health records..." />;
+  }
+
+
   const calcStartDate = () => {
     const defaultDate = subMinutes(new Date(), 15);
     return defaultDate.toString();
@@ -57,7 +59,7 @@ export const HealthPage = () => {
 
   const handleClickOpen = (type?: HealthType) => {
     const newHealth: Health = {
-      id: 0,
+      id: "",
       type: type ?? "medication",
       details: "",
       start: calcStartDate(),
@@ -70,14 +72,17 @@ export const HealthPage = () => {
     setHealth(undefined);
   };
 
-  const onSave = (newHealth: Health) => {
+  const onSave = async (newHealth: Health) => {
     onClose();
 
-    if (newHealth.id === 0) {
-      const newHealthWithId = { ...newHealth, id: Math.random() };
-      dispatch(addHealth(newHealthWithId));
-    } else {
-      dispatch(editHealth(newHealth));
+    try {
+      if (newHealth.id === "") {
+        await addHealthMutation.mutateAsync(newHealth);
+      } else {
+        await updateHealthMutation.mutateAsync(newHealth);
+      }
+    } catch (error) {
+      console.error("Error saving health record:", error);
     }
   };
 
@@ -85,9 +90,13 @@ export const HealthPage = () => {
     setHealth(health);
   };
 
-  const hanleDelete = (id: number) => {
-    dispatch(deleteHealth(id));
-    onClose();
+  const hanleDelete = async (id: string) => {
+    try {
+      await deleteHealthMutation.mutateAsync(id);
+      onClose();
+    } catch (error) {
+      console.error("Error deleting health record:", error);
+    }
   };
 
   return (
