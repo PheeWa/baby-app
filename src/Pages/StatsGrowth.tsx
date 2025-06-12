@@ -18,10 +18,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { RootState } from "../Store/store";
+import { useGrowths } from "../Hooks/useGrowth";
+import { Loader } from "../Components/Loader";
 
 export const StatsGrowth = () => {
-  const babyBirthDate = "23-Feb-2022 11:04 AM";
-  const growths = useSelector((state: RootState) => state.growth.growths);
+  // TODO: change to actual baby birth date when onboarding is implemented
+  const babyBirthDate = "23-Feb-2025 11:04 AM";
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: growths = [], isLoading } = useGrowths(userId);
+
+  if (isLoading) {
+    return <Loader message="Loading growth statistics..." />;
+  }
 
   const babyWeights = growths.filter((growth) => {
     if (growth.type === "weight") {

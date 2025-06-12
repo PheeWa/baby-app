@@ -2,7 +2,6 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import feedSlice from "./feedSlice";
-import growthSlice from "./growthSlice";
 import healthSlice from "./healthSlice";
 import leisureSlice from "./LeisureSlice";
 import photoSlice from "./photoSlice";
@@ -19,7 +18,6 @@ const rootReducer = combineReducers({
   auth: authSlice,
   feed: feedSlice,
   leisure: leisureSlice,
-  growth: growthSlice,
   health: healthSlice,
   photo: photoSlice,
   sleep: sleepSlice,

@@ -35,23 +35,31 @@ import { useFeedings } from "../Hooks/useFeedings";
 import { useSleeps } from "../Hooks/useSleeps";
 import { useDiapers } from "../Hooks/useDiapers";
 import { useLeisures } from "../Hooks/useLeisure";
+import { useGrowths } from "../Hooks/useGrowth";
+import { Loader } from "../Components/Loader";
 
 export const HomeTab = () => {
   const navigate = useNavigate();
   const stopwatch = useSelector((state: RootState) => state.feed.stopwatch);
   const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
-  const { data: feedings = [] } = useFeedings(userId);
+  const { data: feedings = [], isLoading: isLoadingFeedings } = useFeedings(userId);
   const sleepStopwatch = useSelector(
     (state: RootState) => state.sleep.sleepStopwatch
   );
-  const { data: sleeps = [] } = useSleeps(userId);
+  const { data: sleeps = [], isLoading: isLoadingSleeps } = useSleeps(userId);
   const leisureStopwatch = useSelector(
     (state: RootState) => state.leisure.stopwatch
   );
-  const { data: leisures = [] } = useLeisures(userId);
-  const { data: diapers = [] } = useDiapers(userId);
+  const { data: leisures = [], isLoading: isLoadingLeisures } = useLeisures(userId);
+  const { data: diapers = [], isLoading: isLoadingDiapers } = useDiapers(userId);
+  const { data: growths = [], isLoading: isLoadingGrowths } = useGrowths(userId);
   const healths = useSelector((state: RootState) => state.health.healths);
-  const growths = useSelector((state: RootState) => state.growth.growths);
+
+  const isLoading = isLoadingFeedings || isLoadingSleeps || isLoadingLeisures || isLoadingDiapers || isLoadingGrowths;
+
+  if (isLoading) {
+    return <Loader message="Loading activities..." />;
+  }
 
   const latestFeeding = [...feedings].sort((a, b) => {
     if (+new Date(a.finish) < +new Date(b.finish)) {

@@ -21,7 +21,7 @@ type Props = {
   onSave: (newGrowth: Growth) => void;
   onClose: () => void;
   growth?: Growth;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 };
 
 export const getUnit = (type?: GrowthType) => {
@@ -98,12 +98,12 @@ export const GrowthDialog = (props: Props) => {
               }}
             />
           </IconButton>
-          {props.growth?.id !== 0 ? (
+          {props.growth?.id !== "0" ? (
             <IconButton
               aria-label="close"
               onClick={() => {
                 if (props.growth?.id) {
-                  props.onDelete(props.growth?.id);
+                  props.onDelete(props.growth.id);
                 }
               }}
             >
@@ -144,7 +144,7 @@ export const GrowthDialog = (props: Props) => {
         <Button
           onClick={() => {
             props.onSave({
-              id: props.growth?.id ?? 0,
+              id: props.growth?.id ?? "0",
               start: time,
               value: value,
               type: props.growth?.type ?? "head",

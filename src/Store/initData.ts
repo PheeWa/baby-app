@@ -1,46 +1,9 @@
 
-import { Growth } from "../Pages/GrowthPage";
+
 import { Health } from "../Pages/HealthPage";
 import { Photo } from "../Pages/PhotoPage";
 
 
-export const growthData: Growth[] = [
-  { id: 2, type: "head", start: "13-Jul-2022 2:37 PM", value: "40.6" },
-  { id: 3, type: "height", start: "13-Jul-2022 2:37 PM", value: "61.7" },
-  { id: 4, type: "weight", start: "13-Jul-2022 2:37 PM", value: "5.65" },
-  { id: 5, type: "height", start: "15-Jun-2022 1:26 PM", value: "59.5" },
-  { id: 6, type: "weight", start: "15-Jun-2022 1:26 PM", value: "5.35" },
-  { id: 7, type: "height", start: "24-May-2022 1:51 PM", value: "60" },
-  { id: 8, type: "weight", start: "24-May-2022 1:51 PM", value: "5.04" },
-  { id: 9, type: "head", start: "18-May-2022 12:50 PM", value: "38.5" },
-  { id: 10, type: "height", start: "18-May-2022 12:35 PM", value: "59" },
-  { id: 11, type: "weight", start: "18-May-2022 12:34 PM", value: "5" },
-  { id: 12, type: "weight", start: "11-May-2022 1:52 PM", value: "4.86" },
-  { id: 13, type: "head", start: "04-May-2022 10:54 AM", value: "38.2" },
-  { id: 14, type: "height", start: "04-May-2022 10:54 AM", value: "58.5" },
-  { id: 15, type: "weight", start: "04-May-2022 10:53 AM", value: "4.74" },
-  { id: 16, type: "weight", start: "28-Apr-2022 10:10 AM", value: "4.57" },
-  { id: 17, type: "head", start: "26-Apr-2022 11:21 AM", value: "38" },
-  { id: 18, type: "height", start: "26-Apr-2022 11:20 AM", value: "56" },
-  { id: 19, type: "weight", start: "21-Apr-2022 11:15 AM", value: "4.45" },
-  { id: 20, type: "head", start: "14-Apr-2022 2:20 PM", value: "37" },
-  { id: 21, type: "height", start: "14-Apr-2022 2:20 PM", value: "54" },
-  { id: 22, type: "weight", start: "14-Apr-2022 2:20 PM", value: "4.34" },
-  { id: 23, type: "weight", start: "07-Apr-2022 12:10 PM", value: "4.1" },
-  { id: 24, type: "head", start: "30-Mar-2022 12:14 PM", value: "37" },
-  { id: 25, type: "height", start: "30-Mar-2022 12:14 PM", value: "52" },
-  { id: 26, type: "weight", start: "30-Mar-2022 12:07 PM", value: "3.84" },
-  { id: 27, type: "weight", start: "23-Mar-2022 11:31 AM", value: "3.57" },
-  { id: 28, type: "weight", start: "17-Mar-2022 12:27 PM", value: "3.32" },
-  { id: 29, type: "weight", start: "14-Mar-2022 10:09 AM", value: "3.17" },
-  { id: 30, type: "weight", start: "09-Mar-2022 7:30 PM", value: "2.99" },
-  { id: 31, type: "head", start: "02-Mar-2022 4:15 PM", value: "35" },
-  { id: 32, type: "height", start: "02-Mar-2022 4:15 PM", value: "46" },
-  { id: 33, type: "weight", start: "02-Mar-2022 3:08 PM", value: "2.9" },
-  { id: 34, type: "weight", start: "27-Feb-2022 2:05 AM", value: "2.71" },
-  { id: 35, type: "head", start: "23-Feb-2022 3:26 PM", value: "35" },
-  { id: 36, type: "height", start: "23-Feb-2022 3:26 PM", value: "45" },
-];
 export const healthhData: Health[] = [
   {
     id: 1,

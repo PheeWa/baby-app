@@ -14,11 +14,13 @@ import { getLabel, getUnit } from "../Components/GrowthDialog";
 import { Header } from "../Components/Header";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
+import { Loader } from "../Components/Loader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
 import { useFeedings } from "../Hooks/useFeedings";
 import { useSleeps } from "../Hooks/useSleeps";
 import { useDiapers } from "../Hooks/useDiapers";
 import { useLeisures } from "../Hooks/useLeisure";
+import { useGrowths } from "../Hooks/useGrowth";
 import { RootState } from "../Store/store";
 import { Diaper } from "./DiapersPage";
 import { formatDuration } from "./FeedPage";
@@ -28,20 +30,24 @@ import { Health } from "./HealthPage";
 
 export const AllLogsPage = () => {
   const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
-  const { data: feedings = [] } = useFeedings(userId);
-  const { data: sleeps = [] } = useSleeps(userId);
-  const { data: diapers = [] } = useDiapers(userId);
-  const { data: leisures = [] } = useLeisures(userId);
+  const { data: feedings = [], isLoading: isLoadingFeedings } = useFeedings(userId);
+  const { data: sleeps = [], isLoading: isLoadingSleeps } = useSleeps(userId);
+  const { data: diapers = [], isLoading: isLoadingDiapers } = useDiapers(userId);
+  const { data: leisures = [], isLoading: isLoadingLeisures } = useLeisures(userId);
+  const { data: growths = [], isLoading: isLoadingGrowths } = useGrowths(userId);
   const healths = useSelector((state: RootState) => state.health.healths);
-  const growths = useSelector((state: RootState) => state.growth.growths);
+
+  const isLoading = isLoadingFeedings || isLoadingSleeps || isLoadingDiapers || isLoadingLeisures || isLoadingGrowths;
+
+
 
   const allLogs = [
     ...feedings,
     ...sleeps,
     ...leisures,
     ...diapers,
-    ...healths,
     ...growths,
+    ...healths,
   ];
 
   allLogs.sort((a, b) => {
@@ -54,9 +60,14 @@ export const AllLogsPage = () => {
       return -1;
     }
   });
+
   const { fetchData, slicedList, dataLength, hasMore } =
     useInfiniteScroll(allLogs);
 
+
+  if (isLoading) {
+    return <Loader message="Loading logs..." />;
+  }
   return (
     <Box>
       <Header title="All logs" />

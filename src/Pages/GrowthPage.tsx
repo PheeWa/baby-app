@@ -10,23 +10,23 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
-
 import { format, isSameDay, isToday, isYesterday } from "date-fns";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { EndMessage } from "../Components/EndMessage";
 import { getLabel, getUnit, GrowthDialog } from "../Components/GrowthDialog";
 import { Header } from "../Components/Header";
 import { IconType } from "../Components/IconType";
 import { ScrollLoader } from "../Components/ScrollLoader";
+import { Loader } from "../Components/Loader";
 import { useInfiniteScroll } from "../Hooks/infiniteScroll";
-import { addGrowth, deleteGrowth, editGrowth } from "../Store/growthSlice";
+import { useGrowths, useAddGrowth, useUpdateGrowth, useDeleteGrowth } from "../Hooks/useGrowth";
 import { RootState } from "../Store/store";
 import { formatDuration } from "./FeedPage";
 
 export type Growth = {
-  id: number;
+  id: string;
   type: GrowthType;
   value: string;
   start: string;
@@ -35,56 +35,57 @@ export type Growth = {
 export type GrowthType = "weight" | "height" | "head";
 
 export const GrowthPage = () => {
-  const growthsList = useSelector((state: RootState) => {
-    return [...state.growth.growths].sort((a, b) => {
-      if (+new Date(a.start) < +new Date(b.start)) {
-        return 1;
-      } else return -1;
-    });
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: growths = [], isLoading } = useGrowths(userId);
+  const addGrowth = useAddGrowth(userId);
+  const updateGrowth = useUpdateGrowth(userId);
+  const deleteGrowth = useDeleteGrowth(userId);
+  const [selectedGrowth, setSelectedGrowth] = useState<Growth | undefined>(undefined);
+
+  const sortedGrowths = [...growths].sort((a, b) => {
+    if (+new Date(a.start) < +new Date(b.start)) {
+      return 1;
+    } else return -1;
   });
-  //Hooks//
 
-  const { fetchData, slicedList, dataLength, hasMore } =
-    useInfiniteScroll(growthsList);
-  const dispatch = useDispatch();
+  const { fetchData, slicedList, dataLength, hasMore } = useInfiniteScroll(sortedGrowths);
 
-  //usestate//
-  const [growth, setGrowth] = useState<Growth | undefined>(undefined);
-
-  //functions//
   const onSave = (newGrowth: Growth) => {
-    setGrowth(undefined);
+    setSelectedGrowth(undefined);
 
-    if (newGrowth.id === 0) {
-      const newGrowthWithId = { ...newGrowth, id: Math.random() };
-      dispatch(addGrowth(newGrowthWithId));
+    if (newGrowth.id === "0") {
+      addGrowth.mutate(newGrowth);
     } else {
-      dispatch(editGrowth(newGrowth));
+      updateGrowth.mutate(newGrowth);
     }
   };
 
   const handleClose = () => {
-    setGrowth(undefined);
+    setSelectedGrowth(undefined);
   };
 
   const handleEdit = (growth: Growth) => {
-    setGrowth(growth);
+    setSelectedGrowth(growth);
   };
 
   const createNewGrowth = (type: GrowthType) => {
     const newGrowth: Growth = {
-      id: 0,
-      start: Date(),
+      id: "0",
+      start: new Date().toISOString(),
       value: "",
       type: type,
     };
-    setGrowth(newGrowth);
+    setSelectedGrowth(newGrowth);
   };
 
-  const onDelete = (id: number) => {
-    dispatch(deleteGrowth(id));
+  const onDelete = (id: string) => {
+    deleteGrowth.mutate(id);
     handleClose();
   };
+
+  if (isLoading) {
+    return <Loader message="Loading growth records..." />;
+  }
 
   return (
     <Box>
@@ -133,7 +134,7 @@ export const GrowthPage = () => {
       </Container>
       <GrowthDialog
         onSave={onSave}
-        growth={growth}
+        growth={selectedGrowth}
         onClose={handleClose}
         onDelete={onDelete}
       />
@@ -210,9 +211,8 @@ export const GrowthPage = () => {
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={`${text} ,${getLabel(growth.type)},${
-                        growth.value
-                      }${getUnit(growth.type)}`}
+                      primary={`${text} ,${getLabel(growth.type)},${growth.value
+                        }${getUnit(growth.type)}`}
                     />
                   </ListItem>
                 </React.Fragment>
