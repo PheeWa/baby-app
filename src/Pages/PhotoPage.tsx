@@ -2,35 +2,39 @@ import { PhotoCameraRounded, PhotoRounded } from "@mui/icons-material";
 import { Drawer, IconButton, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { BabyPhoto } from "../Components/BabyPhoto";
 import { Header } from "../Components/Header";
-import { updatePhoto } from "../Store/photoSlice";
 import { RootState } from "../Store/store";
+import { usePhotos, useUpdatePhoto, useDeletePhoto, useAddPhoto } from "../Hooks/usePhotos";
+import { Loader } from "../Components/Loader";
 
 export type Photo = {
-  id: number;
+  id: string;
   month: number;
   image: string;
 };
 
 export const PhotoPage = () => {
-  //usestates//
-
-  const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const fileInputRef = useRef(null);
-
   const navigate = useNavigate();
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: photos = [], isLoading } = usePhotos(userId);
+  const updatePhotoMutation = useUpdatePhoto(userId);
+  const deletePhotoMutation = useDeletePhoto(userId);
+  const addPhotoMutation = useAddPhoto(userId);
 
-  //functions//
-  const photos = useSelector((state: RootState) => state.photo.photos);
+  if (isLoading) {
+    return <Loader message="Loading photos..." />;
+  }
 
-  const handleDrawerOpen = (id: number) => {
+  const handleDrawerOpen = (id: string) => {
     setSelectedId(id);
   };
 
-  const goShoot = (id: number) => {
+  const goShoot = (id: string) => {
     navigate(`/photo/take-photo/${id}`);
   };
 
@@ -42,11 +46,19 @@ export const PhotoPage = () => {
     }
   };
 
-  const dispatch = useDispatch();
-  const getPhoto = (result: string | ArrayBuffer | null) => {
-    if (typeof result === "string" && typeof selectedId === "number") {
-      dispatch(updatePhoto({ id: selectedId, image: result, month: 0 }));
-      navigate(`/photo/view-photo/${selectedId}`);
+  const getPhoto = async (result: string | ArrayBuffer | null) => {
+    if (typeof result === "string" && selectedId) {
+      try {
+        if (selectedId === "new") {
+          const newPhoto = await addPhotoMutation.mutateAsync({ image: result, month: 0 });
+          navigate(`/photo/view-photo/${newPhoto.id}`);
+        } else {
+          await updatePhotoMutation.mutateAsync({ id: selectedId, image: result, month: 0 });
+          navigate(`/photo/view-photo/${selectedId}`);
+        }
+      } catch (error) {
+        console.error("Error updating photo:", error);
+      }
     }
   };
 
@@ -60,13 +72,31 @@ export const PhotoPage = () => {
           marginTop: "16px",
           marginBottom: "16px",
           flexWrap: "wrap",
+          justifyContent: photos.length === 0 ? "center" : undefined,
         }}
       >
-        {photos.map((photo) => {
-          return (
-            <BabyPhoto photo={photo} open={() => handlePhotoClick(photo)} />
-          );
-        })}
+        {photos.length === 0 ? (
+          <Box style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", marginTop: 48 }}>
+            <Typography variant="h6" color="textSecondary" style={{ marginBottom: 16 }}>
+              No photos yet
+            </Typography>
+            <IconButton
+              color="primary"
+              size="large"
+              style={{ flexDirection: "column" }}
+              onClick={() => setSelectedId("new")}
+            >
+              <PhotoCameraRounded style={{ fontSize: "50px" }} />
+              <Typography>Add Photo</Typography>
+            </IconButton>
+          </Box>
+        ) : (
+          photos.map((photo) => {
+            return (
+              <BabyPhoto key={photo.id} photo={photo} open={() => handlePhotoClick(photo)} />
+            );
+          })
+        )}
       </Container>
 
       <Drawer
@@ -124,7 +154,7 @@ export const PhotoPage = () => {
               size="large"
               style={{ flexDirection: "column" }}
               onClick={() => {
-                goShoot(selectedId ?? 0);
+                goShoot(selectedId ?? "");
               }}
             >
               <PhotoCameraRounded style={{ fontSize: "50px" }} />

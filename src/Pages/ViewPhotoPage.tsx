@@ -1,30 +1,35 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getText } from "../Components/BabyPhoto";
-import { deletePhoto } from "../Store/photoSlice";
 import { RootState } from "../Store/store";
+import { usePhotos, useDeletePhoto } from "../Hooks/usePhotos";
+import { Loader } from "../Components/Loader";
 
 export const ViewPhotoPage = () => {
-  let { id = "0" } = useParams();
-
-  const dispatch = useDispatch();
-
+  let { id = "" } = useParams();
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: photos = [], isLoading } = usePhotos(userId);
+  const deletePhotoMutation = useDeletePhoto(userId);
   const navigate = useNavigate();
 
-  const photo = useSelector((state: RootState) =>
-    state.photo.photos.find((photo) => {
-      return photo.id === +id;
-    })
-  );
+  if (isLoading) {
+    return <Loader message="Loading photo..." />;
+  }
+
+  const photo = photos.find((photo) => photo.id === id);
   if (!photo) {
     return null;
   }
 
-  const onDelete = (id: number) => {
-    dispatch(deletePhoto(id));
-    navigate("../photo");
+  const onDelete = async (id: string) => {
+    try {
+      await deletePhotoMutation.mutateAsync(id);
+      navigate("../photo");
+    } catch (error) {
+      console.error("Error deleting photo:", error);
+    }
   };
 
   return (

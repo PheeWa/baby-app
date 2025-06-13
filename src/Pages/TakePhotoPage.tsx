@@ -1,21 +1,29 @@
 import { ArrowBackRounded, PhotoCameraRounded } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Webcam from "react-webcam";
-import { updatePhoto } from "../Store/photoSlice";
+import { RootState } from "../Store/store";
+import { useUpdatePhoto } from "../Hooks/usePhotos";
 
 export const TakePhotoPage = () => {
   const webcamRef = React.useRef<any>(null);
-  let { id = "0" } = useParams();
-
-  const dispatch = useDispatch();
+  let { id = "" } = useParams();
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const updatePhotoMutation = useUpdatePhoto(userId);
   const navigate = useNavigate();
-  const capture = () => {
+
+  const capture = async () => {
     const imageSrc = webcamRef.current?.getScreenshot?.();
-    dispatch(updatePhoto({ id: +id, image: imageSrc, month: 0 }));
-    navigate(`/photo/view-photo/${id}`);
+    if (imageSrc) {
+      try {
+        await updatePhotoMutation.mutateAsync({ id, image: imageSrc, month: 0 });
+        navigate(`/photo/view-photo/${id}`);
+      } catch (error) {
+        console.error("Error updating photo:", error);
+      }
+    }
   };
 
   const goBack = () => {
