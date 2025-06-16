@@ -55,7 +55,7 @@ export const HomeTab = () => {
   const { data: diapers = [], isLoading: isLoadingDiapers } = useDiapers(userId);
   const { data: growths = [], isLoading: isLoadingGrowths } = useGrowths(userId);
   const { data: healths = [], isLoading: isLoadingHealths } = useHealths(userId);
-  console.log('healths', healths);
+
 
   const isLoading = isLoadingFeedings || isLoadingSleeps || isLoadingLeisures || isLoadingDiapers || isLoadingGrowths || isLoadingHealths;
 

@@ -31,6 +31,7 @@ import AuthGuard from "./Components/AuthGuard";
 import Layout from "./Components/Layout";
 import { PersistGate } from "redux-persist/integration/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { OnBoarding } from "./Pages/Onboarding";
 
 const queryClient = new QueryClient()
 
@@ -77,44 +78,46 @@ function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider theme={theme}>
-              <BrowserRouter>
-                <CssBaseline />
+            <QueryClientProvider client={queryClient}>
+              <ThemeProvider theme={theme}>
+                <BrowserRouter>
+                  <CssBaseline />
 
-                <Routes>
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route
-                    element={
-                      <AuthGuard>
-                        <Layout />
-                      </AuthGuard>
-                    }
-                  >
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/feed" element={<FeedPage />} />
-                    <Route path="/diapers" element={<DiapersPage />} />
-                    <Route path="/leisure" element={<LeisurePage />} />
-                    <Route path="/growth" element={<GrowthPage />} />
-                    <Route path="/health" element={<HealthPage />} />
-                    <Route path="/photo" element={<PhotoPage />} />
+                  <Routes>
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/login" element={<LoginPage />} />
                     <Route
-                      path="/photo/take-photo/:id"
-                      element={<TakePhotoPage />}
-                    />
-                    <Route
-                      path="/photo/view-photo/:id"
-                      element={<ViewPhotoPage />}
-                    />
-                    <Route path="/sleep" element={<SleepPage />} />
-                    <Route path="/all-log" element={<AllLogsPage />} />
-                    <Route path="/stats" element={<StatsTab />} />
-                    <Route path="/setting" element={<SettingPage />} />
-                  </Route>
-                </Routes>
-              </BrowserRouter>
-            </ThemeProvider>
+                      element={
+                        <AuthGuard>
+                          <Layout />
+                        </AuthGuard>
+                      }
+                    >
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/feed" element={<FeedPage />} />
+                      <Route path="/diapers" element={<DiapersPage />} />
+                      <Route path="/leisure" element={<LeisurePage />} />
+                      <Route path="/growth" element={<GrowthPage />} />
+                      <Route path="/health" element={<HealthPage />} />
+                      <Route path="/photo" element={<PhotoPage />} />
+                      {/* <Route path="/onboarding" element={<OnBoarding />} /> */}
+
+                      <Route
+                        path="/photo/take-photo/:id"
+                        element={<TakePhotoPage />}
+                      />
+                      <Route
+                        path="/photo/view-photo/:id"
+                        element={<ViewPhotoPage />}
+                      />
+                      <Route path="/sleep" element={<SleepPage />} />
+                      <Route path="/all-log" element={<AllLogsPage />} />
+                      <Route path="/stats" element={<StatsTab />} />
+                      <Route path="/setting" element={<SettingPage />} />
+                    </Route>
+                  </Routes>
+                </BrowserRouter>
+              </ThemeProvider>
             </QueryClientProvider>
           </LocalizationProvider>
         </PersistGate>

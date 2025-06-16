@@ -21,17 +21,21 @@ import {
 import React from "react";
 import { HomeTab } from "./HomeTab";
 import { StatsTab } from "./StatsTab";
-import lukaImg from "../Assets/luka.jpg";
 import { AppDispatch, RootState } from "../Store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../Store/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useBabyProfile } from "../Hooks/useBabyProfile";
+import { OnBoarding } from "./Onboarding";
+import { formatDistanceToNowStrict, parseISO } from "date-fns";
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch<AppDispatch>();
   const { loading, user } = useSelector((state: RootState) => state.auth);
+  const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
+  const { data: babyProfile, isLoading } = useBabyProfile(userId);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -56,6 +60,9 @@ export const HomePage = () => {
     }
   };
 
+  if (isLoading) return null;
+
+
   return (
     <Box>
       <Box
@@ -68,28 +75,38 @@ export const HomePage = () => {
         }}
       >
         <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          {/* TODO: need to update the hard coded value of baby photo and name */}
-          <Avatar alt="Remy Sharp" src={lukaImg} />
-          <Typography>Luka</Typography>
+          <Avatar alt={babyProfile?.photoUrl || "Baby"} src={babyProfile?.photoUrl || undefined} />
+          <Box>
+            <Typography sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
+              {babyProfile?.name || "Your Baby"}
+            </Typography>
+            <Typography sx={{ fontSize: "0.85rem", color: 'text.secondary' }}>
+              {babyProfile?.birthDate
+                ? formatDistanceToNowStrict(parseISO(babyProfile.birthDate), { unit: 'month' }) + " old"
+                : "Age unknown"}
+            </Typography>
+          </Box>
         </Box>
         <IconButton onClick={handleClickOpen}>
           <LogoutRounded />
         </IconButton>
       </Box>
-
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          centered
-          variant="fullWidth"
-        >
-          <Tab icon={<HomeRounded />} aria-label="phone" />
-          <Tab icon={<TimelineRounded />} aria-label="favorite" />
-        </Tabs>
-      </Box>
-      {value === 0 && <HomeTab />}
-      {value === 1 && <StatsTab />}
+      {babyProfile ?
+        <Box>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              centered
+              variant="fullWidth"
+            >
+              <Tab icon={<HomeRounded />} aria-label="phone" />
+              <Tab icon={<TimelineRounded />} aria-label="favorite" />
+            </Tabs>
+          </Box>
+          {value === 0 && <HomeTab />}
+          {value === 1 && <StatsTab />}
+        </Box> : <OnBoarding />}
 
       <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
         <DialogTitle style={{ display: "flex", alignItems: "center" }}>
