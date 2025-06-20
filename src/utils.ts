@@ -1,5 +1,6 @@
 import { differenceInDays, addDays } from "date-fns";
 
+
 const defaultDate = new Date("21-Jul-2022 11:05 AM");
 const diff = differenceInDays(new Date(Date()), defaultDate);
 export const checkDate = (arr: any) => {
@@ -15,3 +16,5 @@ export const checkDate = (arr: any) => {
   });
   return updatedDates;
 };
+
+

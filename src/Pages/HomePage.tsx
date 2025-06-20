@@ -28,6 +28,8 @@ import { useNavigate } from "react-router-dom";
 import { useBabyProfile } from "../Hooks/useBabyProfile";
 import { OnBoarding } from "./Onboarding";
 import { formatDistanceToNowStrict, parseISO } from "date-fns";
+import BabyProfileDrawer from "../Components/BabyProfileDrawer";
+import { useSetBabyProfile } from "../Hooks/useBabyProfile";
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -36,6 +38,8 @@ export const HomePage = () => {
   const { loading, user } = useSelector((state: RootState) => state.auth);
   const userId = useSelector((state: RootState) => state.auth.user?.userId || "");
   const { data: babyProfile, isLoading } = useBabyProfile(userId);
+  const setProfile = useSetBabyProfile(userId);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -75,7 +79,12 @@ export const HomePage = () => {
         }}
       >
         <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Avatar alt={babyProfile?.photoUrl || "Baby"} src={babyProfile?.photoUrl || undefined} />
+          <Avatar
+            alt={babyProfile?.photoUrl || "Baby"}
+            src={babyProfile?.photoUrl || undefined}
+            sx={{ cursor: "pointer" }}
+            onClick={() => setDrawerOpen(true)}
+          />
           <Box>
             <Typography sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
               {babyProfile?.name || "Your Baby"}
@@ -107,6 +116,20 @@ export const HomePage = () => {
           {value === 0 && <HomeTab />}
           {value === 1 && <StatsTab />}
         </Box> : <OnBoarding />}
+
+      <BabyProfileDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        profile={babyProfile}
+        onSave={async (data) => {
+          await setProfile.mutateAsync({
+            name: data.name,
+            birthDate: data.birthDate,
+            gender: data.gender,
+            photoUrl: data.photoUrl,
+          });
+        }}
+      />
 
       <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
         <DialogTitle style={{ display: "flex", alignItems: "center" }}>
